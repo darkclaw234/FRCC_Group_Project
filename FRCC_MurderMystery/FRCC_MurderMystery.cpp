@@ -283,13 +283,37 @@ int enter_room_two(vector<bool>& currentUserChoices, int roomNum) {
     //Declares user input string
     string userKeyword;
 
-    //FIXME: ADD ROOM 2 INTERACTIONS
-    cout << "FIXME: ADD ROOM 2 INTERACTIONS." << endl;
-    cout << "entered magic room 2" << endl;
+    print_keyword_request(roomNum);
+    userKeyword = get_keyword_input();
+    //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
+    print_input(userKeyword);
 
-    //FIXME: RETURN USER'S DESIRED ROOMNUM
-    cout << "FIXME: RETURN USER'S DESIRED ROOMNUM." << endl;
-    return 0;
+    while (userKeyword.compare("leave") != 0) {
+
+        print_keyword_request(roomNum);
+        userKeyword = get_keyword_input();
+        //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
+        print_input(userKeyword);
+    }
+
+    print_adjacent_rooms(roomNum);
+    userKeyword = get_keyword_input();
+
+    if (userKeyword.compare("ballroom") == 0) {
+        roomNum = 1;
+    }
+
+    if (userKeyword.compare("servant") == 0 || 
+        userKeyword.compare("servant's") == 0 ||
+        userKeyword.compare("bedroom") == 0) {
+        roomNum = 3;
+    }
+
+    if (userKeyword.compare("library") == 0) {
+        roomNum = 4;
+    }
+
+    return roomNum;
 }
 
 
@@ -647,9 +671,6 @@ void print_adjacent_rooms(int roomNum) {
         break;
 
     case 1:
-        //FIXME : COUT ADJACENT ROOMS
-        cout << "FIXME: COUT ADJACENT ROOMS" << endl;
-
         cout << "\"";
         print_room_name(0);
         cout << "\"" << " " << "\"";
@@ -671,13 +692,23 @@ void print_adjacent_rooms(int roomNum) {
         break;
 
     case 2:
-        //FIXME : COUT ADJACENT ROOMS
-        cout << "FIXME: COUT ADJACENT ROOMS" << endl;
+        cout << "\"";
+        print_room_name(1);
+        cout << "\"" << " " << "\"";
+        print_room_name(3);
+        cout << "\"" << " " << "\"";
+        print_room_name(4);
+        cout << "\"" << " " << "\"";
         break;
 
     case 3:
-        //FIXME : COUT ADJACENT ROOMS
-        cout << "FIXME: COUT ADJACENT ROOMS" << endl;
+        cout << "\"";
+        print_room_name(1);
+        cout << "\"" << " " << "\"";
+        print_room_name(2);
+        cout << "\"" << " " << "\"";
+        print_room_name(4);
+        cout << "\"" << " " << "\"";
         break;
 
     case 4:
