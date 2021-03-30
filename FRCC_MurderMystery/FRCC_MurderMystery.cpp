@@ -267,14 +267,45 @@ int enter_room_one(vector<bool>& currentUserChoices, int roomNum) {
     //Declares user input string
     string userKeyword;
 
-    //FIXME: ADD ROOM 1 INTERACTIONS
-    cout << "FIXME: ADD ROOM 1 INTERACTIONS." << endl;
-    cout << "entered magic room 1" << endl;
+    print_keyword_request(roomNum);
+    userKeyword = get_keyword_input();
+    print_input(userKeyword);
 
-    //FIXME: RETURN USER'S DESIRED ROOMNUM
-    cout << "FIXME: RETURN USER'S DESIRED ROOMNUM." << endl;
-    return -1;
+    while (userKeyword.compare("leave") != 0) {
+        print_keyword_request(roomNum);
+        userKeyword = get_keyword_input();
+        print_input(userKeyword);
+    }
+    
+    print_adjacent_rooms(roomNum);
+    userKeyword = get_keyword_input();
 
+    if (userKeyword.compare("trophy hall") == 0) {
+        roomNum = 0;
+    }
+    if (userKeyword.compare("office") == 0) {
+        roomNum = 2;
+    }
+    if (userKeyword.compare("servant's quarters") == 0) {
+        roomNum = 3;
+    }
+    if (userKeyword.compare("library") == 0) {
+        roomNum = 4;
+    }
+    if (userKeyword.compare("kitcken") == 0) {
+        roomNum = 5;
+    }
+    if (userKeyword.compare("dining room") == 0) {
+        roomNum = 6;
+    }
+    if (userKeyword.compare("green house") == 0) {
+        roomNum = 7;
+    }
+    if (userKeyword.compare("stairwell") == 0) {
+        roomNum = 8;
+    }
+
+    return roomNum;
 }
 
 
