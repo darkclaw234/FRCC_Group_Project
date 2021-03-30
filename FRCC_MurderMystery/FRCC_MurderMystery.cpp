@@ -238,22 +238,28 @@ int enter_room_zero(vector<bool>& currentUserChoices, int roomNum) {
         describe_room(currentUserChoices, roomNum);
     }
 
+    //Requests User Input Keyword, Gets Keyword Input
     print_keyword_request(roomNum);
     userKeyword = get_keyword_input();
     //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
     print_input(userKeyword);
-    
+
+    //Loops Until User Decides to leave room
     while (userKeyword.compare("leave") != 0) {
 
+        //Requests User Input Keyword, Gets Keyword Input
         print_keyword_request(roomNum);
         userKeyword = get_keyword_input();
         //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
         print_input(userKeyword);
     }
 
+    //Asks user for input, prints adjacent rooms for reference, and then gets user chosen room
+    print_room_request(roomNum);
     print_adjacent_rooms(roomNum);
     userKeyword = get_keyword_input();
 
+    //Sets roomNum to user's chosen room
     if (userKeyword.compare("ballroom") == 0) {
         roomNum = 1;
     }
@@ -267,19 +273,26 @@ int enter_room_one(vector<bool>& currentUserChoices, int roomNum) {
     //Declares user input string
     string userKeyword;
 
+    //Requests User Input Keyword, Gets Keyword Input
     print_keyword_request(roomNum);
     userKeyword = get_keyword_input();
+    //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
     print_input(userKeyword);
 
+    //Loops Until User Decides to leave room
     while (userKeyword.compare("leave") != 0) {
         print_keyword_request(roomNum);
         userKeyword = get_keyword_input();
+        //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
         print_input(userKeyword);
     }
-    
+
+    //Asks user for input, prints adjacent rooms for reference, and then gets user chosen room
+    print_room_request(roomNum);
     print_adjacent_rooms(roomNum);
     userKeyword = get_keyword_input();
 
+    //Sets roomNum to user's chosen room
     if (userKeyword.compare("trophy hall") == 0) {
         roomNum = 0;
     }
@@ -292,7 +305,7 @@ int enter_room_one(vector<bool>& currentUserChoices, int roomNum) {
     if (userKeyword.compare("library") == 0) {
         roomNum = 4;
     }
-    if (userKeyword.compare("kitcken") == 0) {
+    if (userKeyword.compare("kitchen") == 0) {
         roomNum = 5;
     }
     if (userKeyword.compare("dining room") == 0) {
@@ -314,27 +327,33 @@ int enter_room_two(vector<bool>& currentUserChoices, int roomNum) {
     //Declares user input string
     string userKeyword;
 
+    //Requests User Input Keyword, Gets Keyword Input
     print_keyword_request(roomNum);
     userKeyword = get_keyword_input();
     //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
     print_input(userKeyword);
 
+    //Loops Until User Decides to leave room
     while (userKeyword.compare("leave") != 0) {
 
+        //Requests User Input Keyword, Gets Keyword Input
         print_keyword_request(roomNum);
         userKeyword = get_keyword_input();
         //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
         print_input(userKeyword);
     }
 
+    //Asks user for input, prints adjacent rooms for reference, and then gets user chosen room
+    print_room_request(roomNum);
     print_adjacent_rooms(roomNum);
     userKeyword = get_keyword_input();
 
+    //Sets roomNum to user's chosen room
     if (userKeyword.compare("ballroom") == 0) {
         roomNum = 1;
     }
 
-    if (userKeyword.compare("servant") == 0 || 
+    if (userKeyword.compare("servant") == 0 ||
         userKeyword.compare("servant's") == 0 ||
         userKeyword.compare("bedroom") == 0) {
         roomNum = 3;
@@ -542,6 +561,15 @@ void print_keyword_request(int roomNum) {
     cout << "?" << endl;
 
     cout << "(Type \"leave\" to move between rooms.)" << endl;
+}
+
+
+
+void print_room_request(int roomNum) {
+
+    cout << "Which room do you want to enter from the ";
+    print_room_name(roomNum);
+    cout << "?" << endl;
 }
 
 
