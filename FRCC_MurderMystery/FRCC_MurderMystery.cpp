@@ -299,7 +299,9 @@ int enter_room_one(vector<bool>& currentUserChoices, int roomNum) {
     if (userKeyword.compare("office") == 0) {
         roomNum = 2;
     }
-    if (userKeyword.compare("servant's quarters") == 0) {
+    if (userKeyword.compare("servant's") == 0
+        || userKeyword.compare("servant") == 0
+        || userKeyword.compare("quarters") == 0){
         roomNum = 3;
     }
     if (userKeyword.compare("library") == 0) {
@@ -355,7 +357,7 @@ int enter_room_two(vector<bool>& currentUserChoices, int roomNum) {
 
     if (userKeyword.compare("servant") == 0 ||
         userKeyword.compare("servant's") == 0 ||
-        userKeyword.compare("bedroom") == 0) {
+        userKeyword.compare("quarters") == 0) {
         roomNum = 3;
     }
 
@@ -719,100 +721,151 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
 void print_adjacent_rooms(int roomNum) {
 
     cout << "Which room would you like to go to?" << endl;
-    cout << "Adjacent Rooms: ";
+    cout << "Adjacent Rooms: " << endl;
     
     switch (roomNum) {
 
     case 0:
         cout << "\"";
         print_room_name(1);
-        cout << "\"";
+        cout << "\"" << endl;
         break;
 
     case 1:
         cout << "\"";
         print_room_name(0);
-        cout << "\"" << " " << "\"";
+        cout << "\"" << "\n" << "\"";
         print_room_name(2);
-        cout << "\"" << " " << "\"";
+        cout << "\"" << "\n" << "\"";
         print_room_name(3);
-        cout << "\"" << " " << "\"";
+        cout << "\"" << "\n" << "\"";
         print_room_name(4);
         cout << "\"" << "\n" << "\"";
         print_room_name(5);
-        cout << "\"" << " " << "\"";
+        cout << "\"" << "\n" << "\"";
         print_room_name(6);
-        cout << "\"" << " " << "\"";
+        cout << "\"" << "\n" << "\"";
         print_room_name(7);
-        cout << "\"" << " " << "\"";
+        cout << "\"" << "\n" << "\"";
         print_room_name(8);
-        cout << "\"";
+        cout << "\"" << endl;
 
         break;
 
     case 2:
         cout << "\"";
         print_room_name(1);
-        cout << "\"" << " " << "\"";
+        cout << "\"" << "\n" << "\"";
         print_room_name(3);
-        cout << "\"" << " " << "\"";
+        cout << "\"" << "\n" << "\"";
         print_room_name(4);
-        cout << "\"" << " " << "\"";
+        cout << "\"" << endl;
         break;
 
     case 3:
         cout << "\"";
         print_room_name(1);
-        cout << "\"" << " " << "\"";
+        cout << "\"" << "\n" << "\"";
         print_room_name(2);
-        cout << "\"" << " " << "\"";
+        cout << "\"" << "\n" << "\"";
         print_room_name(4);
-        cout << "\"" << " " << "\"";
+        cout << "\"" << endl;
         break;
 
     case 4:
-        //FIXME : COUT ADJACENT ROOMS
-        cout << "FIXME: COUT ADJACENT ROOMS" << endl;
+        cout << "\"";
+        print_room_name(1);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(2);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(3);
+        cout << "\"" << endl;
         break;
 
     case 5:
-        //FIXME : COUT ADJACENT ROOMS
-        cout << "FIXME: COUT ADJACENT ROOMS" << endl;
+        cout << "\"";
+        print_room_name(2);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(6);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(7);
+        cout << "\"" << endl;
         break;
 
     case 6:
-        //FIXME : COUT ADJACENT ROOMS
-        cout << "FIXME: COUT ADJACENT ROOMS" << endl;
+        cout << "\"";
+        print_room_name(2);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(5);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(7);
+        cout << "\"" << endl;
         break;
 
     case 7:
-        //FIXME : COUT ADJACENT ROOMS
-        cout << "FIXME: COUT ADJACENT ROOMS" << endl;
+        cout << "\"";
+        print_room_name(2);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(5);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(6);
+        cout << "\"" << endl;
         break;
 
     case 8:
-        //FIXME : COUT ADJACENT ROOMS
-        cout << "FIXME: COUT ADJACENT ROOMS" << endl;
+        
+        cout << "\nUPSTAIRS" << endl;
+        cout << "----------------" << endl;
+        
+        cout << "\"";
+        print_room_name(2);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(11);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(12);
+        cout << "\"" << endl;
+
+        cout << "\nDOWNSTAIRS" << endl;
+        cout << "--------------------" << endl;
+
+        cout << "\"";
+        print_room_name(9);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(10);
+        cout << "\"" << endl;
+
         break;
 
     case 9:
-        //FIXME : COUT ADJACENT ROOMS
-        cout << "FIXME: COUT ADJACENT ROOMS" << endl;
+        cout << "\"";
+        print_room_name(10);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(8);
+        cout << "\"" << endl;
         break;
 
     case 10:
-        //FIXME : COUT ADJACENT ROOMS
-        cout << "FIXME: COUT ADJACENT ROOMS" << endl;
+        cout << "\"";
+        print_room_name(9);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(8);
+        cout << "\"" << endl;
         break;
 
     case 11:
-        //FIXME : COUT ADJACENT ROOMS
-        cout << "FIXME: COUT ADJACENT ROOMS" << endl;
+        cout << "\"";
+        print_room_name(12);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(8);
+        cout << "\"" << endl;
         break;
 
     case 12:
-        //FIXME : COUT ADJACENT ROOMS
-        cout << "FIXME: COUT ADJACENT ROOMS" << endl;
+        cout << "\"";
+        print_room_name(11);
+        cout << "\"" << "\n" << "\"";
+        print_room_name(8);
+        cout << "\"" << endl;
         break;
 
     case 13:
