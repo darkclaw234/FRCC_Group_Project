@@ -786,7 +786,6 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
 
 void print_adjacent_rooms(int roomNum) {
 
-    cout << "Which room would you like to go to?" << endl;
     cout << "Adjacent Rooms: " << endl;
     
     switch (roomNum) {
