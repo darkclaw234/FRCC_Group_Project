@@ -259,9 +259,23 @@ int enter_room_zero(vector<bool>& currentUserChoices, int roomNum) {
     print_adjacent_rooms(roomNum);
     userKeyword = get_keyword_input();
 
-    //Sets roomNum to user's chosen room
     if (userKeyword.compare("ballroom") == 0) {
         roomNum = 1;
+    }
+    
+    //Loops while room number hasn't changed
+    //So player must move to another room after typing leave
+    while (roomNum == 0) {
+
+        //Asks user for input, prints adjacent rooms for reference, and then gets user chosen room
+        print_room_request(roomNum);
+        print_adjacent_rooms(roomNum);
+        userKeyword = get_keyword_input();
+
+        //Sets roomNum to user's chosen room
+        if (userKeyword.compare("ballroom") == 0) {
+            roomNum = 1;
+        }
     }
 
     return roomNum;
@@ -318,6 +332,43 @@ int enter_room_one(vector<bool>& currentUserChoices, int roomNum) {
     }
     if (userKeyword.compare("stairwell") == 0) {
         roomNum = 8;
+    }
+
+    //Loops while room number hasn't changed
+    //So player must move to another room after typing leave
+    while (roomNum == 1) {
+        //Asks user for input, prints adjacent rooms for reference, and then gets user chosen room
+        print_room_request(roomNum);
+        print_adjacent_rooms(roomNum);
+        userKeyword = get_keyword_input();
+
+        //Sets roomNum to user's chosen room
+        if (userKeyword.compare("trophy hall") == 0) {
+            roomNum = 0;
+        }
+        if (userKeyword.compare("office") == 0) {
+            roomNum = 2;
+        }
+        if (userKeyword.compare("servant's") == 0
+            || userKeyword.compare("servant") == 0
+            || userKeyword.compare("quarters") == 0) {
+            roomNum = 3;
+        }
+        if (userKeyword.compare("library") == 0) {
+            roomNum = 4;
+        }
+        if (userKeyword.compare("kitchen") == 0) {
+            roomNum = 5;
+        }
+        if (userKeyword.compare("dining room") == 0) {
+            roomNum = 6;
+        }
+        if (userKeyword.compare("green house") == 0) {
+            roomNum = 7;
+        }
+        if (userKeyword.compare("stairwell") == 0) {
+            roomNum = 8;
+        }
     }
 
     return roomNum;
