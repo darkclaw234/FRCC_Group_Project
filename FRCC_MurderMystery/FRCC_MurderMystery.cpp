@@ -658,12 +658,16 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
             cout << "He probably has a case file prepared for you." << endl;
         }
 
+        cout << endl;
+
         break;
 
     case 1:
         //FIXME: DESCRIBE ROOM 1
         print_room_title(roomNum);
         cout << "FIXME: DESCRIBE ROOM 1." << endl;
+
+        cout << endl;
 
         break;
 
@@ -672,12 +676,16 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         print_room_title(roomNum);
         cout << "FIXME: DESCRIBE ROOM 2." << endl;
 
+        cout << endl;
+
         break;
 
     case 3:
         //FIXME: DESCRIBE ROOM 3
         print_room_title(roomNum);
         cout << "FIXME: DESCRIBE ROOM 3." << endl;
+
+        cout << endl;
 
         break;
 
@@ -686,12 +694,16 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         print_room_title(roomNum);
         cout << "FIXME: DESCRIBE ROOM 4." << endl;
 
+        cout << endl;
+
         break;
 
     case 5:
         //FIXME: DESCRIBE ROOM 5
         print_room_title(roomNum);
         cout << "FIXME: DESCRIBE ROOM 5." << endl;
+
+        cout << endl;
 
         break;
 
@@ -700,12 +712,16 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         print_room_title(roomNum);
         cout << "FIXME: DESCRIBE ROOM 6." << endl;
 
+        cout << endl;
+
         break;
 
     case 7:
         //FIXME: DESCRIBE ROOM 7
         print_room_title(roomNum);
         cout << "FIXME: DESCRIBE ROOM 7." << endl;
+
+        cout << endl;
 
         break;
 
@@ -714,12 +730,16 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         print_room_title(roomNum);
         cout << "FIXME: DESCRIBE ROOM 8." << endl;
 
+        cout << endl;
+
         break;
 
     case 9:
         //FIXME: DESCRIBE ROOM 9
         print_room_title(roomNum);
         cout << "FIXME: DESCRIBE ROOM 9." << endl;
+
+        cout << endl;
 
         break;
 
@@ -728,12 +748,16 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         print_room_title(roomNum);
         cout << "FIXME: DESCRIBE ROOM 10." << endl;
 
+        cout << endl;
+
         break;
 
     case 11:
         //FIXME: DESCRIBE ROOM 11
         print_room_title(roomNum);
         cout << "FIXME: DESCRIBE ROOM 11." << endl;
+
+        cout << endl;
 
         break;
 
@@ -742,12 +766,16 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         print_room_title(roomNum);
         cout << "FIXME: DESCRIBE ROOM 12." << endl;
 
+        cout << endl;
+
         break;
     
     case 13:
         //FIXME: DESCRIBE ROOM 13
         print_room_title(roomNum);
         cout << "FIXME: DESCRIBE ROOM 13." << endl;
+
+        cout << endl;
 
         break;
     }
