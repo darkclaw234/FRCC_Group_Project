@@ -29,7 +29,9 @@ int enter_room_thirteen(vector<bool>& currentUserChoices, int roomNum);
 void ending(vector<bool>& currentUserChoices);
 
 void print_room_title(int roomNum);
+
 void print_keyword_request(int roomNum);
+void print_room_request(int roomNum);
 
 void describe_room(vector<bool>& currentUserChoices, int roomNum);
 void print_adjacent_rooms(int roomNum);

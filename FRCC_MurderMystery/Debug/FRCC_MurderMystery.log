@@ -1,2 +1,6 @@
 ﻿  FRCC_MurderMystery.cpp
-  FRCC_MurderMystery.vcxproj -> C:\Users\darks\source\repos\FRCC_MurderMystery\Debug\FRCC_MurderMystery.exe
+C:\Users\darks\source\repos\FRCC_MurderMystery\FRCC_MurderMystery\FRCC_MurderMystery.cpp(258,5): error C3861: 'print_room_request': identifier not found
+C:\Users\darks\source\repos\FRCC_MurderMystery\FRCC_MurderMystery\FRCC_MurderMystery.cpp(271,9): error C3861: 'print_room_request': identifier not found
+C:\Users\darks\source\repos\FRCC_MurderMystery\FRCC_MurderMystery\FRCC_MurderMystery.cpp(305,5): error C3861: 'print_room_request': identifier not found
+C:\Users\darks\source\repos\FRCC_MurderMystery\FRCC_MurderMystery\FRCC_MurderMystery.cpp(341,9): error C3861: 'print_room_request': identifier not found
+C:\Users\darks\source\repos\FRCC_MurderMystery\FRCC_MurderMystery\FRCC_MurderMystery.cpp(400,5): error C3861: 'print_room_request': identifier not found
