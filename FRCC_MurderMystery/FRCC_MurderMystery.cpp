@@ -8,10 +8,14 @@
 #include <string>
 using namespace std;
 
+//This function will print the beginning of the story to give the player context.
 void beginning();
 
+//This function will give the player a basic tutorial on the game's input system.
 void enter_tutorial(vector<bool>& currentUserChoices);
 
+//These functions are the meat of every room's code. While inside an enter function,
+//The user investigates the room, interrogates players and then leaves the room to find more clues across the house.
 int enter_room_zero(vector<bool>& currentuserChoices, int roomNum);
 int enter_room_one(vector<bool>& currentUserChoices, int roomNum);
 int enter_room_two(vector<bool>& currentUserChoices, int roomNum);
@@ -27,32 +31,45 @@ int enter_room_eleven(vector<bool>& currentUserChoices, int roomNum);
 int enter_room_twelve(vector<bool>& currentUserChoices, int roomNum);
 int enter_room_thirteen(vector<bool>& currentUserChoices, int roomNum);
 
+//This function will print the end of the story, which may change based on the player's actions.
 void ending(vector<bool>& currentUserChoices);
 
-
-
+//These functions print requests for user input. The first requests a keyword to investigate, 
+//and the second requests input for a room name.
 void print_keyword_request(int roomNum);
 void print_room_request(int roomNum);
 
+//These functions are called right when a player enters a room. 
+//describe_room prints a basic description, investigate_room allows the player to investigate objects in the room,
+//and leave_room lets the player move from room to room.
 void describe_room(vector<bool>& currentUserChoices, int roomNum);
 string investigate_room(vector<bool>& currentUserChoices, int roomNum);
 int leave_room(int roomNum);
 
+//These functions print a pretty title for each room, the actual name of each room,
+//and the names of adjacent rooms to the player's current location.
 void print_room_title(int roomNum);
 void print_room_name(int roomNum);
 void print_adjacent_rooms(int roomNum);
 
+//These functions both get user input: the first for investigating and leaving a room,
+//and the second is used to pause the game until the player is ready to move forward.
+//This will help them read the descriptions etc.
 string get_keyword_input();
 void type_and_continue();
 
+//This is a function used for testing that prints user input.
 void print_input(string input);
 
+//These constants will be used as the indexs for the userChoices vector. The titles keep track of user choices and progress.
+//If you meet Clyde in the tutorial, for example, userChoices.at(meetClyde) is set to true to keep track of that progress.
+//It prevents you from having to repeat the tutorial every time you enter the trophy hall.
 const int meetClyde = 0;
 
 
 
 
-
+//Main Program
 int main()
 {
     int roomNum = 0;
@@ -67,9 +84,15 @@ int main()
     //Prints introduction to story
     beginning();
 
+    //Loops Until roomNum is -1, which will only be the case once the player
+    //Submits their final answer as to who the murderer is etc.
+    //Then the end of the game is set in motion and the user exits the loop.
     while (roomNum != -1) {
+        
+        //Switch statement used to keep player in rooms 1 - 12 (a room 13 may be added later)
         switch (roomNum) {
-
+        
+            //If roomNum == 0
         case 0:
             //Empties console screen
             system("CLS");
@@ -77,6 +100,7 @@ int main()
             roomNum = enter_room_zero(userChoices, roomNum);
             break;
 
+            //If roomNum == 1
         case 1:
             //Empties console screen
             system("CLS");
@@ -84,6 +108,7 @@ int main()
             roomNum = enter_room_one(userChoices, roomNum);
             break;
 
+            //If roomNum == 2
         case 2:
             //Empties console screen
             system("CLS");
@@ -91,6 +116,7 @@ int main()
             roomNum = enter_room_two(userChoices, roomNum);
             break;
 
+            //If roomNum == 3
         case 3:
             //Empties console screen
             system("CLS");
@@ -98,6 +124,7 @@ int main()
             roomNum = enter_room_three(userChoices, roomNum);
             break;
 
+            //If roomNum == 4
         case 4:
             //Empties console screen
             system("CLS");
@@ -105,6 +132,7 @@ int main()
             roomNum = enter_room_four(userChoices, roomNum);
             break;
 
+            //If roomNum == 5
         case 5:
             //Empties console screen
             system("CLS");
@@ -112,6 +140,7 @@ int main()
             roomNum = enter_room_five(userChoices, roomNum);
             break;
 
+            //If roomNum == 6
         case 6:
             //Empties console screen
             system("CLS");
@@ -119,6 +148,7 @@ int main()
             roomNum = enter_room_six(userChoices, roomNum);
             break;
 
+            //If roomNum == 7
         case 7:
             //Empties console screen
             system("CLS");
@@ -126,6 +156,7 @@ int main()
             roomNum = enter_room_seven(userChoices, roomNum);
             break;
 
+            //If roomNum == 8
         case 8:
             //Empties console screen
             system("CLS");
@@ -133,6 +164,7 @@ int main()
             roomNum = enter_room_eight(userChoices, roomNum);
             break;
 
+            //If roomNum == 9
         case 9:
             //Empties console screen
             system("CLS");
@@ -140,6 +172,7 @@ int main()
             roomNum = enter_room_nine(userChoices, roomNum);
             break;
 
+            //If roomNum == 10
         case 10:
             //Empties console screen
             system("CLS");
@@ -147,6 +180,7 @@ int main()
             roomNum = enter_room_ten(userChoices, roomNum);
             break;
 
+            //If roomNum == 11
         case 11:
             //Empties console screen
             system("CLS");
@@ -154,6 +188,7 @@ int main()
             roomNum = enter_room_eleven(userChoices, roomNum);
             break;
 
+            //If roomNum == 12
         case 12:
             //Empties console screen
             system("CLS");
@@ -161,6 +196,7 @@ int main()
             roomNum = enter_room_twelve(userChoices, roomNum);
             break;
 
+            //If roomNum == 13
         case 13:
             //Empties console screen
             system("CLS");
@@ -168,6 +204,7 @@ int main()
             roomNum = enter_room_thirteen(userChoices, roomNum);
             break;
 
+            //If roomNum == anything else
         default:
             cout << "FIXME: ROOMNUM IS " << roomNum << endl;
             cout << "UNPREDICTED VALUE." << endl;
@@ -175,6 +212,7 @@ int main()
         }
     }
 
+    //Calls ending function to finish game.
     ending(userChoices);
 
     return 0;
@@ -183,6 +221,7 @@ int main()
 
 
 
+//Prints lore / context for the player's benefit at beginning of game.
 void beginning() {
     //Declares user input string
     string userInput;
@@ -196,6 +235,7 @@ void beginning() {
 
 
 
+//Gives player brief tutorial of user input system.
 void enter_tutorial(vector<bool>& currentUserChoices) {
     //Declares user input string
     string userKeyword;
@@ -259,6 +299,7 @@ int enter_room_zero(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 0) {
         //Clears Screen
         system("CLS");
@@ -289,6 +330,7 @@ int enter_room_one(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 1) {
         //Clears Screen
         system("CLS");
@@ -319,6 +361,7 @@ int enter_room_two(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 2) {
         //Clears Screen
         system("CLS");
@@ -349,6 +392,7 @@ int enter_room_three(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 3) {
         //Clears Screen
         system("CLS");
@@ -379,6 +423,7 @@ int enter_room_four(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 4) {
         //Clears Screen
         system("CLS");
@@ -409,6 +454,7 @@ int enter_room_five(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 5) {
         //Clears Screen
         system("CLS");
@@ -439,6 +485,7 @@ int enter_room_six(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 6) {
         //Clears Screen
         system("CLS");
@@ -469,6 +516,7 @@ int enter_room_seven(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 7) {
         //Clears Screen
         system("CLS");
@@ -499,6 +547,7 @@ int enter_room_eight(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 8) {
         //Clears Screen
         system("CLS");
@@ -529,6 +578,7 @@ int enter_room_nine(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 9) {
         //Clears Screen
         system("CLS");
@@ -559,6 +609,7 @@ int enter_room_ten(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 10) {
         //Clears Screen
         system("CLS");
@@ -589,6 +640,7 @@ int enter_room_eleven(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 11) {
         //Clears Screen
         system("CLS");
@@ -619,6 +671,7 @@ int enter_room_twelve(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 12) {
         //Clears Screen
         system("CLS");
@@ -649,6 +702,7 @@ int enter_room_thirteen(vector<bool>& currentUserChoices, int roomNum) {
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
 
+    //Loops until player has chosen new room to enter
     while (roomNum == 13) {
         //Clears Screen
         system("CLS");
@@ -824,14 +878,16 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
 
 }
 
-//Allows player to investigate objects within a room. Asks for user input and prints a description of chosen objects that are important to story
+//Allows player to investigate objects within a room.
 string investigate_room(vector<bool>& currentUserChoices, int roomNum) {
 
+    //Asks for user input and gets user input
     print_keyword_request(roomNum);
     string userKeyword = get_keyword_input();
     //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
     print_input(userKeyword);
 
+    //Prints descriptions of object within current room if user keyword matches item name
     switch (roomNum) {
     case 0:
         break;
@@ -892,6 +948,7 @@ int leave_room(int roomNum) {
     //Gets user's chosen room
     string userKeyword = get_keyword_input();
 
+    //Sets New Room Num based on user input as long as the input is the name of an adjacent room
     switch (roomNum) {
 
     case 0:
@@ -1184,6 +1241,7 @@ void print_room_name(int roomNum) {
 
 }
 
+//Prints the room names of all adjacent rooms associated with roomNum
 void print_adjacent_rooms(int roomNum) {
 
     cout << "Adjacent Rooms: " << endl;
@@ -1342,18 +1400,22 @@ void print_adjacent_rooms(int roomNum) {
 }
 
 
-
+//Gets keyword Input from user and sets keyword to lower case so it can be compared with
+//room and object names easier.
 string get_keyword_input() {
 
     string keywordInput;
     cin >> keywordInput;
     transform(keywordInput.begin(), keywordInput.end(), keywordInput.begin(), ::tolower);
 
+    //ignores any input beyond the first string
     cin.ignore(1000, '\n');
 
     return keywordInput;
 }
 
+//Temporarily pauses game so player can read any descriptions and text. 
+//Only requires that the user enter text to continue, regardless of what it is.
 void type_and_continue() {
 
     string tempString;
@@ -1361,11 +1423,12 @@ void type_and_continue() {
     cout << "\nType anything and press enter to continue..." << endl;
     cin >> tempString;
     
+    //ignores any input beyond the first string
     cin.ignore(1000, '\n');
 }
 
 
-
+//Prints user input for testing
 void print_input(string input) {
     cout << "\nFIXME: Remove userInput printer when game is finished." << endl;
     cout << "The user input is: " << input << endl;
