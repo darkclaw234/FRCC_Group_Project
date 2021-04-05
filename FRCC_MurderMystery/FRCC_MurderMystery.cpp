@@ -767,6 +767,7 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         }
         //Prints different description if player hasn't met clyde
         else {
+            print_room_title(roomNum);
             cout << "You enter the mansion and find yourself in an ornate trophy hall." << endl;
             cout << "Glass cupboards line the edges of the room with glimmering bronze and silver figures." << endl;
             cout << "Juniper shrubs cradle to the shelves of old photographs that appear well dusted." << endl;
@@ -1341,7 +1342,7 @@ void print_adjacent_rooms(int roomNum) {
         cout << "----------------" << endl;
 
         cout << "\"";
-        print_room_name(2);
+        print_room_name(1);
         cout << "\"" << "\n" << "\"";
         print_room_name(11);
         cout << "\"" << "\n" << "\"";
