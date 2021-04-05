@@ -57,7 +57,7 @@ int main()
 {
     int roomNum = 0;
 
-    //Declares boolean vector userChoices, which will keep track of progress etc
+    //Declares boolean vector userChoices, which will keep track of the user's progress and decisions through game etc
     vector<bool> userChoices(20);
     //Sets boolean at every index to false
     for (size_t i = 0; i < userChoices.size(); i++) {
