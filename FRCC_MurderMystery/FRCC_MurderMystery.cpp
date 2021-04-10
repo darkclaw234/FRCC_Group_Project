@@ -789,9 +789,12 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         break;
 
     case 2:
-        //FIXME: DESCRIBE ROOM 2
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 2." << endl;
+        cout << "As you open the door to the Office you are met with a dim light." << endl;
+        cout << "There is a single lamp sitting on a large desk." << endl;
+        cout << "Velvet curtains line the walls covering tall windows." << endl;
+        cout << "There is a small bookcase on your left that is only partially filled." << endl;
+        cout << "As you approach the desk you see a small letter sitting unopened." << endl;
 
         break;
 
@@ -812,7 +815,11 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
     case 5:
         //FIXME: DESCRIBE ROOM 5
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 5." << endl;
+        cout << "You enter the Kitchen through a creaky door." << endl;
+        cout << "Industrial cookware fills the room." << endl;
+        cout << "The chef is chopping something and doesn't seem to notice you." << endl;
+        cout << "You walk around the room inspecting the oven and stove." << endl;
+        cout << "Silverware is scattered around the kitchen and fills the dirty sink." << endl;
 
         break;
 
@@ -824,16 +831,19 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         break;
 
     case 7:
-        //FIXME: DESCRIBE ROOM 7
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 7." << endl;
+        cout << "A wave of heat blasts you in the face as you walk through the door to the Greenhouse." << endl;
+        cout << "Potted plants line the walls." << endl;
+        cout << "Large windows allow the moonlight to illuminate the room." << endl;
+        cout << "There is a small bag of fertilizer and a watering can in the corner." << endl;
 
         break;
 
     case 8:
-        //FIXME: DESCRIBE ROOM 8
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 8." << endl;
+        cout << "You approach the stairs." << endl;
+        cout << "There is a carpet lain across the middle of the stairs." << endl;
+        cout << "Small lights line the walls providing just enough light to avoid some small holes." << endl;
 
         break;
 
