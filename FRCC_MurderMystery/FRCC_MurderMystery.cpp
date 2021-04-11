@@ -759,7 +759,7 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         //Prints basic room description if player has met clyde
         if (currentUserChoices.at(meetClyde) == true) {
             print_room_title(roomNum);
-            cout << "Glass cupboards line the edges of the room with glimmering bronze and silver figures." << endl;
+            cout << "In the Trophy Hall, Glass cupboards line the edges of the room with glimmering bronze and silver figures." << endl;
             cout << "Juniper shrubs cradle to the shelves of old photographs that appear well dusted." << endl;
             cout << "There's even a golden lion head attached to the wall, right above the double doors that lead into the mansion's core." << endl;
 
@@ -768,7 +768,7 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         //Prints different description if player hasn't met clyde
         else {
             print_room_title(roomNum);
-            cout << "You enter the mansion and find yourself in an ornate trophy hall." << endl;
+            cout << "You enter the mansion and find yourself in an ornate Trophy Hall." << endl;
             cout << "Glass cupboards line the edges of the room with glimmering bronze and silver figures." << endl;
             cout << "Juniper shrubs cradle to the shelves of old photographs that appear well dusted." << endl;
             cout << "There's even a golden lion head attached to the wall, right above the double doors that lead into the mansion's core." << endl;
@@ -782,114 +782,157 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         break;
 
     case 1:
-        //FIXME: DESCRIBE ROOM 1
+        //Prints Description For Room 1
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 1." << endl;
+        cout << "The Ballroom before you is gorgeous." << endl;
+        cout << "Two shades of sparkling vinyl encompass the floor in a spiral pattern, almost like they're chasing one another." << endl;
+        cout << "Marble columns outline the space's edges, stretching at least two stories to the ceiling." << endl;
+        cout << "Several intricate chandeliers hang from the ceiling, too." << endl;
+        cout << "They almost seem to be intertwined, their supports forming a star-like shape above the dance floor." << endl;
+
+        cout << "\n(FIXME: CREATE NAME) BUTLER is standing by one of the columns, washing it down with some bleach." << endl;
+        cout << "He looks at you. \"Hello, Detective. I can be at your service whenever you wish." << endl;
 
         break;
 
     case 2:
+        //Prints Description For Room 2
         print_room_title(roomNum);
-        cout << "As you open the door to the Office you are met with a dim light." << endl;
-        cout << "There is a single lamp sitting on a large desk." << endl;
-        cout << "Velvet curtains line the walls covering tall windows." << endl;
+        cout << "As you open the door to the Office, you are met with a dim light." << endl;
+        cout << "In the middle of the room, there's a single lamp sitting on a large desk with oak drawers." << endl;
+        cout << "Velvet curtains line the walls, covering the tall windows." << endl;
         cout << "There is a small bookcase on your left that is only partially filled." << endl;
-        cout << "As you approach the desk you see a small letter sitting unopened." << endl;
+        cout << "As you approach the desk, you see a small letter sitting unopened." << endl;
 
         break;
 
     case 3:
-        //FIXME: DESCRIBE ROOM 3
+        //Prints Description For Room 3
         print_room_title(roomNum);
-        cout << "Walking into the Servant’s quarters, you immediately notice a young female sitting elegantly on a bed seemingly belonging to her." << endl;
-        cout << "The quarters are relatively small, with two twin beds sitting on opposite sides of the room." << endl;
-        cout << "Small, wooden chests are placed at the foot of each bed." << endl;
-        cout << "An old-fashioned grandfather clock towers between the two beds, the pendulum slowly moving back and forth as the seconds slowly tick by." << endl;
+        cout << "In the Servant’s quarters, there are two twin beds sitting on opposite sides of the room." << endl;
+        cout << "The quarters are relatively small, hardly longer than one of the beds." << endl;
+        cout << "The only other furniture along the walls are two small desks set beside each bed." << endl;
+        cout << "Their uncushioned chairs seem hardly used." << endl;
+        cout << "Some small, wooden chests also sit at the foot of each servant's bed." << endl;
+        cout << "An old-fashioned grandfather clock towers over the back wall between the two beds." << endl;
+        cout << "Its pendulum slowly moves back and forth as the seconds tick by." << endl;
+
+        cout << "\n(FIXME: CREATE NAME) SOUS CHEF sits on one of the twin beds elegantly." << endl;
+        cout << "\"Hi there, Detective. I can answer some questions if you have any for me." << endl;
 
         break;
 
     case 4:
-        //FIXME: DESCRIBE ROOM 4
+        //Prints Description For Room 4
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 4." << endl;
+        cout << "In the library, the air is thick with dust." << endl;
+        cout << "The space, though constricted, feels quite cozy." << endl;
+        cout << "Tall wooden bookcases form several rows, and they're filled to the brim with books." << endl;
+        cout << "At the room's far end, an antique fireplace lets off heat and light." << endl;
+        cout << "It looks to be made of large granite chunks, likely from the quarry south of the estate." << endl;
+
+        cout << "\n(FIXME: CREATE NAME) WIDOW is sitting in a nearby escritoire scribbling on some ephemeral paper." << endl;
+        cout << "She taps her fountain pen on the page blankly. \"I don't suppose you're just going to stand there, are you?\"" << endl;
 
         break;
 
     case 5:
-        //FIXME: DESCRIBE ROOM 5
+        //Prints Description For Room 5
         print_room_title(roomNum);
         cout << "You enter the Kitchen through a creaky door." << endl;
-        cout << "Industrial cookware fills the room." << endl;
-        cout << "The chef is chopping something and doesn't seem to notice you." << endl;
-        cout << "You walk around the room inspecting the oven and stove." << endl;
-        cout << "Silverware is scattered around the kitchen and fills the dirty sink." << endl;
+        cout << "An industrial stovetop oven, along with a stainless steel sink, are set across the back counter." << endl;
+        cout << "Under the cupboards, there is a block of knives and a container of cooking utensils." << endl;
+        cout << "Silverware is scattered around the kitchen. Dirty plates fill the sink." << endl;
 
         break;
 
     case 6:
-        //FIXME: DESCRIBE ROOM 6
+        //Prints Description For Room 6
         print_room_title(roomNum);
-        cout << "You walk into a bright, naturally lit dining room. This is the last room in which everyone was together on the night of the murder." << endl;
-        cout << "An extremely large  dining table takes up most of the space within the room." << endl;
-        cout << "The dishes from the previous night's dinner party remain scattered unsightly across the table." << endl;
-        cout << "An elegant diamond chandelier hanging high above the table glistens from the sunlight shining through the window." << endl;
-        cout << "As you walk around the table, you notice one of the dining chairs is stained with a dark red substance." << endl;
-        cout << "Near the head of the table, where Mr. Stronghold would typically sit, you notice writing on a small piece of paper, hidden sneakingly under a dirty plate." << endl;
+        cout << "The dining room is very bright." << endl;
+        cout << "An elegant diamond chandelier hangs high above the table, and its bulbs make the jewels perched on its top glisten." << endl;
+        cout << "You shake your head. This was the last room everyone saw Mr. Stronghold in before his death." << endl;
+        cout << "An ornate dining table takes up most of the room's space." << endl;
+        cout << "It's surrounded by red velvet chairs that are just as pompous as everything else." << endl;
 
         break;
 
     case 7:
+        //Prints Description For Room 7
         print_room_title(roomNum);
-        cout << "A wave of heat blasts you in the face as you walk through the door to the Greenhouse." << endl;
-        cout << "Potted plants line the walls." << endl;
-        cout << "Large windows allow the moonlight to illuminate the room." << endl;
-        cout << "There is a small bag of fertilizer and a watering can in the corner." << endl;
+        cout << "A wave of heat blasts through you when you walk through the door to the Greenhouse." << endl;
+        cout << "Shelves full of potted plants crowd the room messily." << endl;
+        cout << "A fence of grape vines tracks the edge of the room." << endl;
+        cout << "This room feels rather comfortable, especially thanks to the glimmering moonlight raining down from the skylight." << endl;
+        cout << "In the corner, you find a shovel, a watering can, some other gardening tools, and a bag of fresh fertilizer." << endl;
+
+        cout << "\n(FIXME: CREATE NAME) WINE CRAFTER is kneeling beside the grape vines, picking them." << endl;
+        cout << "He drops a handful of grapes into the bucket next to him. \"If you must talk, be quick. Grapes aren't in season forever.\"" << endl;
 
         break;
 
     case 8:
+        //Prints Description For Room 8
         print_room_title(roomNum);
-        cout << "You approach the stairs." << endl;
-        cout << "There is a carpet lain across the middle of the stairs." << endl;
-        cout << "Small lights line the walls providing just enough light to avoid some small holes." << endl;
+        cout << "You approach the delapidated oak stairwell." << endl;
+        cout << "A small, uninteresting bathroom sits beside them." << endl;
+        cout << "There is a worn red carpet lain across the middle of them." << endl;
+        cout << "Small lights line the walls, providing just enough light to avoid some holes in the cracked planks." << endl;
 
         break;
 
     case 9:
-        //FIXME: DESCRIBE ROOM 9
+        //Prints Description For Room 9
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 9." << endl;
+        cout << "If anything confirms the overindulgence of these people, it's the Wine Cellar." << endl;
+        cout << "Several hundred bottles of white and red wine fill up slots on the walls, seeming to sparkle in the dim light." << endl;
+        cout << "The room is lit by some ceiling fixtures, but not well enough to read the bottle labels." << endl;
+        cout << "You're not sure what you could investigate down here without a flashlight." << endl;
 
         break;
 
     case 10:
-        //FIXME: DESCRIBE ROOM 10
+        //Prints Description For Room 10
         print_room_title(roomNum);
-        cout << "As you enter the boiler room, you hear the soft hum of the furnace." << endl;
-        cout << "A breaker box sits quietly on the concrete wall to your right." << endl;
+        cout << "As you enter the Boiler Room, you hear the soft hum of the furnace." << endl;
         cout << "There is a singular lightbulb hanging from the ceiling in the center of the room." << endl;
-        cout << "As you walk further into the room, you notice something move in the corner of your eye." << endl;
-        cout << "Frightened, you quickly dash to the center of the room and pull the cord that turns on the light." << endl;
         cout << "As light illuminates the room, you are able to makeout the shape of a man sitting at the back of the room." << endl;
-        cout << "A man, sitting in a pool of mud, stared directly at you, only the whites of his eyes showed through the dark brown mud that covered his entire being." << endl;
+        cout << "The breaker box sits in the corner, quietly." << endl;
+
+        cout << "As you walk further into the room, you notice something move in the corner of your eye." << endl;
+        cout << "Frightened, you turn on the light." << endl;
+        cout << "\n(FIXME: CREATE NAME) MUD MAN stares directly at you. He's sitting in a pile of dark sticky mud." << endl;
+        cout << "Besides the whites of his eyes, almost everything is covered in muck." << endl;
+        cout << "\"What do you want? If you're not here for anything important, leave me to my mud.\"" << endl;
 
         break;
 
     case 11:
-        //FIXME: DESCRIBE ROOM 11
+        //Prints Description For Room 11
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 11." << endl;
+        cout << "The first thing you notice about the Observatory is the gigantic telescope at its center." << endl;
+        cout << "With all of its sophisticated mechanical parts, you'd guess it would take weeks of practice to use. Months maybe." << endl;
+        cout << "Beyond the telescope, there seem to be little exhibits about the solar system, the sun, and black holes on display." << endl;
+        cout << "There's also a lab-like area full of scientific tools and half-finished experiments. Some steel cupboards hang above them." << endl;
+
+        cout << "\n(FIXME: CREATE NAME) ASTROPHYSICIST/ARCHEOLOGIST emerges from behind the telescope and waves to you." << endl;
+        cout << "She sighs. \"It's a shame there are no stars out tonight, Detective. You'd probably have an eye for astronomy." << endl;
+        cout << "There's a pause. \"What can I do for you?\"" << endl;
 
         break;
 
     case 12:
-        //FIXME: DESCRIBE ROOM 12
+        //Prints Description For Room 12
         print_room_title(roomNum);
-        cout << "You enter the master bedroom through an oversized, incredibly heavy door. This is where Mr. Stronghold was murdered." << endl;
-        cout << "Mr. Stronghold’s body lay sprawled across a bed that is covered in bloodstains." << endl;
-        cout << "To the left of the bed is an old, wooden nightstand with many drawers." << endl;
-        cout << "Across the room sits a large, ornate desk cluttered with mountains of papers." << endl;
-        cout << "Beside the desk sits a oversized, victorian era vanity belonging to Mrs. Stronghold." << endl;
+        cout << "You enter the Master Bedroom through two heavy french doors." << endl;
+        cout << "The smell of death is potent. This definitely seems to be where Mr. Stronghold was murdered." << endl;
+        cout << "Mr. Stronghold’s body lay sprawled across a lavish blood stained bed." << endl;
+        cout << "To the left of the bed there's an old, wooden nightstand with many drawers." << endl;
+        cout << "Across the room, two victorian era armoires sit tight against the wall." << endl;
+
+        cout << "You check the Master Bathroom as well. The tub, large enough to be a small pool, is still full." << endl;
+        cout << "Two glamorous vanities sit across from it. One of them is open." << endl;
+        cout << "Of course. There's also a golden toilet." << endl;
 
         break;
 
