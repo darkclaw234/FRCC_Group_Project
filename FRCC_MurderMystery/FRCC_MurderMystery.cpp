@@ -14,23 +14,6 @@ void beginning();
 //This function will give the player a basic tutorial on the game's input system.
 void enter_tutorial(vector<bool>& currentUserChoices);
 
-//These functions are the meat of every room's code. While inside an enter function,
-//The user investigates the room, interrogates players and then leaves the room to find more clues across the house.
-int enter_room_zero(vector<bool>& currentuserChoices, int roomNum);
-int enter_room_one(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_two(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_three(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_four(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_five(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_six(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_seven(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_eight(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_nine(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_ten(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_eleven(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_twelve(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_thirteen(vector<bool>& currentUserChoices, int roomNum);
-
 //This function will print the end of the story, which may change based on the player's actions.
 void ending(vector<bool>& currentUserChoices);
 
@@ -39,7 +22,7 @@ void ending(vector<bool>& currentUserChoices);
 void print_keyword_request(int roomNum);
 void print_room_request(int roomNum);
 
-//These functions are called right when a player enters a room. 
+//These functions are the meat of every room's code.
 //describe_room prints a basic description, investigate_room allows the player to investigate objects in the room,
 //and leave_room lets the player move from room to room.
 void describe_room(vector<bool>& currentUserChoices, int roomNum);
@@ -94,7 +77,7 @@ int main()
         //In every case, the code prints aroom description, 
         //allows player to investigate room until they want to leave, 
         //and then helps player move between rooms. 
-        //The code is identical for each room besides the roomNum info
+        //The code is basically identical for each room.
         switch (roomNum) {
 
         case 0:
