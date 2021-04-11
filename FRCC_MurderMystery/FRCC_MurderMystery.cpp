@@ -88,10 +88,10 @@ int main()
     //Submits their final answer as to who the murderer is etc.
     //Then the end of the game is set in motion and the user exits the loop.
     while (roomNum != -1) {
-        
+
         //Switch statement used to keep player in rooms 1 - 12 (a room 13 may be added later)
         switch (roomNum) {
-        
+
             //If roomNum == 0
         case 0:
             //Empties console screen
@@ -254,7 +254,7 @@ void enter_tutorial(vector<bool>& currentUserChoices) {
 
     //Loops until user has typed "clyde"
     while (userKeyword.compare("clyde") != 0) {
-        
+
         cout << "\nIncorrect input." << endl;
         cout << "Try typing \"clyde\" to talk to your investigative partner." << endl;
 
@@ -268,7 +268,7 @@ void enter_tutorial(vector<bool>& currentUserChoices) {
     currentUserChoices.at(meetClyde) = true;
 
     type_and_continue();
-    
+
     //Empties console screen
     system("CLS");
 
@@ -387,7 +387,7 @@ int enter_room_three(vector<bool>& currentUserChoices, int roomNum) {
     while (userKeyword.compare("leave") != 0) {
         userKeyword = investigate_room(currentUserChoices, roomNum);
     }
-   
+
     //Sets New Room Number to User's Input
     print_room_request(roomNum);
     roomNum = leave_room(roomNum);
@@ -789,16 +789,22 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         break;
 
     case 2:
-        //FIXME: DESCRIBE ROOM 2
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 2." << endl;
+        cout << "As you open the door to the Office you are met with a dim light." << endl;
+        cout << "There is a single lamp sitting on a large desk." << endl;
+        cout << "Velvet curtains line the walls covering tall windows." << endl;
+        cout << "There is a small bookcase on your left that is only partially filled." << endl;
+        cout << "As you approach the desk you see a small letter sitting unopened." << endl;
 
         break;
 
     case 3:
         //FIXME: DESCRIBE ROOM 3
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 3." << endl;
+        cout << "Walking into the Servant’s quarters, you immediately notice a young female sitting elegantly on a bed seemingly belonging to her." << endl;
+        cout << "The quarters are relatively small, with two twin beds sitting on opposite sides of the room." << endl;
+        cout << "Small, wooden chests are placed at the foot of each bed." << endl;
+        cout << "An old-fashioned grandfather clock towers between the two beds, the pendulum slowly moving back and forth as the seconds slowly tick by." << endl;
 
         break;
 
@@ -812,28 +818,40 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
     case 5:
         //FIXME: DESCRIBE ROOM 5
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 5." << endl;
+        cout << "You enter the Kitchen through a creaky door." << endl;
+        cout << "Industrial cookware fills the room." << endl;
+        cout << "The chef is chopping something and doesn't seem to notice you." << endl;
+        cout << "You walk around the room inspecting the oven and stove." << endl;
+        cout << "Silverware is scattered around the kitchen and fills the dirty sink." << endl;
 
         break;
 
     case 6:
         //FIXME: DESCRIBE ROOM 6
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 6." << endl;
+        cout << "You walk into a bright, naturally lit dining room. This is the last room in which everyone was together on the night of the murder." << endl;
+        cout << "An extremely large  dining table takes up most of the space within the room." << endl;
+        cout << "The dishes from the previous night's dinner party remain scattered unsightly across the table." << endl;
+        cout << "An elegant diamond chandelier hanging high above the table glistens from the sunlight shining through the window." << endl;
+        cout << "As you walk around the table, you notice one of the dining chairs is stained with a dark red substance." << endl;
+        cout << "Near the head of the table, where Mr. Stronghold would typically sit, you notice writing on a small piece of paper, hidden sneakingly under a dirty plate." << endl;
 
         break;
 
     case 7:
-        //FIXME: DESCRIBE ROOM 7
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 7." << endl;
+        cout << "A wave of heat blasts you in the face as you walk through the door to the Greenhouse." << endl;
+        cout << "Potted plants line the walls." << endl;
+        cout << "Large windows allow the moonlight to illuminate the room." << endl;
+        cout << "There is a small bag of fertilizer and a watering can in the corner." << endl;
 
         break;
 
     case 8:
-        //FIXME: DESCRIBE ROOM 8
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 8." << endl;
+        cout << "You approach the stairs." << endl;
+        cout << "There is a carpet lain across the middle of the stairs." << endl;
+        cout << "Small lights line the walls providing just enough light to avoid some small holes." << endl;
 
         break;
 
@@ -847,7 +865,13 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
     case 10:
         //FIXME: DESCRIBE ROOM 10
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 10." << endl;
+        cout << "As you enter the boiler room, you hear the soft hum of the furnace." << endl;
+        cout << "A breaker box sits quietly on the concrete wall to your right." << endl;
+        cout << "There is a singular lightbulb hanging from the ceiling in the center of the room." << endl;
+        cout << "As you walk further into the room, you notice something move in the corner of your eye." << endl;
+        cout << "Frightened, you quickly dash to the center of the room and pull the cord that turns on the light." << endl;
+        cout << "As light illuminates the room, you are able to makeout the shape of a man sitting at the back of the room." << endl;
+        cout << "A man, sitting in a pool of mud, stared directly at you, only the whites of his eyes showed through the dark brown mud that covered his entire being." << endl;
 
         break;
 
@@ -861,7 +885,11 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
     case 12:
         //FIXME: DESCRIBE ROOM 12
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 12." << endl;
+        cout << "You enter the master bedroom through an oversized, incredibly heavy door. This is where Mr. Stronghold was murdered." << endl;
+        cout << "Mr. Stronghold’s body lay sprawled across a bed that is covered in bloodstains." << endl;
+        cout << "To the left of the bed is an old, wooden nightstand with many drawers." << endl;
+        cout << "Across the room sits a large, ornate desk cluttered with mountains of papers." << endl;
+        cout << "Beside the desk sits a oversized, victorian era vanity belonging to Mrs. Stronghold." << endl;
 
         break;
 
@@ -1224,7 +1252,7 @@ void print_room_name(int roomNum) {
         break;
 
     case 10:
-        cout << "Power Room";
+        cout << "Boiler Room";
         break;
 
     case 11:
@@ -1308,7 +1336,7 @@ void print_adjacent_rooms(int roomNum) {
 
     case 5:
         cout << "\"";
-        print_room_name(2);
+        print_room_name(1);
         cout << "\"" << "\n" << "\"";
         print_room_name(6);
         cout << "\"" << "\n" << "\"";
@@ -1318,7 +1346,7 @@ void print_adjacent_rooms(int roomNum) {
 
     case 6:
         cout << "\"";
-        print_room_name(2);
+        print_room_name(1);
         cout << "\"" << "\n" << "\"";
         print_room_name(5);
         cout << "\"" << "\n" << "\"";
@@ -1328,7 +1356,7 @@ void print_adjacent_rooms(int roomNum) {
 
     case 7:
         cout << "\"";
-        print_room_name(2);
+        print_room_name(1);
         cout << "\"" << "\n" << "\"";
         print_room_name(5);
         cout << "\"" << "\n" << "\"";
@@ -1423,7 +1451,7 @@ void type_and_continue() {
     //Requests user input to continue
     cout << "\nType anything and press enter to continue..." << endl;
     cin >> tempString;
-    
+
     //ignores any input beyond the first string
     cin.ignore(1000, '\n');
 }
