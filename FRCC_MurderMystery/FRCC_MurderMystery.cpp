@@ -782,16 +782,9 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         break;
 
     case 1:
-        //Describes Room 1
+        //FIXME: DESCRIBE ROOM 1
         print_room_title(roomNum);
-        cout << "The space before you is gorgeous." << endl;
-        cout << "Two shades of sparkling vinyl encompass the floor in a spiral pattern, almost like they're chasing one another." << endl;
-        cout << "Marble columns outline the space's edges, stretching at least two stories to the ceiling." << endl;
-        cout << "Several intricate chandeliers hang from the ceiling, too." << endl;
-        cout << "They almost seem to be intertwined, their supports forming a star-like shape above the dance floor." << endl;
-
-        cout << "\n(FIXME: CREATE NAME) BUTLER is standing by one of the columns, washing it down with some bleach." << endl;
-        cout << "He looks at you. \"Hello, Detective. I can be at your service whenever you wish." << endl;
+        cout << "FIXME: DESCRIBE ROOM 1." << endl;
 
         break;
 
@@ -810,15 +803,9 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         break;
 
     case 4:
-        //Describes Room 4
+        //FIXME: DESCRIBE ROOM 4
         print_room_title(roomNum);
-        cout << "This space, though constricted, feels quite cozy." << endl;
-        cout << "The air is thick with dust. Tall wooden bookcases form several rows, and they're filled to the brim with books." << endl;
-        cout << "At the room's far end, an antique fireplace lets off heat and light." << endl;
-        cout << "It looks to be made of large granite chunks, likely from the quarry south of the estate." << endl; 
-
-        cout << "\n(FIXME: CREATE NAME) WIDOW is sitting in a nearby escritoire scribbling on some ephemeral paper." << endl;
-        cout << "She taps her fountain pen on the page blankly. \"I don't suppose you're just going to stand there, are you?\"" << endl;
+        cout << "FIXME: DESCRIBE ROOM 4." << endl;
 
         break;
 
@@ -851,12 +838,9 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         break;
 
     case 9:
-        //Describes Room 9
+        //FIXME: DESCRIBE ROOM 9
         print_room_title(roomNum);
-        cout << "Several hundred bottles of wine fill up the slots on the walls." << endl;
-        cout << "The room is lit by some ceiling fixtures, but not well enough to read their labels." << endl;
-        cout << "The bottles seem to sparkle in the dim light." << endl;
-        cout << "You're not sure what you could investigate down here without a flashlight." << endl;
+        cout << "FIXME: DESCRIBE ROOM 9." << endl;
 
         break;
 
@@ -870,15 +854,7 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
     case 11:
         //FIXME: DESCRIBE ROOM 11
         print_room_title(roomNum);
-        cout << "The first thing you notice about this room is the gigantic telescope at its center." << endl;
-        cout << "With all of its sophisticated mechanical parts, you'd guess it would take weeks of practice to use. Months maybe." << endl;
-        cout << "Beyond the telescope, there seem to be little exhibits about the solar system, the sun, and black holes on display." << endl;
-        cout << "There's also a lab-like area full of scientific tools and half-finished experiments. Some steel cupboards hang above them." << endl;
-
-        cout << "\n(FIXME: CREATE NAME) ASTROPHYSICIST/ARCHEOLOGIST emerges from behind the telescope and waves to you." << endl;
-        cout << "She sighs. \"It's a shame there are no stars out tonight, Detective. You'd probably have an eye for astronomy." << endl;
-        cout << "There's a pause. \"What can I do for you?\"" << endl;
-
+        cout << "FIXME: DESCRIBE ROOM 11." << endl;
 
         break;
 
@@ -1122,7 +1098,7 @@ int leave_room(int roomNum) {
             || userKeyword.compare("room") == 0) {
             newRoomNum = 10;
         }
-        if (userKeyword.compare("observatory") == 0) {
+        if (userKeyword.compare("obervatory") == 0) {
             newRoomNum = 11;
         }
         if (userKeyword.compare("master bedroom") == 0
@@ -1173,7 +1149,7 @@ int leave_room(int roomNum) {
             || (userKeyword.compare("stairs") == 0)) {
             newRoomNum = 8;
         }
-        if (userKeyword.compare("observatory") == 0) {
+        if (userKeyword.compare("obervatory") == 0) {
             newRoomNum = 11;
         }
         break;
