@@ -20,13 +20,13 @@ void ending(vector<bool>& currentUserChoices);
 //These functions print requests for user input. The first requests a keyword to investigate, 
 //and the second requests input for a room name.
 void print_keyword_request(int roomNum);
-void print_room_request(int roomNum);
+void print_new_room_request(int roomNum);
 
 //These functions are the meat of every room's code.
 //describe_room prints a basic description, investigate_room allows the player to investigate objects in the room,
 //and leave_room lets the player move from room to room.
-void describe_room(vector<bool>& currentUserChoices, int roomNum);
-string investigate_room(vector<bool>& currentUserChoices, int roomNum);
+void describe_room(int roomNum, vector<bool>& currentUserChoices);
+string investigate_room(int roomNum, vector<bool>& currentUserChoices);
 int leave_room(int roomNum);
 
 //These functions print a pretty title for each room, the actual name of each room,
@@ -85,24 +85,29 @@ int main()
             system("CLS");
 
             //Describes Room 0
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Enters tutorial for player if they're just starting the game
             if (userChoices.at(meetClyde) == false) {
                 enter_tutorial(userChoices);
-                describe_room(userChoices, roomNum);
+                describe_room(roomNum, userChoices);
             }
 
             //Investigates chosen keyword from room 0 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -122,18 +127,23 @@ int main()
             system("CLS");
 
             //Describes Room 1
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Investigates chosen keyword from room 1 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -153,18 +163,23 @@ int main()
             system("CLS");
 
             //Describes Room 2
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Investigates chosen keyword from room 2 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -184,18 +199,23 @@ int main()
             system("CLS");
 
             //Describes Room 3
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Investigates chosen keyword from room 3 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -215,18 +235,23 @@ int main()
             system("CLS");
 
             //Describes Room 4
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Investigates chosen keyword from room 4 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -246,18 +271,23 @@ int main()
             system("CLS");
 
             //Describes Room 5
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Investigates chosen keyword from room 5 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -277,18 +307,23 @@ int main()
             system("CLS");
 
             //Describes Room 6
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Investigates chosen keyword from room 6 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -308,18 +343,24 @@ int main()
             system("CLS");
 
             //Describes Room 7
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Investigates chosen keyword from room 7 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
+
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -339,18 +380,23 @@ int main()
             system("CLS");
 
             //Describes Room 8
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Investigates chosen keyword from room 8 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -370,18 +416,23 @@ int main()
             system("CLS");
 
             //Describes Room 9
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Investigates chosen keyword from room 9 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -401,18 +452,23 @@ int main()
             system("CLS");
 
             //Describes Room 10
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Investigates chosen keyword from room 10 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -432,18 +488,23 @@ int main()
             system("CLS");
 
             //Describes Room 11
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Investigates chosen keyword from room 11 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -463,18 +524,23 @@ int main()
             system("CLS");
 
             //Describes Room 12
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Investigates chosen keyword from room 12 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -494,18 +560,23 @@ int main()
             system("CLS");
 
             //Describes Room 13
-            describe_room(userChoices, roomNum);
+            describe_room(roomNum, userChoices);
 
             //Investigates chosen keyword from room 13 description, prints info about keyword
-            userKeyword = investigate_room(userChoices, roomNum);
+            userKeyword = investigate_room(roomNum, userChoices);
 
             //Loops Until Player decides to leave room
             while (userKeyword.compare("leave") != 0) {
-                userKeyword = investigate_room(userChoices, roomNum);
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
             }
 
             //Sets New Room Number to User's Input
-            print_room_request(roomNum);
+            print_new_room_request(roomNum);
             roomNum = leave_room(roomNum);
 
             //Loops until player has chosen new room to enter
@@ -617,7 +688,7 @@ void print_keyword_request(int roomNum) {
 
 
 //Asks user which room they want to enter
-void print_room_request(int roomNum) {
+void print_new_room_request(int roomNum) {
 
     cout << "\nWhich room do you want to enter from the ";
     print_room_name(roomNum);
@@ -626,7 +697,7 @@ void print_room_request(int roomNum) {
 
 
 //Describes current room, and may change description based on user choices
-void describe_room(vector<bool>& currentUserChoices, int roomNum) {
+void describe_room(int roomNum, vector<bool>& currentUserChoices) {
 
     switch (roomNum) {
 
@@ -684,7 +755,7 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
     case 3:
         //Prints Description For Room 3
         print_room_title(roomNum);
-        cout << "In the Servant’s quarters, there are two twin beds sitting on opposite sides of the room." << endl;
+        cout << "In the Servant's quarters, there are two twin beds sitting on opposite sides of the room." << endl;
         cout << "The quarters are relatively small, hardly longer than one of the beds." << endl;
         cout << "The only other furniture along the walls are two small desks set beside each bed." << endl;
         cout << "Their uncushioned chairs seem hardly used." << endl;
@@ -742,7 +813,7 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         cout << "In the corner, you find a shovel, a watering can, some other gardening tools, and a bag of fresh fertilizer." << endl;
 
         cout << "\n(FIXME: CREATE NAME) WINE CRAFTER is kneeling beside the grape vines, picking them." << endl;
-        cout << "He drops a handful of grapes into the bucket next to him. \"If you must talk, be quick. Grapes aren't in season forever.\"" << endl;
+        cout << "He drops a handful of grapes into a nearby bucket. \"Interrogate me, but be quick. Grapes aren't in season forever.\"" << endl;
 
         break;
 
@@ -791,8 +862,9 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         cout << "There's also a lab-like area full of scientific tools and half-finished experiments. Some steel cupboards hang above them." << endl;
 
         cout << "\n(FIXME: CREATE NAME) ASTROPHYSICIST/ARCHEOLOGIST emerges from behind the telescope and waves to you." << endl;
-        cout << "She sighs. \"It's a shame there are no stars out tonight, Detective. You'd probably have an eye for astronomy." << endl;
-        cout << "There's a pause. \"What can I do for you?\"" << endl;
+        cout << "\"It's a shame that there's a storm, Detective." << endl;
+        cout << "\"I wish I could show you some of Dr. Stronghold's favorite stars.\"" << endl;
+        cout << "She sighs. \"What can I do for you?\"" << endl;
 
         break;
 
@@ -801,7 +873,7 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         print_room_title(roomNum);
         cout << "You enter the Master Bedroom through two heavy french doors." << endl;
         cout << "The smell of death is potent. This definitely seems to be where Mr. Stronghold was murdered." << endl;
-        cout << "Mr. Stronghold’s body lay sprawled across a lavish blood stained bed." << endl;
+        cout << "Mr. Stronghold's body lay sprawled across a lavish blood stained bed." << endl;
         cout << "To the left of the bed there's an old, wooden nightstand with many drawers." << endl;
         cout << "Across the room, two victorian era armoires sit tight against the wall." << endl;
 
@@ -826,13 +898,16 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
 }
 
 //Allows player to investigate objects within a room.
-string investigate_room(vector<bool>& currentUserChoices, int roomNum) {
+string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
 
     //Asks for user input and gets user input
     print_keyword_request(roomNum);
     string userKeyword = get_keyword_input();
+
     //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
-    print_input(userKeyword);
+    if (userKeyword.compare("leave") != 0) {
+        print_input(userKeyword);
+    }
 
     //Prints descriptions of object within current room if user keyword matches item name
     switch (roomNum) {
@@ -880,6 +955,10 @@ string investigate_room(vector<bool>& currentUserChoices, int roomNum) {
 
     default:
         break;
+    }
+    
+    if (userKeyword.compare("leave") != 0) {
+        type_and_continue();
     }
 
     return userKeyword;
@@ -1191,7 +1270,7 @@ void print_room_name(int roomNum) {
 //Prints the room names of all adjacent rooms associated with roomNum
 void print_adjacent_rooms(int roomNum) {
 
-    cout << "Adjacent Rooms: " << endl;
+    cout << "\nAdjacent Rooms: " << endl;
 
     switch (roomNum) {
 
@@ -1288,11 +1367,16 @@ void print_adjacent_rooms(int roomNum) {
         cout << "----------------" << endl;
 
         cout << "\"";
-        print_room_name(1);
-        cout << "\"" << "\n" << "\"";
         print_room_name(11);
         cout << "\"" << "\n" << "\"";
         print_room_name(12);
+        cout << "\"" << endl;
+
+        cout << "\nGROUND FLOOR" << endl;
+        cout << "----------------" << endl;
+
+        cout << "\"";
+        print_room_name(1);
         cout << "\"" << endl;
 
         cout << "\nDOWNSTAIRS" << endl;
