@@ -1169,7 +1169,7 @@ int leave_room(int roomNum) {
             || userKeyword.compare("room") == 0) {
             newRoomNum = 10;
         }
-        if (userKeyword.compare("obervatory") == 0) {
+        if (userKeyword.compare("observatory") == 0) {
             newRoomNum = 11;
         }
         if (userKeyword.compare("master bedroom") == 0
@@ -1220,7 +1220,7 @@ int leave_room(int roomNum) {
             || (userKeyword.compare("stairs") == 0)) {
             newRoomNum = 8;
         }
-        if (userKeyword.compare("obervatory") == 0) {
+        if (userKeyword.compare("observatory") == 0) {
             newRoomNum = 11;
         }
         break;
