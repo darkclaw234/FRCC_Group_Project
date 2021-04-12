@@ -14,36 +14,19 @@ void beginning();
 //This function will give the player a basic tutorial on the game's input system.
 void enter_tutorial(vector<bool>& currentUserChoices);
 
-//These functions are the meat of every room's code. While inside an enter function,
-//The user investigates the room, interrogates players and then leaves the room to find more clues across the house.
-int enter_room_zero(vector<bool>& currentuserChoices, int roomNum);
-int enter_room_one(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_two(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_three(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_four(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_five(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_six(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_seven(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_eight(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_nine(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_ten(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_eleven(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_twelve(vector<bool>& currentUserChoices, int roomNum);
-int enter_room_thirteen(vector<bool>& currentUserChoices, int roomNum);
-
 //This function will print the end of the story, which may change based on the player's actions.
 void ending(vector<bool>& currentUserChoices);
 
 //These functions print requests for user input. The first requests a keyword to investigate, 
 //and the second requests input for a room name.
 void print_keyword_request(int roomNum);
-void print_room_request(int roomNum);
+void print_new_room_request(int roomNum);
 
-//These functions are called right when a player enters a room. 
+//These functions are the meat of every room's code.
 //describe_room prints a basic description, investigate_room allows the player to investigate objects in the room,
 //and leave_room lets the player move from room to room.
-void describe_room(vector<bool>& currentUserChoices, int roomNum);
-string investigate_room(vector<bool>& currentUserChoices, int roomNum);
+void describe_room(int roomNum, vector<bool>& currentUserChoices);
+string investigate_room(int roomNum, vector<bool>& currentUserChoices);
 int leave_room(int roomNum);
 
 //These functions print a pretty title for each room, the actual name of each room,
@@ -73,6 +56,7 @@ const int meetClyde = 0;
 int main()
 {
     int roomNum = 0;
+    string userKeyword;
 
     //Declares boolean vector userChoices, which will keep track of the user's progress and decisions through game etc
     vector<bool> userChoices(20);
@@ -88,123 +72,525 @@ int main()
     //Submits their final answer as to who the murderer is etc.
     //Then the end of the game is set in motion and the user exits the loop.
     while (roomNum != -1) {
-        
+
         //Switch statement used to keep player in rooms 1 - 12 (a room 13 may be added later)
+        //In every case, the code prints aroom description, 
+        //allows player to investigate room until they want to leave, 
+        //and then helps player move between rooms. 
+        //The code is basically identical for each room.
         switch (roomNum) {
-        
-            //If roomNum == 0
+
         case 0:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_zero(userChoices, roomNum);
+
+            //Describes Room 0
+            describe_room(roomNum, userChoices);
+
+            //Enters tutorial for player if they're just starting the game
+            if (userChoices.at(meetClyde) == false) {
+                enter_tutorial(userChoices);
+                describe_room(roomNum, userChoices);
+            }
+
+            //Investigates chosen keyword from room 0 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 0) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == 1
+        
         case 1:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_one(userChoices, roomNum);
+
+            //Describes Room 1
+            describe_room(roomNum, userChoices);
+
+            //Investigates chosen keyword from room 1 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 1) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == 2
+
         case 2:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_two(userChoices, roomNum);
+
+            //Describes Room 2
+            describe_room(roomNum, userChoices);
+
+            //Investigates chosen keyword from room 2 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 2) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == 3
+
         case 3:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_three(userChoices, roomNum);
+
+            //Describes Room 3
+            describe_room(roomNum, userChoices);
+
+            //Investigates chosen keyword from room 3 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 3) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == 4
+ 
         case 4:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_four(userChoices, roomNum);
+
+            //Describes Room 4
+            describe_room(roomNum, userChoices);
+
+            //Investigates chosen keyword from room 4 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 4) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == 5
+
         case 5:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_five(userChoices, roomNum);
+
+            //Describes Room 5
+            describe_room(roomNum, userChoices);
+
+            //Investigates chosen keyword from room 5 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 5) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == 6
+
         case 6:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_six(userChoices, roomNum);
+
+            //Describes Room 6
+            describe_room(roomNum, userChoices);
+
+            //Investigates chosen keyword from room 6 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 6) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == 7
+
         case 7:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_seven(userChoices, roomNum);
+
+            //Describes Room 7
+            describe_room(roomNum, userChoices);
+
+            //Investigates chosen keyword from room 7 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 7) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == 8
+
         case 8:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_eight(userChoices, roomNum);
+
+            //Describes Room 8
+            describe_room(roomNum, userChoices);
+
+            //Investigates chosen keyword from room 8 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 8) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == 9
+ 
         case 9:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_nine(userChoices, roomNum);
+
+            //Describes Room 9
+            describe_room(roomNum, userChoices);
+
+            //Investigates chosen keyword from room 9 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 9) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == 10
+
         case 10:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_ten(userChoices, roomNum);
+
+            //Describes Room 10
+            describe_room(roomNum, userChoices);
+
+            //Investigates chosen keyword from room 10 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 10) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == 11
+
         case 11:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_eleven(userChoices, roomNum);
+
+            //Describes Room 11
+            describe_room(roomNum, userChoices);
+
+            //Investigates chosen keyword from room 11 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 11) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == 12
+
         case 12:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_twelve(userChoices, roomNum);
+
+            //Describes Room 12
+            describe_room(roomNum, userChoices);
+
+            //Investigates chosen keyword from room 12 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 12) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == 13
+
         case 13:
             //Empties console screen
             system("CLS");
-            describe_room(userChoices, roomNum);
-            roomNum = enter_room_thirteen(userChoices, roomNum);
+
+            //Describes Room 13
+            describe_room(roomNum, userChoices);
+
+            //Investigates chosen keyword from room 13 description, prints info about keyword
+            userKeyword = investigate_room(roomNum, userChoices);
+
+            //Loops Until Player decides to leave room
+            while (userKeyword.compare("leave") != 0) {
+                //Empties console screen
+                system("CLS");
+
+                //Describes Room 0
+                describe_room(roomNum, userChoices);
+                userKeyword = investigate_room(roomNum, userChoices);
+            }
+
+            //Sets New Room Number to User's Input
+            print_new_room_request(roomNum);
+            roomNum = leave_room(roomNum);
+
+            //Loops until player has chosen new room to enter
+            while (roomNum == 13) {
+                //Clears Screen
+                system("CLS");
+                cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
+                //Sets New Room Number to User's Input
+                roomNum = leave_room(roomNum);
+            }
+
             break;
 
-            //If roomNum == anything else
+
         default:
             cout << "FIXME: ROOMNUM IS " << roomNum << endl;
             cout << "UNPREDICTED VALUE." << endl;
@@ -254,7 +640,7 @@ void enter_tutorial(vector<bool>& currentUserChoices) {
 
     //Loops until user has typed "clyde"
     while (userKeyword.compare("clyde") != 0) {
-        
+
         cout << "\nIncorrect input." << endl;
         cout << "Try typing \"clyde\" to talk to your investigative partner." << endl;
 
@@ -268,450 +654,10 @@ void enter_tutorial(vector<bool>& currentUserChoices) {
     currentUserChoices.at(meetClyde) = true;
 
     type_and_continue();
-    
+
     //Empties console screen
     system("CLS");
 
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_zero(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Enters tutorial for player if they're just starting the game
-    if (currentUserChoices.at(meetClyde) == false) {
-        enter_tutorial(currentUserChoices);
-        describe_room(currentUserChoices, roomNum);
-    }
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 0) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_one(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 1) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_two(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 2) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_three(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-   
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 3) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_four(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 4) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_five(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 5) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_six(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 6) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_seven(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 7) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_eight(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 8) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_nine(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 9) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_ten(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 10) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_eleven(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 11) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_twelve(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 12) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
-}
-
-
-
-//Prints room description, allows player to investigate room until they want to leave, and then helps player move between rooms
-int enter_room_thirteen(vector<bool>& currentUserChoices, int roomNum) {
-    //Declares user input string
-    string userKeyword;
-
-    //Investigates chosen keyword from roomdescription, prints info about keyword
-    userKeyword = investigate_room(currentUserChoices, roomNum);
-
-    //Loops Until Player decides to leave room
-    while (userKeyword.compare("leave") != 0) {
-        userKeyword = investigate_room(currentUserChoices, roomNum);
-    }
-
-    //Sets New Room Number to User's Input
-    print_room_request(roomNum);
-    roomNum = leave_room(roomNum);
-
-    //Loops until player has chosen new room to enter
-    while (roomNum == 13) {
-        //Clears Screen
-        system("CLS");
-        cout << "Invalid Selection. Type one of the following room names exactly: \n" << endl;
-        //Sets New Room Number to User's Input
-        roomNum = leave_room(roomNum);
-    }
-
-    return roomNum;
 }
 
 
@@ -742,7 +688,7 @@ void print_keyword_request(int roomNum) {
 
 
 //Asks user which room they want to enter
-void print_room_request(int roomNum) {
+void print_new_room_request(int roomNum) {
 
     cout << "\nWhich room do you want to enter from the ";
     print_room_name(roomNum);
@@ -751,7 +697,7 @@ void print_room_request(int roomNum) {
 
 
 //Describes current room, and may change description based on user choices
-void describe_room(vector<bool>& currentUserChoices, int roomNum) {
+void describe_room(int roomNum, vector<bool>& currentUserChoices) {
 
     switch (roomNum) {
 
@@ -759,7 +705,7 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         //Prints basic room description if player has met clyde
         if (currentUserChoices.at(meetClyde) == true) {
             print_room_title(roomNum);
-            cout << "Glass cupboards line the edges of the room with glimmering bronze and silver figures." << endl;
+            cout << "In the Trophy Hall, Glass cupboards line the edges of the room with glimmering bronze and silver figures." << endl;
             cout << "Juniper shrubs cradle to the shelves of old photographs that appear well dusted." << endl;
             cout << "There's even a golden lion head attached to the wall, right above the double doors that lead into the mansion's core." << endl;
 
@@ -768,7 +714,7 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         //Prints different description if player hasn't met clyde
         else {
             print_room_title(roomNum);
-            cout << "You enter the mansion and find yourself in an ornate trophy hall." << endl;
+            cout << "You enter the mansion and find yourself in an ornate Trophy Hall." << endl;
             cout << "Glass cupboards line the edges of the room with glimmering bronze and silver figures." << endl;
             cout << "Juniper shrubs cradle to the shelves of old photographs that appear well dusted." << endl;
             cout << "There's even a golden lion head attached to the wall, right above the double doors that lead into the mansion's core." << endl;
@@ -782,86 +728,158 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
         break;
 
     case 1:
-        //FIXME: DESCRIBE ROOM 1
+        //Prints Description For Room 1
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 1." << endl;
+        cout << "The Ballroom before you is gorgeous." << endl;
+        cout << "Two shades of sparkling vinyl encompass the floor in a spiral pattern, almost like they're chasing one another." << endl;
+        cout << "Marble columns outline the space's edges, stretching at least two stories to the ceiling." << endl;
+        cout << "Several intricate chandeliers hang from the ceiling, too." << endl;
+        cout << "They almost seem to be intertwined, their supports forming a star-like shape above the dance floor." << endl;
+
+        cout << "\n(FIXME: CREATE NAME) BUTLER is standing by one of the columns, washing it down with some bleach." << endl;
+        cout << "He looks at you. \"Hello, Detective. I can be at your service whenever you wish." << endl;
 
         break;
 
     case 2:
-        //FIXME: DESCRIBE ROOM 2
+        //Prints Description For Room 2
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 2." << endl;
+        cout << "As you open the door to the Office, you are met with a dim light." << endl;
+        cout << "In the middle of the room, there's a single lamp sitting on a large desk with oak drawers." << endl;
+        cout << "Velvet curtains line the walls, covering the tall windows." << endl;
+        cout << "There is a small bookcase on your left that is only partially filled." << endl;
+        cout << "As you approach the desk, you see a small letter sitting unopened." << endl;
 
         break;
 
     case 3:
-        //FIXME: DESCRIBE ROOM 3
+        //Prints Description For Room 3
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 3." << endl;
+        cout << "In the Servant's quarters, there are two twin beds sitting on opposite sides of the room." << endl;
+        cout << "The quarters are relatively small, hardly longer than one of the beds." << endl;
+        cout << "The only other furniture along the walls are two small desks set beside each bed." << endl;
+        cout << "Their uncushioned chairs seem hardly used." << endl;
+        cout << "Some small, wooden chests also sit at the foot of each servant's bed." << endl;
+        cout << "An old-fashioned grandfather clock towers over the back wall between the two beds." << endl;
+        cout << "Its pendulum slowly moves back and forth as the seconds tick by." << endl;
+
+        cout << "\n(FIXME: CREATE NAME) SOUS CHEF sits on one of the twin beds elegantly." << endl;
+        cout << "\"Hi there, Detective. I can answer some questions if you have any for me." << endl;
 
         break;
 
     case 4:
-        //FIXME: DESCRIBE ROOM 4
+        //Prints Description For Room 4
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 4." << endl;
+        cout << "In the library, the air is thick with dust." << endl;
+        cout << "The space, though constricted, feels quite cozy." << endl;
+        cout << "Tall wooden bookcases form several rows, and they're filled to the brim with books." << endl;
+        cout << "At the room's far end, an antique fireplace lets off heat and light." << endl;
+        cout << "It looks to be made of large granite chunks, likely from the quarry south of the estate." << endl;
+
+        cout << "\n(FIXME: CREATE NAME) WIDOW is sitting in a nearby escritoire scribbling on some ephemeral paper." << endl;
+        cout << "She taps her fountain pen on the page blankly. \"I don't suppose you're just going to stand there, are you?\"" << endl;
 
         break;
 
     case 5:
-        //FIXME: DESCRIBE ROOM 5
+        //Prints Description For Room 5
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 5." << endl;
+        cout << "You enter the Kitchen through a creaky door." << endl;
+        cout << "An industrial stovetop oven, along with a stainless steel sink, are set across the back counter." << endl;
+        cout << "Under the cupboards, there is a block of knives and a container of cooking utensils." << endl;
+        cout << "Silverware is scattered around the kitchen. Dirty plates fill the sink." << endl;
 
         break;
 
     case 6:
-        //FIXME: DESCRIBE ROOM 6
+        //Prints Description For Room 6
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 6." << endl;
+        cout << "The dining room is very bright." << endl;
+        cout << "An elegant diamond chandelier hangs high above the table, and its bulbs make the jewels perched on its top glisten." << endl;
+        cout << "You shake your head. This was the last room everyone saw Mr. Stronghold in before his death." << endl;
+        cout << "An ornate dining table takes up most of the room's space." << endl;
+        cout << "It's surrounded by red velvet chairs that are just as pompous as everything else." << endl;
 
         break;
 
     case 7:
-        //FIXME: DESCRIBE ROOM 7
+        //Prints Description For Room 7
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 7." << endl;
+        cout << "A wave of heat blasts through you when you walk through the door to the Greenhouse." << endl;
+        cout << "Shelves full of potted plants crowd the room messily." << endl;
+        cout << "A fence of grape vines tracks the edge of the room." << endl;
+        cout << "This room feels rather comfortable, especially thanks to the glimmering moonlight raining down from the skylight." << endl;
+        cout << "In the corner, you find a shovel, a watering can, some other gardening tools, and a bag of fresh fertilizer." << endl;
+
+        cout << "\n(FIXME: CREATE NAME) WINE CRAFTER is kneeling beside the grape vines, picking them." << endl;
+        cout << "He drops a handful of grapes into a nearby bucket. \"Interrogate me, but be quick. Grapes aren't in season forever.\"" << endl;
 
         break;
 
     case 8:
-        //FIXME: DESCRIBE ROOM 8
+        //Prints Description For Room 8
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 8." << endl;
+        cout << "You approach the delapidated oak stairwell." << endl;
+        cout << "A small, uninteresting bathroom sits beside them." << endl;
+        cout << "There is a worn red carpet lain across the middle of them." << endl;
+        cout << "Small lights line the walls, providing just enough light to avoid some holes in the cracked planks." << endl;
 
         break;
 
     case 9:
-        //FIXME: DESCRIBE ROOM 9
+        //Prints Description For Room 9
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 9." << endl;
+        cout << "If anything confirms the overindulgence of these people, it's the Wine Cellar." << endl;
+        cout << "Several hundred bottles of white and red wine fill up slots on the walls, seeming to sparkle in the dim light." << endl;
+        cout << "The room is lit by some ceiling fixtures, but not well enough to read the bottle labels." << endl;
+        cout << "You're not sure what you could investigate down here without a flashlight." << endl;
 
         break;
 
     case 10:
-        //FIXME: DESCRIBE ROOM 10
+        //Prints Description For Room 10
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 10." << endl;
+        cout << "As you enter the Boiler Room, you hear the soft hum of the furnace." << endl;
+        cout << "There is a singular lightbulb hanging from the ceiling in the center of the room." << endl;
+        cout << "As light illuminates the room, you are able to makeout the shape of a man sitting at the back of the room." << endl;
+        cout << "The breaker box sits in the corner, quietly." << endl;
+
+        cout << "As you walk further into the room, you notice something move in the corner of your eye." << endl;
+        cout << "Frightened, you turn on the light." << endl;
+        cout << "\n(FIXME: CREATE NAME) MUD MAN stares directly at you. He's sitting in a pile of dark sticky mud." << endl;
+        cout << "Besides the whites of his eyes, almost everything is covered in muck." << endl;
+        cout << "\"What do you want? If you're not here for anything important, leave me to my mud.\"" << endl;
 
         break;
 
     case 11:
-        //FIXME: DESCRIBE ROOM 11
+        //Prints Description For Room 11
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 11." << endl;
+        cout << "The first thing you notice about the Observatory is the gigantic telescope at its center." << endl;
+        cout << "With all of its sophisticated mechanical parts, you'd guess it would take weeks of practice to use. Months maybe." << endl;
+        cout << "Beyond the telescope, there seem to be little exhibits about the solar system, the sun, and black holes on display." << endl;
+        cout << "There's also a lab-like area full of scientific tools and half-finished experiments. Some steel cupboards hang above them." << endl;
+
+        cout << "\n(FIXME: CREATE NAME) ASTROPHYSICIST/ARCHEOLOGIST emerges from behind the telescope and waves to you." << endl;
+        cout << "\"It's a shame that there's a storm, Detective." << endl;
+        cout << "\"I wish I could show you some of Dr. Stronghold's favorite stars.\"" << endl;
+        cout << "She sighs. \"What can I do for you?\"" << endl;
 
         break;
 
     case 12:
-        //FIXME: DESCRIBE ROOM 12
+        //Prints Description For Room 12
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 12." << endl;
+        cout << "You enter the Master Bedroom through two heavy french doors." << endl;
+        cout << "The smell of death is potent. This definitely seems to be where Mr. Stronghold was murdered." << endl;
+        cout << "Mr. Stronghold's body lay sprawled across a lavish blood stained bed." << endl;
+        cout << "To the left of the bed there's an old, wooden nightstand with many drawers." << endl;
+        cout << "Across the room, two victorian era armoires sit tight against the wall." << endl;
+
+        cout << "You check the Master Bathroom as well. The tub, large enough to be a small pool, is still full." << endl;
+        cout << "Two glamorous vanities sit across from it. One of them is open." << endl;
+        cout << "Of course. There's also a golden toilet." << endl;
 
         break;
 
@@ -880,13 +898,16 @@ void describe_room(vector<bool>& currentUserChoices, int roomNum) {
 }
 
 //Allows player to investigate objects within a room.
-string investigate_room(vector<bool>& currentUserChoices, int roomNum) {
+string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
 
     //Asks for user input and gets user input
     print_keyword_request(roomNum);
     string userKeyword = get_keyword_input();
+
     //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
-    print_input(userKeyword);
+    if (userKeyword.compare("leave") != 0) {
+        print_input(userKeyword);
+    }
 
     //Prints descriptions of object within current room if user keyword matches item name
     switch (roomNum) {
@@ -934,6 +955,10 @@ string investigate_room(vector<bool>& currentUserChoices, int roomNum) {
 
     default:
         break;
+    }
+    
+    if (userKeyword.compare("leave") != 0) {
+        type_and_continue();
     }
 
     return userKeyword;
@@ -1098,7 +1123,7 @@ int leave_room(int roomNum) {
             || userKeyword.compare("room") == 0) {
             newRoomNum = 10;
         }
-        if (userKeyword.compare("obervatory") == 0) {
+        if (userKeyword.compare("observatory") == 0) {
             newRoomNum = 11;
         }
         if (userKeyword.compare("master bedroom") == 0
@@ -1149,7 +1174,7 @@ int leave_room(int roomNum) {
             || (userKeyword.compare("stairs") == 0)) {
             newRoomNum = 8;
         }
-        if (userKeyword.compare("obervatory") == 0) {
+        if (userKeyword.compare("observatory") == 0) {
             newRoomNum = 11;
         }
         break;
@@ -1224,7 +1249,7 @@ void print_room_name(int roomNum) {
         break;
 
     case 10:
-        cout << "Power Room";
+        cout << "Boiler Room";
         break;
 
     case 11:
@@ -1245,7 +1270,7 @@ void print_room_name(int roomNum) {
 //Prints the room names of all adjacent rooms associated with roomNum
 void print_adjacent_rooms(int roomNum) {
 
-    cout << "Adjacent Rooms: " << endl;
+    cout << "\nAdjacent Rooms: " << endl;
 
     switch (roomNum) {
 
@@ -1308,7 +1333,7 @@ void print_adjacent_rooms(int roomNum) {
 
     case 5:
         cout << "\"";
-        print_room_name(2);
+        print_room_name(1);
         cout << "\"" << "\n" << "\"";
         print_room_name(6);
         cout << "\"" << "\n" << "\"";
@@ -1318,7 +1343,7 @@ void print_adjacent_rooms(int roomNum) {
 
     case 6:
         cout << "\"";
-        print_room_name(2);
+        print_room_name(1);
         cout << "\"" << "\n" << "\"";
         print_room_name(5);
         cout << "\"" << "\n" << "\"";
@@ -1328,7 +1353,7 @@ void print_adjacent_rooms(int roomNum) {
 
     case 7:
         cout << "\"";
-        print_room_name(2);
+        print_room_name(1);
         cout << "\"" << "\n" << "\"";
         print_room_name(5);
         cout << "\"" << "\n" << "\"";
@@ -1342,11 +1367,16 @@ void print_adjacent_rooms(int roomNum) {
         cout << "----------------" << endl;
 
         cout << "\"";
-        print_room_name(1);
-        cout << "\"" << "\n" << "\"";
         print_room_name(11);
         cout << "\"" << "\n" << "\"";
         print_room_name(12);
+        cout << "\"" << endl;
+
+        cout << "\nGROUND FLOOR" << endl;
+        cout << "----------------" << endl;
+
+        cout << "\"";
+        print_room_name(1);
         cout << "\"" << endl;
 
         cout << "\nDOWNSTAIRS" << endl;
@@ -1423,7 +1453,7 @@ void type_and_continue() {
     //Requests user input to continue
     cout << "\nType anything and press enter to continue..." << endl;
     cin >> tempString;
-    
+
     //ignores any input beyond the first string
     cin.ignore(1000, '\n');
 }
