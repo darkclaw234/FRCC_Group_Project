@@ -948,6 +948,9 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
         break;
 
     case 12:
+        if(userKeyword.compare("body") == 0){
+            cout << "ITEM DESCRIPTION" << endl;
+        }
         break;
 
     case 13:
