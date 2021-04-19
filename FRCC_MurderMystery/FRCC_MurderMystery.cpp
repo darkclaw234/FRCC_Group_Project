@@ -121,7 +121,7 @@ int main()
 
             break;
 
-        
+
         case 1:
             //Empties console screen
             system("CLS");
@@ -229,7 +229,7 @@ int main()
 
             break;
 
- 
+
         case 4:
             //Empties console screen
             system("CLS");
@@ -410,7 +410,7 @@ int main()
 
             break;
 
- 
+
         case 9:
             //Empties console screen
             system("CLS");
@@ -799,7 +799,9 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
         cout << "An elegant diamond chandelier hangs high above the table, and its bulbs make the jewels perched on its top glisten." << endl;
         cout << "You shake your head. This was the last room everyone saw Mr. Stronghold in before his death." << endl;
         cout << "An ornate dining table takes up most of the room's space." << endl;
-        cout << "It's surrounded by red velvet chairs that are just as pompous as everything else." << endl;
+        cout << "It's surrounded by red velvet chairs that are just as pompous as everything else." << endl << endl;
+
+        cout << "Investigatable Items: Red velvet chairs." << endl;
 
         break;
 
@@ -849,7 +851,9 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
         cout << "Frightened, you turn on the light." << endl;
         cout << "\n(FIXME: CREATE NAME) MUD MAN stares directly at you. He's sitting in a pile of dark sticky mud." << endl;
         cout << "Besides the whites of his eyes, almost everything is covered in muck." << endl;
-        cout << "\"What do you want? If you're not here for anything important, leave me to my mud.\"" << endl;
+        cout << "\"What do you want? If you're not here for anything important, leave me to my mud.\"" << endl << endl;
+        
+        cout << "Investigatable Items: Breaker box." << endl;
 
         break;
 
@@ -879,7 +883,9 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
 
         cout << "You check the Master Bathroom as well. The tub, large enough to be a small pool, is still full." << endl;
         cout << "Two glamorous vanities sit across from it. One of them is open." << endl;
-        cout << "Of course. There's also a golden toilet." << endl;
+        cout << "Of course. There's also a golden toilet." << endl << endl;
+
+        cout << "Investigatable Items: Mr. Stronghold's body, Victorian era armoires, Bathroom vanity." << endl;
 
         break;
 
@@ -930,6 +936,14 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
         break;
 
     case 6:
+        if ((userKeyword.compare("red velvet chairs") == 0)
+            || (userKeyword.compare("velvet chairs") == 0)
+            || (userKeyword.compare("chairs") == 0)) {
+            cout << "Red Velvet Chairs: " << endl;
+            cout << "As you take a closer look around the dining room, you begin to count the number of chairs." << endl;
+            cout << "You realize that there's one less chair than the number of guests at the dinner party." << endl;
+            cout << "It is likely that the butler and sous chef alternate between sitting in the same chair, but you should question them to make sure." << endl;
+        }
         break;
 
     case 7:
@@ -942,12 +956,56 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
         break;
 
     case 10:
+        if ((userKeyword.compare("breaker box") == 0)
+            || (userKeyword.compare("breaker") == 0)
+            || (userKeyword.compare("box") == 0)) {
+            cout << "Breaker Box: " << endl;
+            cout << "You learned from Clyde that the power had been turned off around the time of the murder, so you decide to take a closer look at the breaker box." << endl;
+            cout << "The breaker box controls the power to the rest of the house, so the murderer was likely in the boiler room directly before or after they committed the crime." << endl;
+            cout << "However, there is no signs of tampering, and the forensics team didn't find any fingerprints on the breaker box." << endl;
+        }
         break;
 
     case 11:
         break;
 
     case 12:
+        if ((userKeyword.compare("body") == 0)
+            || (userKeyword.compare("mr. stronghold") == 0)
+            || (userKeyword.compare("mr. stronghold's body") == 0)
+            || (userKeyword.compare("mr. strongholds body") == 0)
+            || (userKeyword.compare("stronghold") == 0)
+            || (userKeyword.compare("mr stronghold") == 0)
+            || (userKeyword.compare("mr stronghold's body") == 0)
+            || (userKeyword.compare("mr strongholds body") == 0)) {
+            cout << "Mr. Stronghold's Body: " << endl;
+            cout << "As you are drawn in closer to Mr. Stronghold's body, you notice a peculiar pagama garment poking out from under the bed." << endl;
+            cout << "Standing directly over the dead body, you can't help but notice how sickly pale Mr. Stronghold's face has become." << endl;
+            cout << "It is clear that his throat had been sliced cleanly with a knife. This was his cause of death on Clyde's report." << endl;
+        }
+        if ((userKeyword.compare("armoires") == 0)
+            || (userKeyword.compare("victorian era armoires") == 0)
+            || (userKeyword.compare("victorian armoires") == 0)
+            || (userKeyword.compare("armoire") == 0)
+            || (userKeyword.compare("victorian era armoire") == 0)
+            || (userKeyword.compare("victorian armoire") == 0)) {
+            cout << "Victorian Era Armoires: " << endl;
+            cout << "Even though you normally wouldn't give a second thought to a victim's clothing closet, you decide taking a look inside the Strongholds' armoires might give good insight." << endl;
+            cout << "Inside Mr. Stronghold's armoire, you find a pair of snow boots, still wet from trecking through snow." << endl;
+            cout << "There had been a big snowstorm the night of the murder, so this didn't seem particularly strange to you, but what was Mr. Stronghold doing outside in such bad weather?" << endl;
+            cout << "As you rumage through the rest of Mr. Stronghold's clothing, a small sparkling object catches your eye." << endl;
+            cout << "You pick up the object, and realize it is a small, yet elegent, diamond earing. What would Mr. Stronghold be doing with a diamond earing in his armoire?" << endl;
+            cout << "Mrs. Stronghold's armoire yeilds no significant evidence." << endl;
+        }
+        if ((userKeyword.compare("vanity") == 0)
+            || (userKeyword.compare("vanities") == 0)
+            || (userKeyword.compare("glamorous vanity") == 0)
+            || (userKeyword.compare("glamorous vanities") == 0)) {
+            cout << "Bathroom Vanity: " << endl;
+            cout << "In the bathroom, the smell of lavender soap is overwhelming, even though this is a nice escape from the smell of death radiating from the bedroom." << endl;
+            cout << "You immediately trace the smell to the open vanity's sink, as you approach the smell of the soap grows stronger." << endl;
+            cout << "The sink glistens, light reflecting off water that remain on the sides." << endl;
+        }
         break;
 
     case 13:
@@ -956,7 +1014,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
     default:
         break;
     }
-    
+
     if (userKeyword.compare("leave") != 0) {
         type_and_continue();
     }
@@ -1464,3 +1522,5 @@ void print_input(string input) {
     cout << "\nFIXME: Remove userInput printer when game is finished." << endl;
     cout << "The user input is: " << input << endl;
 }
+
+
