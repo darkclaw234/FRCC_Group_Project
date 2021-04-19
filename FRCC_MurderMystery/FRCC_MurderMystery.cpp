@@ -48,6 +48,8 @@ void print_input(string input);
 //If you meet Clyde in the tutorial, for example, userChoices.at(meetClyde) is set to true to keep track of that progress.
 //It prevents you from having to repeat the tutorial every time you enter the trophy hall.
 const int meetClyde = 0;
+const int findFlashlight = 1;
+const int findUVLight = 2;
 
 
 
@@ -705,8 +707,8 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
         //Prints basic room description if player has met clyde
         if (currentUserChoices.at(meetClyde) == true) {
             print_room_title(roomNum);
-            cout << "In the Trophy Hall, Glass cupboards line the edges of the room with glimmering bronze and silver figures." << endl;
-            cout << "Juniper shrubs cradle to the shelves of old photographs that appear well dusted." << endl;
+            cout << "In the Trophy Hall, glass cupboards line the edges of the room with glimmering bronze and silver figures." << endl;
+            cout << "Dracaena plants cradle some shelves filled with well dusted black and white photos." << endl;
             cout << "There's even a golden lion head attached to the wall, right above the double doors that lead into the mansion's core." << endl;
 
             cout << "\nClyde sits by the plastic table of evidence, prepared to answer any questions you might have." << endl;
@@ -755,7 +757,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
     case 3:
         //Prints Description For Room 3
         print_room_title(roomNum);
-        cout << "In the Servant's quarters, there are two twin beds sitting on opposite sides of the room." << endl;
+        cout << "In the Servant's Quarters, there are two twin beds sitting on opposite sides of the room." << endl;
         cout << "The quarters are relatively small, hardly longer than one of the beds." << endl;
         cout << "The only other furniture along the walls are two small desks set beside each bed." << endl;
         cout << "Their uncushioned chairs seem hardly used." << endl;
@@ -771,7 +773,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
     case 4:
         //Prints Description For Room 4
         print_room_title(roomNum);
-        cout << "In the library, the air is thick with dust." << endl;
+        cout << "In the Library, the air is thick with dust." << endl;
         cout << "The space, though constricted, feels quite cozy." << endl;
         cout << "Tall wooden bookcases form several rows, and they're filled to the brim with books." << endl;
         cout << "At the room's far end, an antique fireplace lets off heat and light." << endl;
@@ -795,7 +797,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
     case 6:
         //Prints Description For Room 6
         print_room_title(roomNum);
-        cout << "The dining room is very bright." << endl;
+        cout << "The Dining Room is very bright." << endl;
         cout << "An elegant diamond chandelier hangs high above the table, and its bulbs make the jewels perched on its top glisten." << endl;
         cout << "You shake your head. This was the last room everyone saw Mr. Stronghold in before his death." << endl;
         cout << "An ornate dining table takes up most of the room's space." << endl;
@@ -822,7 +824,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
     case 8:
         //Prints Description For Room 8
         print_room_title(roomNum);
-        cout << "You approach the delapidated oak stairwell." << endl;
+        cout << "You approach the delapidated oak Stairwell." << endl;
         cout << "A small, uninteresting bathroom sits beside them." << endl;
         cout << "There is a worn red carpet lain across the middle of them." << endl;
         cout << "Small lights line the walls, providing just enough light to avoid some holes in the cracked planks." << endl;
@@ -832,7 +834,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
     case 9:
         //Prints Description For Room 9
         print_room_title(roomNum);
-        cout << "If anything confirms the overindulgence of these people, it's the Wine Cellar." << endl;
+        cout << "If anything most confirms these people's overindulgence, it's their Wine Cellar." << endl;
         cout << "Several hundred bottles of white and red wine fill up slots on the walls, seeming to sparkle in the dim light." << endl;
         cout << "The room is lit by some ceiling fixtures, but not well enough to read the bottle labels." << endl;
         cout << "You're not sure what you could investigate down here without a flashlight." << endl;
@@ -862,8 +864,8 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
         print_room_title(roomNum);
         cout << "The first thing you notice about the Observatory is the gigantic telescope at its center." << endl;
         cout << "With all of its sophisticated mechanical parts, you'd guess it would take weeks of practice to use. Months maybe." << endl;
-        cout << "Beyond the telescope, there seem to be little exhibits about the solar system, the sun, and black holes on display." << endl;
-        cout << "There's also a lab-like area full of scientific tools and half-finished experiments. Some steel cupboards hang above them." << endl;
+        cout << "Beyond the telescope, there seem to be little statues representing the solar system, the sun, and a black hole on display." << endl;
+        cout << "There's also a lab-like area full of scientific tools and half-finished experiments." << endl;
 
         cout << "\n(FIXME: CREATE NAME) ASTROPHYSICIST/ARCHEOLOGIST emerges from behind the telescope and waves to you." << endl;
         cout << "\"It's a shame that there's a storm, Detective." << endl;
@@ -918,9 +920,68 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
     //Prints descriptions of object within current room if user keyword matches item name
     switch (roomNum) {
     case 0:
+        if ((userKeyword.compare("glass") == 0)
+            || (userKeyword.compare("cupboards") == 0)
+            || (userKeyword.compare("bronze") == 0)
+            || (userKeyword.compare("silver") == 0)
+            || (userKeyword.compare("figures") == 0)) {
+            cout << "\nBronze And Silver Trophies: " << endl;
+            cout << "Mr. Stronghold has an arrangement of trophies proudly presented in the glass cupboards." << endl;
+            cout << "It seems he's achieved quite a lot in the scientific world." << endl;
+            cout << "He received several awards for renovating the world of astronomy with his telescope designs." << endl;
+            cout << "He's also a prime benefactor of a nearby coal mining town." << endl;
+        }
+        if ((userKeyword.compare("dracaena") == 0)
+            || (userKeyword.compare("plants") == 0)) {
+            cout << "\nDracaena Plants:" << endl;
+            cout << "These plants are low effort shrubs with beautiful green leaves." << endl;
+            cout << "Unsurprisingly, the ones in this room are in great condition." << endl;
+            cout << "You would expect no less from a couple with a butler." << endl;
+        }
+        if ((userKeyword.compare("well") == 0)
+            || (userKeyword.compare("dusted") == 0)
+            || (userKeyword.compare("black") == 0)
+            || (userKeyword.compare("white") == 0)
+            || (userKeyword.compare("photos") == 0)) {
+            cout << "\nWell Dusted Black And White Photos:" << endl;
+            cout << "Dr. Stronghold was clearly a fan of photos." << endl;
+            cout << "He has quite a few of each suspect." << endl;
+            cout << "In one, the Butler carries an overflowing tray of drinks with a smile." << endl;
+            cout << "There's another with Dr. Stronghold's prized sous chef displaying a stuffed fish." << endl;
+            cout << "In another, his prized lab partner is holding their shared award for telescope achievement." << endl;
+            cout << "You drift to the final set of photos." << endl;
+            cout << "Mrs. Stronghold looks truly elegant in all of them. Even as her hair grays, her beauty never fades." << endl;
+        }
+        if ((userKeyword.compare("golden") == 0)
+            || (userKeyword.compare("lion") == 0)
+            || (userKeyword.compare("head") == 0)) {
+            cout << "\nGolden Lion Head:" << endl;
+            cout << "It's well polished... and quite gratutious." << endl;
+            cout << "It doesn't seem particularly relevant to the case, however." << endl;
+        }
         break;
 
     case 1:
+        if ((userKeyword.compare("sparkling") == 0)
+            || (userKeyword.compare("vinyl") == 0)
+            || (userKeyword.compare("floor") == 0)) {
+            cout << "\nVinyl Floors:" << endl;
+            cout << "The Butler has clearly been wiping the floors down." << endl;
+            cout << "You wonder if there's any reason for that..." << endl;
+            cout << "Maybe he's just desperate to get his mind off of things." << endl;
+        }
+        if ((userKeyword.compare("marble") == 0)
+            || (userKeyword.compare("columns") == 0)) {
+            cout << "\nMarble Columns:" << endl;
+            cout << "If these are important to the case, you're not seeing why." << endl;
+            cout << "They're just gorgeous pillars. They don't have much use beyond their appeal to the eye." << endl;
+        }
+        if ((userKeyword.compare("intricate") == 0)
+            || (userKeyword.compare("chandeliers") == 0)) {
+            cout << "\nIntricate Chandeliers:" << endl;
+            cout << "An old friend told you about a case of theirs where a chandelier fell onto the victim's head." << endl;
+            cout << "Luckily these chandeliers seem rather attached to the ceiling." << endl;
+        }
         break;
 
     case 2:
@@ -930,6 +991,28 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
         break;
 
     case 4:
+        if ((userKeyword.compare("tall") == 0)
+            || (userKeyword.compare("wooden") == 0)
+            || (userKeyword.compare("bookcases") == 0)) {
+            cout << "\nTall Wooden Bookcases:" << endl;
+            cout << "There are more books on these shelves than you could read in a liftime." << endl;
+            cout << "However, the shelves are all quite dirty." << endl;
+            cout << "If anyone's hiding something here, there's nothing in the few clean spots on the shelves." << endl;
+        }
+        if ((userKeyword.compare("antique") == 0)
+            || (userKeyword.compare("fireplace") == 0)) {
+            cout << "\nAntique Fireplace:" << endl;
+            cout << "This would certainly be the first place a guilty party would get rid of evidence." << endl;
+            cout << "Thankfully, however, it seems recently lit." << endl;
+            cout << "Since it was likely started after Pendleton arrived, it's probably not of importance." << endl;
+        }
+        if ((userKeyword.compare("large") == 0)
+            || (userKeyword.compare("granite") == 0)
+            || (userKeyword.compare("chunks") == 0)) {
+            cout << "\nLarge Granite Chunks:" << endl;
+            cout << "Just more proof of Dr. Stronghold's influence." << endl;
+            cout << "He's certainly a saint in the eyes of the mining townsfolk." << endl;
+        }
         break;
 
     case 5:
@@ -939,7 +1022,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
         if ((userKeyword.compare("red velvet chairs") == 0)
             || (userKeyword.compare("velvet chairs") == 0)
             || (userKeyword.compare("chairs") == 0)) {
-            cout << "Red Velvet Chairs: " << endl;
+            cout << "\nRed Velvet Chairs: " << endl;
             cout << "As you take a closer look around the dining room, you begin to count the number of chairs." << endl;
             cout << "You realize that there's one less chair than the number of guests at the dinner party." << endl;
             cout << "It is likely that the butler and sous chef alternate between sitting in the same chair, but you should question them to make sure." << endl;
@@ -953,13 +1036,32 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
         break;
 
     case 9:
+
+        if ((userKeyword.compare("wine") == 0)
+            || (userKeyword.compare("bottles") == 0)) {
+            cout << "\nIt's too dark in here to investigate at the moment." << endl;
+        }
+        if ((userKeyword.compare("flashlight") == 0)
+             && currentUserChoices.at(findFlashlight) == true) {
+            cout << "\nYou can see the Wine Cellar rather clearly now." << endl;
+            cout << "While the bottles on the shelves seem unopened, something you couldn't see before pops out at you." << endl;
+            cout << "In the back of the room, there's a glass display for a wine bottle, labeled \"Alain Hudelot\"." << endl;
+            cout << "However, there's no bottle of wine inside." << endl;
+            cout << "This is peculiar. You need to ask around about this." << endl;
+        }
+        if (((userKeyword.compare("uv") == 0) || userKeyword.compare("light"))
+            && currentUserChoices.at(findUVLight) == true) {
+            cout << "\nYou were right to use the Astrophysicist's UV Light here." << endl;
+            cout << "On the floor by the glass display case, there are several spurts of blood." << endl;
+            cout << "Getting closer, you can smell a hint of bleach. Someone's cleaned the floor here recently." << endl;
+        }
         break;
 
     case 10:
         if ((userKeyword.compare("breaker box") == 0)
             || (userKeyword.compare("breaker") == 0)
             || (userKeyword.compare("box") == 0)) {
-            cout << "Breaker Box: " << endl;
+            cout << "\nBreaker Box:" << endl;
             cout << "You learned from Clyde that the power had been turned off around the time of the murder, so you decide to take a closer look at the breaker box." << endl;
             cout << "The breaker box controls the power to the rest of the house, so the murderer was likely in the boiler room directly before or after they committed the crime." << endl;
             cout << "However, there is no signs of tampering, and the forensics team didn't find any fingerprints on the breaker box." << endl;
@@ -967,6 +1069,82 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
         break;
 
     case 11:
+        if ((userKeyword.compare("gigantic") == 0)
+            || (userKeyword.compare("telescope") == 0)) {
+            cout << "\nTelescope:" << endl;
+            cout << "It's a beautiful mechanical device with too many parts to count." << endl;
+            cout << "(FIXME: CREATE NAME) ASTROPHYSICIST/ARCHEOLOGIST walks up to you." << endl;
+            cout << "\"Unfortunately there are too many clouds to view the stars tonight.\"" << endl;
+            cout << "\"Dr.Armstrong always wanted to show off the sky to his visitors. I wish I could show you Saturn." << endl;
+            cout << "She smiles wistfully. \"It was his favorite planet. He loved how unique it was.\"" << endl;
+        }
+        if ((userKeyword.compare("little") == 0)
+            || (userKeyword.compare("statues") == 0)) {
+            cout << "\nAstronomy Displays:" << endl;
+            cout << "Three gorgeous statues have been placed behind glass for your viewing pleasure." << endl;
+            cout << "One represents the solar system, another is built to resemble the sun, and the last is a representation of a black hole." << endl;
+        }
+        if ((userKeyword.compare("solar") == 0)
+            || (userKeyword.compare("system") == 0)){
+            cout << "\nYou read the Solar System exhibit's plaque:" << endl;
+            cout << "\"Our solar system rotates our sun like a gracious family, and each planet is a character." << endl;
+            cout << "Mercury rests close to home." << endl;
+            cout << "Venus absorbs the dark flames of space." << endl;
+            cout << "Earth lays in the perfect spot to coax life from its soil." << endl;
+            cout << "Mars drifts near the asteroid belt, admiring it like one admires a stream." << endl;
+            cout << "Jupiter feasts off the resources it's accumulated." << endl;
+            cout << "Saturn dresses in hope that the planets may one day gather to admire one another." << endl;
+            cout << "Uranus sits in eternal winter." << endl;
+            cout << "Neptune practices an eternal dance." << endl;
+            cout << "And of course, Pluto watches in on them like a child watches bugs.\"" << endl;
+
+            type_and_continue();
+
+            cout << "\nAt the bottom of the plaque there is a quote by Paracelsus:" << endl;
+            cout << "\"Man is a microcosm, or a little world, because he is an extract from all the stars" << endl;
+            cout << "and planets of the whole firmament, from the earth and the elements; and so he is their quintessence.\"" << endl;
+
+        }
+        if ((userKeyword.compare("sun") == 0)) {
+            cout << "You read the Sun exhibit's plaque:" << endl;
+            cout << "\"The sun is a burning passion we all share.\"" << endl;
+            cout << "\"Without it there would be no life, and yet one day the stars will extinguish all.\"" << endl;
+            cout << "\"It is a reminder that all life is temporary and magic." << endl;
+            
+            type_and_continue();
+            
+            cout << "\nAt the bottom of the plaque there is a quote by Hafiz:" << endl;
+            cout << "\"Even" << endl;
+            cout << "After" << endl;
+            cout << "All this time" << endl;
+            cout << "The Sun never says to the Earth," << endl;
+            cout << "\n\'You owe me.\'\n" << endl;
+            cout << "Look" << endl;
+            cout << "What happens" << endl;
+            cout << "With a love like that," << endl;
+            cout << "It lights the whole sky.\"" << endl;
+        }
+        if ((userKeyword.compare("black") == 0)
+            || (userKeyword.compare("hole") == 0)) {
+            cout << "You read the Black Hole exhibit's plaque:" << endl;
+            cout << "\"A black hole is everything we fear we cannot see." << endl;
+            cout << "It is the desire that holds us back and the silent anger that stabs our hearts." << endl;
+            cout << "It is a reminder that we can always create more light, and that our work is never done." << endl;
+
+            type_and_continue();
+
+            cout << "\nAt the bottom of the plaque there is a quote by Sir Martin Rees:" << endl;
+            cout << "\"Inside every black hole that collapses may lie the seeds of a new expanding universe.\"" << endl;
+
+        }
+        if ((userKeyword.compare("lab") == 0)
+            || (userKeyword.compare("area") == 0)
+            || (userKeyword.compare("scientific") == 0)
+            || (userKeyword.compare("tools") == 0)
+            || (userKeyword.compare("experiments") == 0)) {
+            cout << "Luckily for you, Clyde's cleared out this area with the junior detectives already." << endl;
+            cout << "The tools and experiments weren't touched tonight, so there's not anything of interest here." << endl;
+        }
         break;
 
     case 12:
