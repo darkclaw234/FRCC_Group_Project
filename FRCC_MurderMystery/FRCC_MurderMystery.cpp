@@ -748,7 +748,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
         cout << "In the middle of the room, there's a single lamp sitting on a large desk with oak drawers." << endl;
         cout << "Velvet curtains line the walls, covering the tall windows." << endl;
         cout << "There is a small bookcase on your left that is only partially filled." << endl;
-        cout << "As you approach the desk, you see a small letter sitting unopened." << endl;
+        cout << "As you approach the desk, you see a small envelope sitting opened." << endl;
 
         break;
 
@@ -787,7 +787,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
         print_room_title(roomNum);
         cout << "You enter the Kitchen through a creaky door." << endl;
         cout << "An industrial stovetop oven, along with a stainless steel sink, are set across the back counter." << endl;
-        cout << "Under the cupboards, there is a block of knives and a container of cooking utensils." << endl;
+        cout << "Under the cupboards, there is a block of knives and a basket of silverware." << endl;
         cout << "Silverware is scattered around the kitchen. Dirty plates fill the sink." << endl;
 
         break;
@@ -808,7 +808,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
         print_room_title(roomNum);
         cout << "A wave of heat blasts through you when you walk through the door to the Greenhouse." << endl;
         cout << "Shelves full of potted plants crowd the room messily." << endl;
-        cout << "A fence of grape vines tracks the edge of the room." << endl;
+        cout << "Beautiful flowers fill the plants." << endl;
         cout << "This room feels rather comfortable, especially thanks to the glimmering moonlight raining down from the skylight." << endl;
         cout << "In the corner, you find a shovel, a watering can, some other gardening tools, and a bag of fresh fertilizer." << endl;
 
@@ -824,6 +824,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
         cout << "A small, uninteresting bathroom sits beside them." << endl;
         cout << "There is a worn red carpet lain across the middle of them." << endl;
         cout << "Small lights line the walls, providing just enough light to avoid some holes in the cracked planks." << endl;
+        cout << "A button is sitting on in the corner of the fourth stair up."
 
         break;
 
@@ -918,7 +919,31 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
         break;
 
     case 2:
+        if (userKeyword.compare("lamp") == 0) 
+            || (userKeyword.compare("small lamp") == 0)
+        {
+        cout << "Lamp" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "A small lamp on the corner of the desk." << endl;
+        cout << "It is emitting a faint light." << endl;
+        }
+
+        if (userKeyword.compare("desk") == 0)
+            || (userKeyword.compare("oak desk") == 0)
+        {
+            cout << "Desk" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "A large desk taking up most of the room." << endl;
+            cout << "It has a small lamp on its corner and a note in the center." << endl;
+        }
         break;
+
+        if (userKeyword.compare("envelope") == 0)
+        {
+            cout << "Envelope" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "An opened letter sitting in the middle of the desk." << endl;
+        }
 
     case 3:
         break;
@@ -927,15 +952,100 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
         break;
 
     case 5:
+        if (userKeyword.compare("oven") == 0)
+        {
+            cout << "Oven" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "A stainless steel oven that doesn't seem to have been cleaned recently." << endl;
+        }
         break;
+
+        if (userKeyword.compare("stove") == 0)
+        {
+            cout << "Stove" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "An open stovetop covered with pots and pans." << endl;
+            cout << "Nothing is out of order here." << endl;
+        }
+
+        if (userKeyword.compare("knife block") == 0)
+            || (userKeyword.compare("knife") == 0)
+            || (userKeyword.compare("knives") == 0)
+            || (userKeyword.compare("silverware") == 0)
+            || (userKeyword.compare("silver ware") == 0)
+        {
+            cout << "Knife block and Silverware" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "A block of different sized knives." << endl;
+            cout << "Next to it is a basket full of spoons and forks." << endl;
+            cout << "One knife is missing from the end of the block." << endl;
+        }
 
     case 6:
         break;
 
     case 7:
+        if (userKeyword.compare("belladonna") == 0)
+            || (userKeyword.compare("belladonna stem") == 0)
+            || (userKeyword.compare("flower") == 0)
+            || (userKeyword.compare("stem") == 0)
+            || (userKeyword.compare("stems") == 0)
+            || (userKeyword.compare("plant") == 0)
+        {
+            cout << "Belladonna Plant" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "The flowers of the belladonna are in bloom." << endl;
+            cout << "Dead leaves cover the soil." << endl;
+            cout << "Some of the stems appear to be cut recently." << endl;
+        }
+
+        if (userKeyword.compare("fertilizer") == 0)
+        {
+            cout << "Fertilizer" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "The fertilizer is sitting in the corner of the room." << endl;
+            cout << "The top is sealed and the bag looks to be about half empty." << endl;
+        }
+
+        if (userKeyword.compare("shovel") == 0)
+        {
+            cout << "Shovel" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "A rusty shovel sits against the bag of fertilizer." << endl;
+            cout << "The handle is splintered from years of wear." << endl;
+        }
         break;
 
+        if (userKeyword.compare("watering can") == 0)
+            || (userKeyword.compare("watering") == 0)
+            || (userKeyword.compare("can") == 0)
+        {
+            cout << "Watering Can" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "The watering can is half full." << endl;
+            cout << "The top of the water is littered with bugs." << endl;
+        }
+
     case 8:
+        if (userKeyword.compare("button") == 0)
+        {
+            cout << "Small Button" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "You pick up the button and see that it is red and scratched." << endl;
+            cout << "Some fabric hangs out of the holes." << endl;
+        }
+
+        if (userKeyword.compare("light") == 0)
+            || (userKeyword.compare("lights") == 0)
+            || (userKeyword.compare("wall light") == 0)
+            || (userKeyword.compare("wall lights") == 0)
+        {
+            cout << "Lights" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "Small lights line the walls." << endl;
+            cout << "Dust and cobwebs cover the top of the lights." << endl;
+        }
+
         break;
 
     case 9:
