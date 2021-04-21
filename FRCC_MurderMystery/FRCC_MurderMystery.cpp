@@ -35,6 +35,9 @@ void print_room_title(int roomNum);
 void print_room_name(int roomNum);
 void print_adjacent_rooms(int roomNum);
 
+//This function prints character names.
+void print_character_name(int roomNum);
+
 //These functions both get user input: the first for investigating and leaving a room,
 //and the second is used to pause the game until the player is ready to move forward.
 //This will help them read the descriptions etc.
@@ -828,7 +831,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
         cout << "A small, uninteresting bathroom sits beside them." << endl;
         cout << "There is a worn red carpet lain across the middle of them." << endl;
         cout << "Small lights line the walls, providing just enough light to avoid some holes in the cracked planks." << endl;
-        cout << "A button is sitting on in the corner of the fourth stair up."
+        cout << "A button is sitting on in the corner of the fourth stair up.";
 
         break;
 
@@ -1540,6 +1543,66 @@ int leave_room(int roomNum) {
     return newRoomNum;
 }
 
+//Prints name of characters associated with current roomNum
+void print_character_name(int roomNum) {
+    switch (roomNum) {
+        case 0:
+        cout << "Clyde Pendleton";
+        break;
+
+    case 1:
+        cout << "Sebastion Gilmore";
+        break;
+
+    case 2:
+        cout << "N/A";
+        break;
+
+    case 3:
+        cout << "Mary Ann Sue";
+        break;
+
+    case 4:
+        cout << "Mrs. Stronghold";
+        break;
+
+    case 5:
+        cout << "N/A";
+        break;
+
+    case 6:
+        cout << "N/A";
+        break;
+
+    case 7:
+        cout << "Louis Arbert";
+        break;
+
+    case 8:
+        cout << "N/A";
+        break;
+
+    case 9:
+        cout << "N/A";
+        break;
+
+    case 10:
+        cout << "Mud Man";
+        break;
+
+    case 11:
+        cout << "Dr. Jill Tyson";
+        break;
+
+    case 12:
+        cout << "Dr. Stronghold";
+        break;
+
+    case 13:
+        cout << "N/A";
+        break;
+    }
+}
 
 //Prints a pretty title for each room when called
 void print_room_title(int roomNum) {
