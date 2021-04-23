@@ -766,7 +766,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
         cout << "Its pendulum slowly moves back and forth as the seconds tick by." << endl;
 
         cout << "\n(FIXME: CREATE NAME) SOUS CHEF sits on one of the twin beds elegantly." << endl;
-        cout << "\"Hi there, Detective. I can answer some questions if you have any for me." << endl;
+        cout << "\"Hi there, Detective. I can answer some questions if you have any for me.\"" << endl;
 
         break;
 
@@ -868,8 +868,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices) {
         cout << "There's also a lab-like area full of scientific tools and half-finished experiments." << endl;
 
         cout << "\n(FIXME: CREATE NAME) ASTROPHYSICIST/ARCHEOLOGIST emerges from behind the telescope and waves to you." << endl;
-        cout << "\"It's a shame that there's a storm, Detective." << endl;
-        cout << "\"I wish I could show you some of Dr. Stronghold's favorite stars.\"" << endl;
+        cout << "\"It's a shame that there's a storm, Detective. The stars aren't out.\"" << endl;
         cout << "She sighs. \"What can I do for you?\"" << endl;
 
         break;
