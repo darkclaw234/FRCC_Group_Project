@@ -36,7 +36,7 @@ void print_room_name(int roomNum);
 void print_adjacent_rooms(int roomNum);
 
 //This function prints character names.
-void print_character_name(int roomNum);
+void print_character_name(int roomNum, int formality);
 
 //These functions both get user input: the first for investigating and leaving a room,
 //and the second is used to pause the game until the player is ready to move forward.
@@ -47,12 +47,16 @@ void type_and_continue();
 //This is a function used for testing that prints user input.
 void print_input(string input);
 
-//These constants will be used as the indexs for the userChoices vector. The titles keep track of user choices and progress.
+//These constants will be used as the indexes for the userChoices vector. The titles keep track of user choices and progress.
 //If you meet Clyde in the tutorial, for example, userChoices.at(meetClyde) is set to true to keep track of that progress.
 //It prevents you from having to repeat the tutorial every time you enter the trophy hall.
 const int meetClyde = 0;
 const int findFlashlight = 1;
 const int findUVLight = 2;
+
+//These constants will be used to mark whether a formal or informal name is called for the print_character_name function.
+const int formal = 0;
+const int informal = 1;
 
 
 
@@ -923,6 +927,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
     //Prints descriptions of object within current room if user keyword matches item name
     switch (roomNum) {
     case 0:
+
         if ((userKeyword.compare("glass") == 0)
             || (userKeyword.compare("cupboards") == 0)
             || (userKeyword.compare("bronze") == 0)
@@ -934,6 +939,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
             cout << "He received several awards for renovating the world of astronomy with his telescope designs." << endl;
             cout << "He's also a prime benefactor of a nearby coal mining town." << endl;
         }
+
         if ((userKeyword.compare("dracaena") == 0)
             || (userKeyword.compare("plants") == 0)) {
             cout << "\nDracaena Plants:" << endl;
@@ -941,12 +947,13 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
             cout << "Unsurprisingly, the ones in this room are in great condition." << endl;
             cout << "You would expect no less from a couple with a butler." << endl;
         }
+
         if ((userKeyword.compare("well") == 0)
             || (userKeyword.compare("dusted") == 0)
             || (userKeyword.compare("black") == 0)
             || (userKeyword.compare("white") == 0)
             || (userKeyword.compare("photos") == 0)) {
-            cout << "\nWell Dusted Black And White Photos:" << endl;
+            cout << "\nWell Dusted Photos:" << endl;
             cout << "Dr. Stronghold was clearly a fan of photos." << endl;
             cout << "He has quite a few of each suspect." << endl;
             cout << "In one, the Butler carries an overflowing tray of drinks with a smile." << endl;
@@ -955,6 +962,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
             cout << "You drift to the final set of photos." << endl;
             cout << "Mrs. Stronghold looks truly elegant in all of them. Even as her hair grays, her beauty never fades." << endl;
         }
+
         if ((userKeyword.compare("golden") == 0)
             || (userKeyword.compare("lion") == 0)
             || (userKeyword.compare("head") == 0)) {
@@ -962,9 +970,11 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
             cout << "It's well polished... and quite gratutious." << endl;
             cout << "It doesn't seem particularly relevant to the case, however." << endl;
         }
+
         break;
 
     case 1:
+
         if ((userKeyword.compare("sparkling") == 0)
             || (userKeyword.compare("vinyl") == 0)
             || (userKeyword.compare("floor") == 0)) {
@@ -973,46 +983,48 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
             cout << "You wonder if there's any reason for that..." << endl;
             cout << "Maybe he's just desperate to get his mind off of things." << endl;
         }
+
         if ((userKeyword.compare("marble") == 0)
             || (userKeyword.compare("columns") == 0)) {
             cout << "\nMarble Columns:" << endl;
             cout << "If these are important to the case, you're not seeing why." << endl;
             cout << "They're just gorgeous pillars. They don't have much use beyond their appeal to the eye." << endl;
         }
+
         if ((userKeyword.compare("intricate") == 0)
             || (userKeyword.compare("chandeliers") == 0)) {
             cout << "\nIntricate Chandeliers:" << endl;
             cout << "An old friend told you about a case of theirs where a chandelier fell onto the victim's head." << endl;
             cout << "Luckily these chandeliers seem rather attached to the ceiling." << endl;
         }
+
         break;
 
     case 2:
-        if (userKeyword.compare("lamp") == 0) 
-            || (userKeyword.compare("small lamp") == 0)
-        {
-        cout << "Lamp" << endl;
+
+        if ((userKeyword.compare("lamp") == 0) 
+            || (userKeyword.compare("small lamp") == 0)){
+        cout << "\nLamp:" << endl;
         cout << "----------------------------------------" << endl;
         cout << "A small lamp on the corner of the desk." << endl;
         cout << "It is emitting a faint light." << endl;
         }
 
-        if (userKeyword.compare("desk") == 0)
-            || (userKeyword.compare("oak desk") == 0)
-        {
-            cout << "Desk" << endl;
+        if ((userKeyword.compare("desk") == 0)
+            || (userKeyword.compare("oak desk") == 0)){
+            cout << "\nOak Desk:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "A large desk taking up most of the room." << endl;
             cout << "It has a small lamp on its corner and a note in the center." << endl;
         }
-        break;
 
-        if (userKeyword.compare("envelope") == 0)
-        {
-            cout << "Envelope" << endl;
+        if (userKeyword.compare("envelope") == 0) {
+            cout << "\nEnvelope:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "An opened letter sitting in the middle of the desk." << endl;
         }
+
+        break;
 
     case 3:
         break;
@@ -1022,10 +1034,11 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
             || (userKeyword.compare("wooden") == 0)
             || (userKeyword.compare("bookcases") == 0)) {
             cout << "\nTall Wooden Bookcases:" << endl;
-            cout << "There are more books on these shelves than you could read in a liftime." << endl;
-            cout << "However, the shelves are all quite dirty." << endl;
-            cout << "If anyone's hiding something here, there's nothing in the few clean spots on the shelves." << endl;
+            cout << "There are more books on these shelves than you could read in a lifetime." << endl;
+            cout << "However, the shelves are all quite dirty, and there's nothing in the few clean spots you find." << endl;
+            cout << "It seems unlikely that someone hid anything here." << endl;
         }
+
         if ((userKeyword.compare("antique") == 0)
             || (userKeyword.compare("fireplace") == 0)) {
             cout << "\nAntique Fireplace:" << endl;
@@ -1033,6 +1046,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
             cout << "Thankfully, however, it seems recently lit." << endl;
             cout << "Since it was likely started after Pendleton arrived, it's probably not of importance." << endl;
         }
+
         if ((userKeyword.compare("large") == 0)
             || (userKeyword.compare("granite") == 0)
             || (userKeyword.compare("chunks") == 0)) {
@@ -1040,32 +1054,30 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
             cout << "Just more proof of Dr. Stronghold's influence." << endl;
             cout << "He's certainly a saint in the eyes of the mining townsfolk." << endl;
         }
+
         break;
 
     case 5:
-        if (userKeyword.compare("oven") == 0)
-        {
-            cout << "Oven" << endl;
+        if (userKeyword.compare("oven") == 0){
+            cout << "\nOven:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "A stainless steel oven that doesn't seem to have been cleaned recently." << endl;
         }
         break;
 
-        if (userKeyword.compare("stove") == 0)
-        {
-            cout << "Stove" << endl;
+        if (userKeyword.compare("stove") == 0){
+            cout << "\nStove:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "An open stovetop covered with pots and pans." << endl;
             cout << "Nothing is out of order here." << endl;
         }
 
-        if (userKeyword.compare("knife block") == 0)
+        if ((userKeyword.compare("knife block") == 0)
             || (userKeyword.compare("knife") == 0)
             || (userKeyword.compare("knives") == 0)
             || (userKeyword.compare("silverware") == 0)
-            || (userKeyword.compare("silver ware") == 0)
-        {
-            cout << "Knife block and Silverware" << endl;
+            || (userKeyword.compare("silver ware") == 0)){
+            cout << "\nKnife Block and Silverware:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "A block of different sized knives." << endl;
             cout << "Next to it is a basket full of spoons and forks." << endl;
@@ -1084,65 +1096,59 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
         break;
 
     case 7:
-        if (userKeyword.compare("belladonna") == 0)
+        if ((userKeyword.compare("belladonna") == 0)
             || (userKeyword.compare("belladonna stem") == 0)
             || (userKeyword.compare("flower") == 0)
             || (userKeyword.compare("stem") == 0)
             || (userKeyword.compare("stems") == 0)
-            || (userKeyword.compare("plant") == 0)
-        {
-            cout << "Belladonna Plant" << endl;
+            || (userKeyword.compare("plant") == 0)){
+            cout << "\nBelladonna Plant:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "The flowers of the belladonna are in bloom." << endl;
             cout << "Dead leaves cover the soil." << endl;
             cout << "Some of the stems appear to be cut recently." << endl;
         }
 
-        if (userKeyword.compare("fertilizer") == 0)
-        {
-            cout << "Fertilizer" << endl;
+        if (userKeyword.compare("fertilizer") == 0){
+            cout << "\nFertilizer:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "The fertilizer is sitting in the corner of the room." << endl;
             cout << "The top is sealed and the bag looks to be about half empty." << endl;
         }
 
-        if (userKeyword.compare("shovel") == 0)
-        {
-            cout << "Shovel" << endl;
+        if (userKeyword.compare("shovel") == 0){
+            cout << "\nShovel:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "A rusty shovel sits against the bag of fertilizer." << endl;
             cout << "The handle is splintered from years of wear." << endl;
         }
         break;
 
-        if (userKeyword.compare("watering can") == 0)
+        if ((userKeyword.compare("watering can") == 0)
             || (userKeyword.compare("watering") == 0)
-            || (userKeyword.compare("can") == 0)
-        {
-            cout << "Watering Can" << endl;
+            || (userKeyword.compare("can") == 0)){
+            cout << "\nWatering Can:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "The watering can is half full." << endl;
-            cout << "The top of the water is littered with bugs." << endl;
+            cout << "The water's surface is littered with dead bugs." << endl;
         }
 
     case 8:
-        if (userKeyword.compare("button") == 0)
-        {
-            cout << "Small Button" << endl;
+        if (userKeyword.compare("button") == 0){
+            cout << "\nSmall Button:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "You pick up the button and see that it is red and scratched." << endl;
             cout << "Some fabric hangs out of the holes." << endl;
         }
 
-        if (userKeyword.compare("light") == 0)
+        if ((userKeyword.compare("light") == 0)
             || (userKeyword.compare("lights") == 0)
             || (userKeyword.compare("wall light") == 0)
-            || (userKeyword.compare("wall lights") == 0)
-        {
-            cout << "Lights" << endl;
+            || (userKeyword.compare("wall lights") == 0)){
+            cout << "\nLights:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "Small lights line the walls." << endl;
-            cout << "Dust and cobwebs cover the top of the lights." << endl;
+            cout << "Dust and cobwebs cover their star shaped tops." << endl;
         }
 
         break;
@@ -1159,7 +1165,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices) {
             cout << "While the bottles on the shelves seem unopened, something you couldn't see before pops out at you." << endl;
             cout << "In the back of the room, there's a glass display for a wine bottle, labeled \"Alain Hudelot\"." << endl;
             cout << "However, there's no bottle of wine inside." << endl;
-            cout << "This is peculiar. You need to ask around about this." << endl;
+            cout << "Hmm... That's peculiar." << endl;
         }
         if (((userKeyword.compare("uv") == 0) || userKeyword.compare("light"))
             && currentUserChoices.at(findUVLight) == true) {
@@ -1543,14 +1549,25 @@ int leave_room(int roomNum) {
 }
 
 //Prints name of characters associated with current roomNum
-void print_character_name(int roomNum) {
+void print_character_name(int roomNum, int formality = 0) {
     switch (roomNum) {
-        case 0:
-        cout << "Clyde Pendleton";
+
+    case 0:
+        if (formality == formal) {
+            cout << "Clyde Pendleton";
+        }
+        else {
+            cout << "Clyde" << endl;
+        }
         break;
 
     case 1:
-        cout << "Sebastion Gilmore";
+        if (formality == formal) {
+            cout << "Mr. Gilmore";
+        }
+        else {
+            cout << "Sebastian" << endl;
+        }
         break;
 
     case 2:
@@ -1558,11 +1575,21 @@ void print_character_name(int roomNum) {
         break;
 
     case 3:
-        cout << "Mary Ann Sue";
+        if (formality == formal) {
+            cout << "Ms. Davis";
+        }
+        else {
+            cout << "Sue" << endl;
+        }
         break;
 
     case 4:
-        cout << "Mrs. Stronghold";
+        if (formality == formal) {
+            cout << "Mrs. Stronghold";
+        }
+        else {
+            cout << "Diane" << endl;
+        }
         break;
 
     case 5:
@@ -1574,7 +1601,12 @@ void print_character_name(int roomNum) {
         break;
 
     case 7:
-        cout << "Louis Arbert";
+        if (formality == formal) {
+            cout << "Mr. Arbert";
+        }
+        else {
+            cout << "Louis" << endl;
+        }
         break;
 
     case 8:
@@ -1586,15 +1618,30 @@ void print_character_name(int roomNum) {
         break;
 
     case 10:
-        cout << "Mud Man";
+        if (formality == formal) {
+            cout << "Mud Man";
+        }
+        else {
+            cout << "Mud Mud Mud" << endl;
+        }
         break;
 
     case 11:
-        cout << "Dr. Jill Tyson";
+        if (formality == formal) {
+            cout << "Dr. Tyson";
+        }
+        else {
+            cout << "Jill" << endl;
+        }
         break;
 
     case 12:
-        cout << "Dr. Stronghold";
+        if (formality == formal) {
+            cout << "Dr. Stronghold";
+        }
+        else {
+            cout << "Nathan" << endl;
+        }
         break;
 
     case 13:
