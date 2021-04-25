@@ -2538,26 +2538,26 @@ void print_interrogation_request(int roomNum, vector<string>& clueList) {
     cout << "Which clue do you want to use to interrogate " << get_character_name(roomNum) << "?" << endl;
     cout << "----------------------------------------" << endl;
     switch (roomNum) {
-    case 0:
+    case CLYDE:
         for (int i = 0; i < NUMCLUES; i++) {
             cout << clueList.at(i) << endl;
         }
-    case 1:
+    case BUTLER:
         cout << clueList.at(CASEFILE) << endl;
         break;
-    case 3:
+    case SOUSCHEF:
         cout << clueList.at(CASEFILE) << endl;
         break;
-    case 4:
+    case MRSSTRONGHOLD:
         cout << clueList.at(CASEFILE) << endl;
         break;
-    case 7:
+    case WINECRAFTER:
         cout << clueList.at(CASEFILE) << endl;
         break;
-    case 10:
+    case MUDMAN:
         cout << clueList.at(CASEFILE) << endl;
         break;
-    case 11:
+    case ASTRONOMER:
         cout << clueList.at(CASEFILE) << endl;
         break;
     }
