@@ -2147,15 +2147,15 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
 
         //Don't forget quotes when they speak
         if (userKeyword.compare("1") == 0) {
-            cout << "FIXME: ADD CHARACTER'S INTRODUCTION" << endl;
+            cout << "How do you do? My name is Sebation Gilmore. I live and work here in this manor and serve as a butler to the Stronghold family." << endl;
             type_and_continue();
         }
         if (userKeyword.compare("2") == 0) {
-            cout << "FIXME: ADD CHARACTER'S WHEREABOUTS AFTER THE DINNER" << endl;
+            cout << "I was in the library starting the fireplace for Mrs. Stronghold." << endl;
             type_and_continue();
         }
         if (userKeyword.compare("3") == 0) {
-            cout << "FIXME: ADD CHARACTER'S SUSPICIONS ABOUT OTHERS" << endl;
+            cout << "Some of the people at the table seemed to be quite jealous of the Dr. for his wealth." << endl;
             type_and_continue();
         }
         if (userKeyword.compare("interrogate") == 0) {
@@ -2170,8 +2170,76 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                 if (((userKeyword.compare("case") == 0)
                     || (userKeyword.compare("file") == 0))
                     && ((clueList.at(CASEFILE)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO CASEFILE'S CONTENTS." << endl;
+                    cout << "\"Shame for him to die in such an undignified way. I always thought he would just pass in his sleep.\"" << endl;
                     type_and_continue();
+                }
+                else if (((userKeyword.compare("floor") == 0)
+                    || (userKeyword.compare("cleaned") == 0))
+                    && ((clueList.at(CLEANEDFLOOR)).compare("???") != 0)) {
+                    cout << "You mention how the cleaned floor in the wine cellar smelled of the same chemicals that Mr. Gilmore uses. \n\"I have not cleaned the wine cellar recently. I can only assume someone stole my cleaning supplies.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("throat") == 0)
+                    || (userKeyword.compare("slashed") == 0))
+                    && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
+                    cout << "\"Well. I don't think that is normal. I don't remember his throat being like that during dinner.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("wet") == 0)
+                    || (userKeyword.compare("boots") == 0))
+                    && ((clueList.at(WETBOOTS)).compare("???") != 0)) {
+                    cout << "\"Dr. Stronghold only uses his boots when the snow is bad and he has to go out. He would have no reason to use them during a party.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("empty") == 0)
+                    || (userKeyword.compare("display") == 0))
+                    && ((clueList.at(EMPTYDISPLAY)).compare("???") != 0)) {
+                    cout << "\"We were planning on having some wine tonight in order to celebrate.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("button") == 0)
+                    || (userKeyword.compare("small") == 0))
+                    && ((clueList.at(SMALLBUTTON)).compare("???") != 0)) {
+                    cout << "\"This looks as though it came off of one of the Dr.'s shirts.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("glass") == 0)
+                    || (userKeyword.compare("shards") == 0))
+                    && ((clueList.at(GLASSSHARDS)).compare("???") != 0)) {
+                    cout << "You hand Sebastion a glass shard. \n\"This looks like it came from a wine bottle. Perhaps the one we were supposed to drink tonight.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("anonymous") == 0)
+                    || (userKeyword.compare("letter") == 0))
+                    && ((clueList.at(ANONYMOUSLETTER).compare("???") != 0))) {
+                    cout << "\"I didn't write it that's for sure. The handwriting is quite sloppy compared to mine.\"" << endl;
+                    type_and_continue();
+                }
+                else if ((userKeyword.compare("velvet") == 0)
+                    || (userKeyword.compare("red") == 0)
+                    || (userKeyword.compare("chairs") == 0)
+                    && ((clueList.at(REDVELVETCHAIRS)).compare("???") != 0)) {
+                    cout << "" << endl;
+                    type_and_continue();
+                }
+                else {
+                    int replyNum = ((rand() % 4) + 1);
+                    if (replyNum == 1) {
+                        cout << "\"Should I be reacting to that?\"" << endl;
+                        type_and_continue();
+                    }
+                    if (replyNum == 2) {
+                        cout << "\"Why would I know anything about that?\"" << endl;
+                        type_and_continue();
+                    }
+                    if (replyNum == 3) {
+                        cout << "\"That makes no sense.\"" << endl;
+                        type_and_continue();
+                    }
+                    if (replyNum == 4) {
+                        cout << "\"I've never heard of that.\"" << endl;
+                        type_and_continue();
+                    }
                 }
 
                 //Empties console screen
@@ -2345,15 +2413,19 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     int replyNum = ((rand() % 4) + 1);
                     if (replyNum == 1) {
                         cout << "\"Sorry, I don't know about that.\"" << endl;
+                        type_and_continue();
                     }
                     if (replyNum == 2) {
                         cout << "\"Why would I know anything about that?\"" << endl;
+                        type_and_continue();
                     }
                     if (replyNum == 3) {
                         cout << "\"I don't really know anything regarding that, sorry.\"" << endl;
+                        type_and_continue();
                     }
                     if (replyNum == 4) {
                         cout << "\"You probably know more about that than me.\"" << endl;
+                        type_and_continue();
                     }
                 }
                 //Empties console screen
@@ -2390,15 +2462,15 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
 
         //Don't forget quotes when they speak
         if (userKeyword.compare("1") == 0) {
-            cout << "FIXME: ADD CHARACTER'S INTRODUCTION" << endl;
+            cout << "My name is Louis Arbert, Lou for short. I was invited here as a friend and long time colleague of Dr. Stronghold's." << endl;
             type_and_continue();
         }
         if (userKeyword.compare("2") == 0) {
-            cout << "FIXME: ADD CHARACTER'S WHEREABOUTS AFTER THE DINNER" << endl;
+            cout << "I was finishing up my dinner in the kitchen. It was a lovely dinner tonight that I paired with a beautifully simple red wine." << endl;
             type_and_continue();
         }
         if (userKeyword.compare("3") == 0) {
-            cout << "FIXME: ADD CHARACTER'S SUSPICIONS ABOUT OTHERS" << endl;
+            cout << "From my observations tonight, I must say that the Mrs. Stronghold didn't seem to talk to her husband very much during dinner." << endl;
             type_and_continue();
         }
         if (userKeyword.compare("interrogate") == 0) {
@@ -2413,8 +2485,59 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                 if (((userKeyword.compare("case") == 0)
                     || (userKeyword.compare("file") == 0))
                     && ((clueList.at(CASEFILE)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO CASEFILE'S CONTENTS." << endl;
+                    cout << "\"Such a tragedy. We were all celebrating without a care in the world last night too." << endl;
                     type_and_continue();
+                }
+                else if (((userKeyword.compare("foamed") == 0)
+                    || (userKeyword.compare("mouth") == 0))
+                    && ((clueList.at(FOAMEDMOUTH)).compare("???") != 0)) {
+                    cout << "Louis is shocked as you tell him about the state you found Dr. Stronghold in. \n\"I can assure you that no wine we produce or sell has any effect like that.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("empty") == 0)
+                    || (userKeyword.compare("display") == 0))
+                    && ((clueList.at(EMPTYDISPLAY)).compare("???") != 0)) {
+                    cout << "Lou seems to understand completely when you mention a bottle missing from the wine cellar \n\"We were planning to use that to celebrate tonight. A shame we don't get to drink that anymore.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("nightshade") == 0)
+                    || (userKeyword.compare("cut") == 0)
+                    || (userKeyword.compare("night") == 0)
+                    || (userKeyword.compare("shade") == 0))
+                    && ((clueList.at(CUTNIGHTSHADE)).compare("???") != 0)) {
+                    cout << "\"Dr. Stronghold likes to keep his plants in good condition so to hear about cut stems is worrying. You know that nightshade can poisonous is the berries are consumed.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("expense") == 0)
+                    || (userKeyword.compare("reports") == 0))
+                    && ((clueList.at(EXPENSEREPORTS)).compare("???") != 0)) {
+                    cout << "\"Of course I know about those. Those are from our buisness. We sold the most luxury wines together.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("glass") == 0)
+                    || (userKeyword.compare("shards") == 0))
+                    && ((clueList.at(GLASSSHARDS)).compare("???") != 0)) {
+                    cout << "You hand Mr. Arbert a shard of glass. \n\"Yes... This looks as though it came from the bottle we were going to use in celebration tonight. A travesty for such a beautiful wine to go to waste.\"" << endl;
+                    type_and_continue();
+                }
+                else {
+                    int replyNum = ((rand() % 4) + 1);
+                    if (replyNum == 1) {
+                        cout << "\"I don't recall.\"" << endl;
+                        type_and_continue();
+                    }
+                    if (replyNum == 2) {
+                        cout << "\"That has nothing to do with wine.\"" << endl;
+                        type_and_continue();
+                    }
+                    if (replyNum == 3) {
+                        cout << "\"That has nothing to do with me.\"" << endl;
+                        type_and_continue();
+                    }
+                    if (replyNum == 4) {
+                        cout << "\"And you think that I did that?.\"" << endl;
+                        type_and_continue();
+                    }
                 }
 
                 //Empties console screen
@@ -2571,7 +2694,7 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
                 if (((userKeyword.compare("broken") == 0)
                     || (userKeyword.compare("lock") == 0))
                     && ((clueList.at(BROKENLOCK)).compare("???") != 0)) {
-                    cout << "The Mudman doesn't respond, he simply starts rolling in his mudman excitedly." << endl;
+                    cout << "The Mudman doesn't respond, he simply starts rolling in his mud excitedly." << endl;
                     type_and_continue();
                 }
                 if (((userKeyword.compare("slashed") == 0)
