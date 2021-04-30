@@ -2343,6 +2343,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                 }
                 else {
                     int replyNum = ((rand() % 4) + 1);
+                    cout << replyNum;
                     if (replyNum == 1) {
                         cout << "\"Sorry, I don't know about that.\"" << endl;
                     }
@@ -2355,6 +2356,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     if (replyNum == 4) {
                         cout << "\"You probably know more about that than me.\"" << endl;
                     }
+                    type_and_continue();
                 }
                 //Empties console screen
                 system("CLS");
@@ -2743,6 +2745,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     if (replyNum == 4) {
                         cout << "\"I'm sorry I can't be a help to you, Detective, but I don't have a clue regarding that.\"" << endl;
                     }
+                    type_and_continue();
                 }
                 //Empties console screen
                 system("CLS");
@@ -2821,6 +2824,14 @@ void print_interrogation_request(int roomNum, vector<string>& clueList) {
         break;
     case MRSSTRONGHOLD:
         cout << clueList.at(CASEFILE) << endl;
+        cout << clueList.at(SMALLSAFE) << endl;
+        cout << clueList.at(INSURANCEPOLICY) << endl;
+        cout << clueList.at(MISSINGKNIFE) << endl;
+        cout << clueList.at(EARRING) << endl;
+        cout << clueList.at(WASHEDSINK) << endl;
+        cout << clueList.at(SLASHEDTHROAT) << endl;
+        cout << clueList.at(FOAMEDMOUTH) << endl;
+        cout << clueList.at(SMALLBUTTON) << endl;
         break;
     case WINECRAFTER:
         cout << clueList.at(CASEFILE) << endl;
@@ -2830,6 +2841,14 @@ void print_interrogation_request(int roomNum, vector<string>& clueList) {
         break;
     case ASTRONOMER:
         cout << clueList.at(CASEFILE) << endl;
+        cout << clueList.at(SMALLSAFE) << endl;
+        cout << clueList.at(LATECHECK) << endl;
+        cout << clueList.at(ANONYMOUSLETTER) << endl;
+        cout << clueList.at(EMPTYDISPLAY) << endl;
+        cout << clueList.at(BROKENLOCK) << endl;
+        cout << clueList.at(SLASHEDTHROAT) << endl;
+        cout << clueList.at(FOAMEDMOUTH) << endl;
+        cout << clueList.at(SNOWYFOOTPRINTS) << endl;
         break;
     }
     cout << "(Type \"end\" to end the interrogation with " << get_character_name(roomNum) << " and return to the character interaction menu.)" << endl;
