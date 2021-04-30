@@ -2414,19 +2414,15 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << replyNum;
                     if (replyNum == 1) {
                         cout << "\"Sorry, I don't know about that.\"" << endl;
-                        type_and_continue();
                     }
                     if (replyNum == 2) {
                         cout << "\"Why would I know anything about that?\"" << endl;
-                        type_and_continue();
                     }
                     if (replyNum == 3) {
                         cout << "\"I don't really know anything regarding that, sorry.\"" << endl;
-                        type_and_continue();
                     }
                     if (replyNum == 4) {
                         cout << "\"You probably know more about that than me.\"" << endl;
-                        type_and_continue();
                     }
                     type_and_continue();
                 }
@@ -2526,20 +2522,17 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                     int replyNum = ((rand() % 4) + 1);
                     if (replyNum == 1) {
                         cout << "\"I don't recall.\"" << endl;
-                        type_and_continue();
                     }
                     if (replyNum == 2) {
                         cout << "\"That has nothing to do with wine.\"" << endl;
-                        type_and_continue();
                     }
                     if (replyNum == 3) {
                         cout << "\"That has nothing to do with me.\"" << endl;
-                        type_and_continue();
                     }
                     if (replyNum == 4) {
                         cout << "\"And you think that I did that?.\"" << endl;
-                        type_and_continue();
                     }
+                    type_and_continue();
                 }
 
                 //Empties console screen
