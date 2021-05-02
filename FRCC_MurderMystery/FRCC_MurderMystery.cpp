@@ -33,6 +33,8 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
 void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 
+void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
+
 //These functions print requests for user input. 
 //These first two ask the player for a keyword to investigate.
 void print_keyword_request(int roomNum);
@@ -73,6 +75,7 @@ void print_input(string input);
 const int MEETCLYDE = 0;
 const int FINDFLASHLIGHT = 1;
 const int FINDUVLIGHT = 2;
+const int ACCUSEMRSSTRONGHOLD = 3;
 
 //These constants will be used as the indexes of the clues in the clueList vector.
 //They will help title each clue as they are found.
@@ -3967,7 +3970,9 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
 
 }
 
+void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
 
+}
 
 //Asks user what they want to investigate
 void print_keyword_request(int roomNum) {
