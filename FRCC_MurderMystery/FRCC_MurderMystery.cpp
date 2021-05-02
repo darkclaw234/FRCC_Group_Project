@@ -12,10 +12,8 @@ using namespace std;
 
 //This function will print the beginning of the story to give the player context.
 void beginning();
-
 //This function will give the player a basic tutorial on the game's input system.
 void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList);
-
 //This function will print the end of the story, which may change based on the player's actions.
 void ending(vector<bool>& currentUserChoices, vector<string>& clueList);
 
@@ -35,10 +33,14 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
 void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 
-//These functions print requests for user input. The first requests a keyword to investigate, 
-//and the second requests input for a room name.
+//These functions print requests for user input. 
+//These first two ask the player for a keyword to investigate.
 void print_keyword_request(int roomNum);
+void print_further_keyword_request();
+//This function asks the player for a new room name.
 void print_new_room_request(int roomNum);
+//These functions ask the player what questions they want to ask an NPC
+//or which clue they want to interrogate an NPC with.
 void print_questioning_request(int roomNum);
 void print_pendleton_help_request(int roomNum);
 void print_interrogation_request(int roomNum, vector<string>& clueList);
@@ -89,14 +91,15 @@ const int EMPTYDISPLAY = 11;
 const int BLOODSTAINS = 12;
 const int CLEANEDFLOOR = 13;
 const int GLASSSHARDS = 14;
-const int BROKENLOCK = 15;
-const int SLASHEDTHROAT = 16;
-const int FOAMEDMOUTH = 17;
-const int BLOODYGARMENT = 18;
-const int WETBOOTS = 19;
-const int EARRING = 20;
-const int WASHEDSINK = 21;
-const int SNOWYFOOTPRINTS = 22;
+const int BREAKERBOX = 15;
+const int BROKENLOCK = 16;
+const int SLASHEDTHROAT = 17;
+const int FOAMEDMOUTH = 18;
+const int BLOODYGARMENT = 19;
+const int WETBOOTS = 20;
+const int EARRING = 21;
+const int WASHEDSINK = 22;
+const int SNOWYFOOTPRINTS = 23;
 
 
 //These constants will be used as markers for each room's number.
@@ -158,7 +161,8 @@ int main()
         clueList.at(i) = "???";
     }
 
-    clueList.at(CASEFILE) = "\"Case File\"";
+    //FIXME: REDISTRIBUTE clues to appropriate places around house
+    clueList.at(CASEFILE) = "\"Case File\" in the " + get_room_name(TROPHYHALL);
     clueList.at(EXPENSEREPORTS) = "\"Expense Reports\" in the " + get_room_name(OFFICE);
     clueList.at(SMALLSAFE) = "\"Small Safe\" in the " + get_room_name(OFFICE);
     clueList.at(INSURANCEPOLICY) = "\"Insurance Policy\" in the " + get_room_name(OFFICE);
@@ -173,14 +177,15 @@ int main()
     clueList.at(BLOODSTAINS) = "\"Bloodstains\" in the " + get_room_name(WINECELLAR);
     clueList.at(CLEANEDFLOOR) = "\"Cleaned Floor\" in the " + get_room_name(WINECELLAR);
     clueList.at(GLASSSHARDS) = "\"Glass Shards\" in the " + get_room_name(BOILERROOM);
-    clueList.at(BROKENLOCK) = "\"Broken Lock\" on the " + get_room_name(OBSERVATORY) + " door to the " + get_room_name(BALCONY);
-    clueList.at(SLASHEDTHROAT) = get_character_name(DRSTRONGHOLD) + "'s Slashed Throat";
-    clueList.at(FOAMEDMOUTH) = get_character_name(DRSTRONGHOLD) + "'s Foaming Mouth";
+    clueList.at(BREAKERBOX) = "\"Breaker Box\" in the " + get_room_name(BOILERROOM);
+    clueList.at(BROKENLOCK) = "\"Broken Lock\" on the " + get_room_name(OBSERVATORY) + "'s door to the " + get_room_name(BALCONY);
+    clueList.at(SLASHEDTHROAT) = "\"Slashed Throat\" of " + get_character_name(DRSTRONGHOLD) + "'s";
+    clueList.at(FOAMEDMOUTH) = "\"Foamed Mouth\" of " + get_character_name(DRSTRONGHOLD) + "'s";
     clueList.at(BLOODYGARMENT) = "\"Bloody Garment\" in the " + get_room_name(MASTERBEDROOM);
     clueList.at(WETBOOTS) = "\"Wet Boots\" in the " + get_room_name(MASTERBEDROOM);
     clueList.at(EARRING) = "\"Earring\" in the " + get_room_name(MASTERBEDROOM);
     clueList.at(WASHEDSINK) = "\"Washed Sink\" in the " + get_room_name(MASTERBEDROOM);
-    clueList.at(SNOWYFOOTPRINTS) = "The \"Snowy Footprints\" on the " + get_room_name(MASTERBEDROOM);
+    clueList.at(SNOWYFOOTPRINTS) = "\"Snowy Footprints\" on the " + get_room_name(BALCONY);
 
     //FIXME: REMOVE ONCE GAME IS FINISHED
     //Prints clueList
@@ -1925,10 +1930,11 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
 
     //Empties console screen
     system("CLS");
-
+    //Prints a title to tell the player which character they are questioning
     print_character_questioning_title(roomNum);
     cout << "As you approach him, he smiles at you with confidence." << endl;
     cout << "\"Hello, Detective. What do you need?\"" << endl;
+    //Asks player which questions they'd like to ask Pendleton
     print_pendleton_help_request(roomNum);
     string userKeyword = get_keyword_input();
 
@@ -1937,185 +1943,363 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
 
         //Don't forget quotes when they speak
         if (userKeyword.compare("1") == 0) {
-            cout << "FIXME: ADD CASE FILE EXPLANATION" << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << "You ask " << get_character_name(CLYDE, INFORMAL) << " about the case file's contents."<< endl;
+            cout << "He opens your case file up and points to the different sections." << endl;
+            cout << "\"This case file will provide you with a basic introduction to the case." << endl;
+            cout << "It contains information on the following subjects:" << endl;
+            cout << "Some background information on the suspects, the order of events before the murder, " << endl;
+            cout << "and a rough autopsy of Dr.Stronghold's body.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << get_character_name(CLYDE, INFORMAL) << " pats you on the shoulder." << endl;
+            cout << "\"And that's about it!" << endl;
+            cout << "Once you've read up on the case, you should begin investigating the house and interrogating the suspects.\"" << endl;
+            cout << "He smiles at you." << endl;
+            cout << "\"Hopefully you'll have it solved in no time.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("2") == 0) {
-            cout << "FIXME: ADD INVESTIGATION EXPLANATION" << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << "You ask " << get_character_name(CLYDE, INFORMAL) << " how to investigate each room." << endl;
+            cout << "He ponders the question while chewing some gum." << endl;
+            cout << "\"Well, when you enter a room, you should take a good look at its description." << endl;
+            cout << "Then you just need to type an object's name to investigate it." << endl;
+            cout << "For example, if you see a plant in a room, you could type \'plant\' to investigate it." << endl;
+            cout << "When you do, you'll receive a more in-depth description of it.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << get_character_name(CLYDE, INFORMAL) << "'s eyes light up." << endl;
+            cout << "\"Oh! One more thing though." << endl;
+            cout << "Sometimes, when you investigate an object, " << endl;
+            cout << "you'll be given an opportunity to investigate it even further." << endl;
+            cout << "If the room's main description disappears, " << endl; 
+            cout << "and you can only see the object's description, " << endl; 
+            cout << "and a prompt asks you to investigate further, " << endl;
+            cout << "then you should be able to investigate items within that object's description!\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "He scratches his chin." << endl;
+            cout << "\"For example, let's say I'm investigating a bookshelf." << endl;
+            cout << "It says that there's a book about nature, and a book about snails." << endl;
+            cout << "If I'm asked to investigate further, I could type \'nature\' or \'snails\' to find out more on either book!\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("3") == 0) {
-            cout << "FIXME: ADD CHARACTER QUESTIONING EXPLANATION" << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << "You ask " << get_character_name(CLYDE, INFORMAL) << " how to tell when you've found a clue." << endl;
+            cout << "\"Good question!\"" << endl;
+            cout << get_character_name(CLYDE, INFORMAL) << " points to the case file." << endl;
+            cout << "\"When you find a clue, let's say your case file, a message will pop up on the screen letting you know." << endl;
+            cout << "It'll say something along the lines of \'You've found a clue! You can access this clue in your inventory.\'" << endl;
+            type_and_continue();
+
+            cout << "\n" << "\"Once you've found a clue, you can access it by typing \'inventory\' in any room." << endl;
+            cout << "Typing \'inventory\' will allow you to look at any of the clues you've already found.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("4") == 0) {
-            cout << "FIXME: EXPLAIN THAT SAVES DON'T WORK RIGHT NOW" << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << "You ask " << get_character_name(CLYDE, INFORMAL) << " how to question the suspects." << endl;
+            cout << "\"In order to question a suspect, first you need to go to the room they're in." << endl;
+            cout << "Then, you need to type their name or profession when asked what you'd like to investigate.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "\"When questioning a suspect, you can either type \'1\' to ask who they are," << endl;
+            cout << "\'2\' to ask about their whereabouts last night, or \'3\' to ask who they think the murderer is.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "\"And, if you want to ask the suspect about any clues you've found, you can type \'interrogate\'." << endl;
+            cout << "This will bring up the interrogation menu, and tell you which clues you can ask them about." << endl;
+            cout << "Then you just type a clue's name to ask about it." << endl;
+            cout << "For example, you could type \'case\' or \'file\' or \'case file\' to ask about the case file.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("5") == 0) {
-            cout << "FIXME: EXPLAIN HOW THE ENDING WORKS WHEN IT'S FINISHED" << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << "You ask " << get_character_name(CLYDE, INFORMAL) << " how to end the game when you've solved the murder and he chuckles."<< endl;
+            cout << "\"Already excited to wrap this thing up? So impatient, Detective." << endl; 
+            cout << "Well, whenever you're ready to end the game, come back here and investigate the plastic table.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "\"Once you've found at least ten clues, you can make your final guess by investigating the handcuffs." << endl;
+            cout << "Be warned, though. You only get one guess at the murderer's identity, Detective." << endl;
+            cout << "Try not to ruin an innocent man or woman's life.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("interrogate") == 0) {
 
             //Empties console screen
             system("CLS");
+            //Prints a title to tell the player which character they are questioning / interrogating
+            print_character_questioning_title(roomNum);
+            //Asks player which piece of evidence they'd like to interrogate the suspect about
             print_interrogation_request(roomNum, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
 
                 if (((userKeyword.compare("case") == 0)
-                    || (userKeyword.compare("file") == 0))
+                    || (userKeyword.compare("file") == 0)
+                    || (userKeyword.compare("casefile") == 0))
                     && ((clueList.at(CASEFILE)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO CASEFILE'S CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You hand over the Case File to " << get_character_name(CLYDE, INFORMAL) << "." << endl;
+                    cout << "\"Ah, a question about the case file? Unfortunately, I can't answer many of them.\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "\"Here's what I can say about the Case File:" << endl;
+                    cout << "The information in this case file is true to my knowledge." << endl;
+                    cout << "I took brief notes whilst talking to each suspect and looked around the rooms myself." << endl;
+                    cout << "You may get more information by talking to the suspects yourself or investigating rooms yourself, however." << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "Also, don't take my information as gospel, Detective." << endl;
+                    cout << "If something in there contradicts your evidence, trust your gut." << endl;
+                    cout << "I'm human. I'm sure I could've made a mistake or two, or been told a lie.\"" << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("expense") == 0)
-                    || (userKeyword.compare("reports") == 0)
-                    || (userKeyword.compare("report") == 0))
+                else if (((userKeyword.compare("expense") == 0)
+                    || (userKeyword.compare("report") == 0)
+                    || (userKeyword.compare("reports") == 0))
                     && ((clueList.at(EXPENSEREPORTS)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO EXPENSEREPORTS' CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(CLYDE, INFORMAL) << " frowns." << endl;
+                    cout << "\"Yes, I'm quite aware of these expense reports." << endl;
+                    cout << get_character_name(DRSTRONGHOLD) << " had just secured a grant before he died." << endl;
+                    cout << "It seems the mining town's mayor and his wife came to dinner to discuss it." << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "They're not suspects, however. They left right after dinner, and were seen arriving in town before the murder." << endl;
+                    cout << "Our suspects are just " << get_character_name(BUTLER) << ", " << get_character_name(SOUSCHEF) << ", " 
+                    << get_character_name(MRSSTRONGHOLD) << ", " << get_character_name(WINECRAFTER) << ", and " << get_character_name(ASTRONOMER) << "." << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("small") == 0)
+                else if (((userKeyword.compare("small") == 0)
                     || (userKeyword.compare("safe") == 0))
                     && ((clueList.at(SMALLSAFE)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO SMALLSAFE'S CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You ask " << get_character_name(CLYDE, INFORMAL) << " about the safe in the " << get_room_name(OFFICE) << "." << endl;
+                    cout << "\"Ah, I've asked " << get_character_name(MRSSTRONGHOLD) << " about that safe." << endl;
+                    cout << "Apparently only her and her husband could open it, but she's not willing to do so for us." << endl;
+                    cout << "Maybe you could convince her to open it somehow, just to make sure neither of them are hiding anything.\"" << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("insurance") == 0)
-                    || (userKeyword.compare("policy") == 0))
-                    && ((clueList.at(INSURANCEPOLICY)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO INSURANCEPOLICY'S CONTENTS." << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("late") == 0)
-                    || (userKeyword.compare("check") == 0))
-                    && ((clueList.at(LATECHECK)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO THIS LATECHECK'S CONTENTS." << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("anonymous") == 0)
-                    || (userKeyword.compare("letter") == 0))
-                    && ((clueList.at(ANONYMOUSLETTER)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO ANONYMOUSLETTER'S CONTENTS." << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("locked") == 0)
-                    || (userKeyword.compare("chests") == 0)
-                    || (userKeyword.compare("chest") == 0))
+                else if (((userKeyword.compare("locked") == 0)
+                    || (userKeyword.compare("chest") == 0)
+                    || (userKeyword.compare("chests") == 0))
                     && ((clueList.at(LOCKEDCHESTS)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO LOCKEDCHESTS' CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(CLYDE, INFORMAL) << " snickers as you mention the Butler and Sous Chef's locked chests." << endl;
+                    cout << "\"It seems even the servants are filled with paranoia too, eh?" << endl;
+                    cout << "Unfortunately, I think the servants are less likely to cooperate. Those are their closest belongings." << endl;
+                    cout << "I wouldn't waste your time trying to open their chests.\"" << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("missing") == 0)
+                else  if (((userKeyword.compare("missing") == 0)
                     || (userKeyword.compare("knife") == 0))
                     && ((clueList.at(MISSINGKNIFE)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO MISSINGKNIFE'S CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(CLYDE, INFORMAL) << " clears his throat as you mention the missing kitchen knife." << endl;
+                    cout << "\"Yes, I'm quite positive that's our murder weapon." << endl;
+                    cout << "It seems to be the same one found in the " << get_room_name(MASTERBEDROOM) << ".\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "\"The sliced throat makes that rather obvious." << endl;
+                    cout << "Unless there's some wild evidence I couldn't find, our victim died of blood loss from that wound." << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("red") == 0)
-                    || (userKeyword.compare("velvet") == 0)
-                    || (userKeyword.compare("chairs") == 0)
-                    || (userKeyword.compare("chair") == 0))
-                    && ((clueList.at(REDVELVETCHAIRS)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO REDVELVETCHAIR'S CONTENTS." << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("cut") == 0)
-                    || (userKeyword.compare("night") == 0)
-                    || (userKeyword.compare("shade") == 0)
-                    || (userKeyword.compare("nightshade") == 0))
-                    && ((clueList.at(CUTNIGHTSHADE)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO CUTNIGHTSHADE'S CONTENTS." << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("small") == 0)
-                    || (userKeyword.compare("button") == 0))
-                    && ((clueList.at(SMALLBUTTON)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO SMALLBUTTON'S CONTENTS." << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("empty") == 0)
-                    || (userKeyword.compare("display") == 0))
-                    && ((clueList.at(EMPTYDISPLAY)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO EMPTYDISPLAY'S CONTENTS." << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("blood") == 0)
+                else if (((userKeyword.compare("blood") == 0)
+                    || (userKeyword.compare("stain") == 0)
                     || (userKeyword.compare("stains") == 0)
-                    || (userKeyword.compare("stain") == 0))
+                    || (userKeyword.compare("bloodstain") == 0)
+                    || (userKeyword.compare("bloodstains") == 0))
                     && ((clueList.at(BLOODSTAINS)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO BLOODSTAINS' CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+                    
+                    cout << get_character_name(CLYDE, INFORMAL) << "'s brow furrows." << endl;
+                    cout << "\"There are some cleaned blood stains in the " << get_room_name(WINECELLAR) << "?\"" << endl;
+                    cout << "You explain that you used a UV light to find them thanks to the Astronomer." << endl;
+                    cout << "\"That changes everything..." << endl;
+                    type_and_continue();
+                    
+                    cout << "\n" << get_character_name(CLYDE, INFORMAL) << " paces the room." << endl;
+                    cout << "\"Well, none of the suspects claimed to be in the " << get_room_name(WINECELLAR) << " last night."<< endl;
+                    cout << "Because of that, I think we can safely assume that's Dr. Stronghold's blood." << endl;
+                    cout << "Now we have to figure out how it got there." << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("cleaned") == 0)
+                else if (((userKeyword.compare("cleaned") == 0)
                     || (userKeyword.compare("floor") == 0))
                     && ((clueList.at(CLEANEDFLOOR)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO CLEANEDFLOOR'S CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+                    
+                    cout << get_character_name(CLYDE, INFORMAL) << " thinks for a moment." << endl;
+                    cout << "\"The cleaned floor smells like bleach?\"" << endl;
+                    cout << "\"Isn't the Butler using bleach to clean the " << get_room_name(BALLROOM) << "?\"" << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("glass") == 0)
-                    || (userKeyword.compare("shards") == 0)
-                    || (userKeyword.compare("shard") == 0))
-                    && ((clueList.at(GLASSSHARDS)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO GLASSSHARDS' CONTENTS." << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("broken") == 0)
+                else if (((userKeyword.compare("broken") == 0)
                     || (userKeyword.compare("lock") == 0))
                     && ((clueList.at(BROKENLOCK)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO BROKENLOCK'S CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+                    
+                    cout << "You ask " << get_character_name(CLYDE, INFORMAL) << " about the broken lock." << endl;
+                    cout << "\"Mmm... Ask the Astronomer for more details, but I was told the lock broke during the blackout." << endl;
+                    cout << "Whoever murdered " << get_character_name(DRSTRONGHOLD) << " probably used the balcony to escape the " << get_room_name(MASTERBEDROOM) << "." << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "I'm still not sure why, though." << endl;
+                    cout << "You'd think leaving through the room's main entrance would be easier." << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("slashed") == 0)
+                else if (((userKeyword.compare("slashed") == 0)
                     || (userKeyword.compare("throat") == 0))
                     && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO SLASHEDTHROAT'S CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(CLYDE, INFORMAL) << "'s eyes fill with anger." << endl;
+                    cout << "\"A painful way to die... but at least it was quick.\"" << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("foamed") == 0)
+                else if (((userKeyword.compare("foamed") == 0)
                     || (userKeyword.compare("mouth") == 0))
                     && ((clueList.at(FOAMEDMOUTH)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO FOAMEDMOUTH'S CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(CLYDE, INFORMAL) << " seems a little stunned." << endl;
+                    cout << "\"What?" << endl;
+                    cout << "I didn't see that during my investigation." << endl;
+                    cout << "I'm... truly unable to say why that happened.\"" << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("bloody") == 0)
+                else if (((userKeyword.compare("bloody") == 0)
                     || (userKeyword.compare("garment") == 0))
                     && ((clueList.at(BLOODYGARMENT)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO BLOODGARMENT'S CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(CLYDE, INFORMAL) << " scowls." << endl;
+                    cout << "\"Detective, you found this under the bed?\"" << endl;
+                    cout << "You nod at him." << endl;
+                    cout << "\"This seems rather incriminating... but I'm not sure who for.\"" << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("wet") == 0)
-                    || (userKeyword.compare("boots") == 0))
-                    && ((clueList.at(WETBOOTS)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO WETBOOTS' CONTENTS." << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("earring") == 0))
-                    && ((clueList.at(EARRING)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO EARRING'S CONTENTS." << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("washed") == 0)
-                    || (userKeyword.compare("sink") == 0))
-                    && ((clueList.at(WASHEDSINK)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO WASHEDSINK'S CONTENTS." << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("snowy") == 0)
+                else if (((userKeyword.compare("snowy") == 0)
                     || (userKeyword.compare("foot") == 0)
                     || (userKeyword.compare("prints") == 0)
                     || (userKeyword.compare("footprints") == 0))
                     && ((clueList.at(SNOWYFOOTPRINTS)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO SNOWYFOOTPRINTS' CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(CLYDE, INFORMAL) << " holds his breath at the mention of the footprints." << endl;
+                    cout << "\"That confused the hell out of me. I was prepared to find one set of footprints, but two?" << endl;
+                    cout << "I have no idea why there are two sets.\"" << endl;
+                    type_and_continue();
+                }
+                else {
+                    int replyNum = ((rand() % 4) + 1);
+                    if (replyNum == 1) {
+                        cout << "\n\"I didn't find that in my investigation... Interesting.\"" << endl;
+                    }
+                    if (replyNum == 2) {
+                        cout << "\n\"I'm not sure this is relevant to the case. Sorry.\"" << endl;
+                    }
+                    if (replyNum == 3) {
+                        cout << "\n\"I'm not sure I can help with that.\"" << endl;
+                    }
+                    if (replyNum == 4) {
+                        cout << "\n\"I don't know anything about that.\"" << endl;
+                    }
                     type_and_continue();
                 }
 
+
                 //Empties console screen
                 system("CLS");
+                
                 print_input(userKeyword);
+
+                //Prints a title to tell the player which character they are questioning / interrogating
+                print_character_questioning_title(roomNum);
+                //Asks player which piece of evidence they'd like to interrogate the suspect about
                 print_interrogation_request(roomNum, clueList);
                 userKeyword = get_keyword_input();
             }
@@ -2124,8 +2308,13 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
 
         //Empties console screen
         system("CLS");
+        //Prints a title to tell the player which character they are questioning
+        print_character_questioning_title(roomNum);
+
         print_input(userKeyword);
-        print_questioning_request(roomNum);
+
+        //Asks player which questions they'd like to ask Pendleton
+        print_pendleton_help_request(roomNum);
         userKeyword = get_keyword_input();
     }
 
@@ -2135,116 +2324,288 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     //Empties console screen
     system("CLS");
-
+    //Prints a title to tell the player which character they are questioning
     print_character_questioning_title(roomNum);
     cout << "As you approach him, he bows to you with great fervor." << endl;
     cout << "\"Hello, Detective. I can be at your service whenever you wish.\"" << endl;
+    //Asks player which questions they'd like to ask the suspect
     print_questioning_request(roomNum);
     string userKeyword = get_keyword_input();
 
     //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
     while (userKeyword.compare("stop") != 0) {
 
-        //Don't forget quotes when they speak
         if (userKeyword.compare("1") == 0) {
-            cout << "How do you do? My name is Sebation Gilmore. I live and work here in this manor and serve as a butler to the Stronghold family." << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << "\"Good evening, Detective.\"" << endl;
+            cout << "He shakes your hand." << endl;
+            cout << "\"My name is Sebation Gilmore." << endl;
+            cout << "I serve the Stronghold family as a butler. I've also been given the opportunity to live here.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "He looks away from you and sighs." << endl;
+            cout << "\"I'd like to think I'm a no nonsense kind of person, Detective. Hard working. Efficient." << endl;
+            cout << "In that same vein, I'd like to do everything in my power to find our killer." << endl;
+            cout << "Please ask me any questions you have, even if they incriminate me.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("2") == 0) {
-            cout << "I was in the library starting the fireplace for Mrs. Stronghold." << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << "\"He pauses to think for a moment." << endl;
+            cout << "After Dinner, I grabbed a hors d'oeuvre or two from the " << get_room_name(KITCHEN) << "." << endl;
+            cout << "I started cleaning the " << get_room_name(BALLROOM) << ", and did so for an hour or so.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "His brows furrow." << endl;
+            cout << "\"Oh yes, then I was told that Mrs. Stronghold wanted to sit by the " << get_room_name(LIBRARY) << " fireplace after her bath." << endl;
+            cout << "I gathered some firewood from the " << get_room_name(GREENHOUSE) << " and saw the Wine Crafter." << endl;
+            cout << "Then I grabbed some hors d'oeuvres for " << get_character_name(MRSSTRONGHOLD) << " and made my way to the " << get_room_name(LIBRARY) << "." << endl;
+            cout << "Around the time I finished lighting the fire, " << get_character_name(MRSSTRONGHOLD) << " screamed." << endl;
+            cout << "I made my way to the " << get_room_name(MASTERBEDROOM) << " and nobody left each other's sides since." << endl;
+            type_and_continue();
+
+            cout << "\n" << "\"It's a shame though. I wanted to finish cleaning the " << get_room_name(BALLROOM) << " today." << endl;
+            cout << "The Butler gets a little teary eyed." << endl;
+            cout << "I've been cleaning all week, but I couldn't finish " << get_character_name(DRSTRONGHOLD) << "'s final order before he died.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("3") == 0) {
-            cout << "Some of the people at the table seemed to be quite jealous of the Dr. for his wealth." << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << "A little frown appears on " << get_character_name(BUTLER) << "'s face." << endl;
+            cout << "\"I'm sure everyone is thrilled to get out their distaste for someone with meaningless gossip." << endl;
+            cout << "But frankly, Detective, I think all of us would have a reason to kill " << get_character_name(DRSTRONGHOLD) << "." << endl;
             type_and_continue();
+
+            cout << "\n" << "\"That doesn't mean I think all of us here would've, or that " << get_character_name(DRSTRONGHOLD) << " was a bad man." << endl;
+            cout << "I just think it's human nature to be crushed when your wishes or hopes are denied." << endl;
+            cout << "And truthfully, he's denied all of our wishes at times.\"" << endl;
+            type_and_continue(); 
         }
         if (userKeyword.compare("interrogate") == 0) {
 
             //Empties console screen
             system("CLS");
+            //Prints a title that tells the player which character they are questioning / interrogating
+            print_character_questioning_title(roomNum);
+            //Asks player which piece of evidence they'd like to interrogate the suspect about
             print_interrogation_request(roomNum, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
 
                 if (((userKeyword.compare("case") == 0)
-                    || (userKeyword.compare("file") == 0))
+                    || (userKeyword.compare("file") == 0)
+                    || (userKeyword.compare("casefile") == 0))
                     && ((clueList.at(CASEFILE)).compare("???") != 0)) {
-                    cout << "\"Shame for him to die in such an undignified way. I always thought he would just pass in his sleep.\"" << endl;
-                    type_and_continue();
-                }
-                else if (((userKeyword.compare("floor") == 0)
-                    || (userKeyword.compare("cleaned") == 0))
-                    && ((clueList.at(CLEANEDFLOOR)).compare("???") != 0)) {
-                    cout << "You mention how the cleaned floor in the wine cellar smelled of the same chemicals that Mr. Gilmore uses. \n\"I have not cleaned the wine cellar recently. I can only assume someone stole my cleaning supplies.\"" << endl;
-                    type_and_continue();
-                }
-                else if (((userKeyword.compare("throat") == 0)
-                    || (userKeyword.compare("slashed") == 0))
-                    && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
-                    cout << "\"Well. I don't think that is normal. I don't remember his throat being like that during dinner.\"" << endl;
-                    type_and_continue();
-                }
-                else if (((userKeyword.compare("wet") == 0)
-                    || (userKeyword.compare("boots") == 0))
-                    && ((clueList.at(WETBOOTS)).compare("???") != 0)) {
-                    cout << "\"Dr. Stronghold only uses his boots when the snow is bad and he has to go out. He would have no reason to use them during a party.\"" << endl;
-                    type_and_continue();
-                }
-                else if (((userKeyword.compare("empty") == 0)
-                    || (userKeyword.compare("display") == 0))
-                    && ((clueList.at(EMPTYDISPLAY)).compare("???") != 0)) {
-                    cout << "\"We were planning on having some wine tonight in order to celebrate.\"" << endl;
-                    type_and_continue();
-                }
-                else if (((userKeyword.compare("button") == 0)
-                    || (userKeyword.compare("small") == 0))
-                    && ((clueList.at(SMALLBUTTON)).compare("???") != 0)) {
-                    cout << "\"This looks as though it came off of one of the Dr.'s shirts.\"" << endl;
-                    type_and_continue();
-                }
-                else if (((userKeyword.compare("glass") == 0)
-                    || (userKeyword.compare("shards") == 0))
-                    && ((clueList.at(GLASSSHARDS)).compare("???") != 0)) {
-                    cout << "You hand Sebastion a glass shard. \n\"This looks like it came from a wine bottle. Perhaps the one we were supposed to drink tonight.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "As he turns the case file's pages, he looks disturbed." << endl;
+                    cout << "\"It's a shame he died in an undignified fashion." << endl;
+                    cout << "I always thought he would just pass in his sleep peacefully.\"" << endl;
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("anonymous") == 0)
                     || (userKeyword.compare("letter") == 0))
                     && ((clueList.at(ANONYMOUSLETTER).compare("???") != 0))) {
-                    cout << "\"I didn't write it that's for sure. The handwriting is quite sloppy compared to mine.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You show " << get_character_name(BUTLER, INFORMAL) << " the letter." << endl;
+                    cout << "\"You found this in " << get_character_name(DRSTRONGHOLD) << "'s safe?" << endl;
+                    cout << "I suppose he is the kind of man to be sentimental in private.\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "He raises his eyebrow." << endl;
+                    cout << "The handwriting is quite sloppy, however.\"" << endl;
+                    cout << "I think it's too sloppy to be " << get_character_name(MRSSTRONGHOLD) << "'s or mine." << endl;
                     type_and_continue();
                 }
-                else if ((userKeyword.compare("velvet") == 0)
-                    || (userKeyword.compare("red") == 0)
-                    || (userKeyword.compare("chairs") == 0)
+                else if (((userKeyword.compare("locked") == 0)
+                    || (userKeyword.compare("chest") == 0)
+                    || (userKeyword.compare("chests") == 0))
+                    && ((clueList.at(LOCKEDCHESTS)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(BUTLER, INFORMAL) << " shakes his head as you mention the chests." << endl;
+                    cout << "\"I apologize, but I'm not interested in having you ruffle through our things." << endl;
+                    cout << "I don't think you'll lose any valuable evidence if you don't inspect my undergarments.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("red") == 0)
+                    || (userKeyword.compare("velvet") == 0)
+                    || (userKeyword.compare("chair") == 0) 
+                    || (userKeyword.compare("chairs") == 0))
                     && ((clueList.at(REDVELVETCHAIRS)).compare("???") != 0)) {
-                    cout << "" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You ask " << get_character_name(BUTLER, INFORMAL) << " where he sat during Dinner." << endl;
+                    cout << "He lightly knocks his fist on his skull while trying to remember." << endl;
+                    cout << "\"We tend to switch seats depending on the occassion, but we're always seated to " << get_character_name(DRSTRONGHOLD) << "'s right.\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "You tell " << get_character_name(BUTLER) << " to clarify who this \'we\' is." << endl;
+                    cout << "\"Because " << get_character_name(SOUSCHEF, INFORMAL) << " and I are " << get_character_name(DRSTRONGHOLD) << "'s staff, " << endl;
+                    cout << "we don't often sit down for the whole of dinner." << endl;
+                    cout << "Last night we just popped in and out of the kitchen to check on the guests and used the same empty chair.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("small") == 0)
+                    || (userKeyword.compare("button") == 0))
+                    && ((clueList.at(SMALLBUTTON)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "The Butler's eyes widen as you hand him the button." << endl;
+                    cout << "\"This button is " << get_character_name(DRSTRONGHOLD) << "'s." << endl;
+                    cout << "It's from the suit jacket he wore tonight...\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "He continues to study it." << endl;
+                    cout << "\"The buttons are carved from granite because the townsfolk made him the suit." << endl;
+                    cout << "He wore it to impress the mayor and his wife..." << endl;
+                    cout << "Where did you find this?\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("empty") == 0)
+                    || (userKeyword.compare("display") == 0))
+                    && ((clueList.at(EMPTYDISPLAY)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "The Butler nods, enthusiastically." << endl;
+                    cout << "\"Ah, the \'Alain Hudelot\'. He was saving that for a special occasion." << endl;
+                    cout << "He must have downed it because he secured us that grant.\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "But then the Butler bites his finger." << endl;
+                    cout << "\"Actually, I'm unsure why the bottle would be missing though. He usually asked me to box finished bottles." << endl;
+                    cout << "He liked to recycle them for the townsfolk, and to be honest, he hates cleaning for himself." << endl;
+                    cout << "He would've left it on the display and requested I clean it up. I'm sure of it.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("cleaned") == 0)
+                    || (userKeyword.compare("floor") == 0))
+                    && ((clueList.at(CLEANEDFLOOR)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You mention that the floor in the " << get_room_name(WINECELLAR) << " smells recently cleaned." << endl;
+                    cout << "\"I haven't cleaned the wine cellar recently. Why are you asking me about that?\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "You explain that the floor smells like his bleach." << endl;
+                    cout << "His face drains white." << endl;
+                    cout << "\"I can only assume someone stole my cleaning supplies, but I have no idea who did.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("glass") == 0)
+                    || (userKeyword.compare("shard") == 0)
+                    || (userKeyword.compare("shards") == 0))
+                    && ((clueList.at(GLASSSHARDS)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You hand " << get_character_name(BUTLER, INFORMAL) << " one of the glass shards." << endl;
+                    cout << "\"This looks like it came from a wine bottle." << endl;
+                    cout << "We don't throw away glass in this manor, however." << endl;
+                    cout << "We box bottles like these and recycle them for the mining townsfolk.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("slashed") == 0)
+                    || (userKeyword.compare("throat") == 0))
+                    && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "The Butler holds his breath." << endl;
+                    cout << "\"That's very odd. I don't remember his throat being like that during dinner.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("wet") == 0)
+                    || (userKeyword.compare("boot") == 0)
+                    || (userKeyword.compare("boots") == 0))
+                    && ((clueList.at(WETBOOTS)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You mention the boots and " << get_character_name(BUTLER, INFORMAL) << " blinks with confusion." << endl;
+                    cout << "\"" << get_character_name(DRSTRONGHOLD) << " is the only one who'd own boots like that." << endl;
+                    cout << "He would have no reason to use them during a party, however.\"" << endl;
                     type_and_continue();
                 }
                 else {
                     int replyNum = ((rand() % 4) + 1);
                     if (replyNum == 1) {
-                        cout << "\"Should I be reacting to that?\"" << endl;
-                        type_and_continue();
+                        cout << "\n\"Should I know something about that?\"" << endl;
                     }
                     if (replyNum == 2) {
-                        cout << "\"Why would I know anything about that?\"" << endl;
-                        type_and_continue();
+                        cout << "\n\"Why are you showing me this?\"" << endl;
                     }
                     if (replyNum == 3) {
-                        cout << "\"That makes no sense.\"" << endl;
-                        type_and_continue();
+                        cout << "\n\"I'm sorry, but I have no idea how this is relevant to me.\"" << endl;
                     }
                     if (replyNum == 4) {
-                        cout << "\"I've never heard of that.\"" << endl;
-                        type_and_continue();
+                        cout << "\n\"I don't know anything about that.\"" << endl;
                     }
+                    type_and_continue();
                 }
 
                 //Empties console screen
                 system("CLS");
+
                 print_input(userKeyword);
+
+                //Prints a title to tell the player which character they are questioning / interrogating
+                print_character_questioning_title(roomNum);
+                //Asks player which piece of evidence they'd like to interrogate the suspect about
                 print_interrogation_request(roomNum, clueList);
                 userKeyword = get_keyword_input();
             }
@@ -2253,7 +2614,12 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
 
         //Empties console screen
         system("CLS");
+        //Prints a title to tell the player which character they are questioning
+        print_character_questioning_title(roomNum);
+
         print_input(userKeyword);
+
+        //Asks player which questions they'd like to ask the suspect
         print_questioning_request(roomNum);
         userKeyword = get_keyword_input();
     }
@@ -2263,7 +2629,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
 
     //Empties console screen
     system("CLS");
-
+    //Prints a title to tell the player which character they are questioning
     print_character_questioning_title(roomNum);
     cout << "As you approach her, she kicks her feet against the covers." << endl;
     cout << "\"Hi there, Detective. I can answer some questions if you have any for me.\"" << endl;
@@ -2275,36 +2641,258 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
 
         //Don't forget quotes when they speak
         if (userKeyword.compare("1") == 0) {
-            cout << "FIXME: ADD CHARACTER'S INTRODUCTION" << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << "\"Good to see you, Detective.\"" << endl;
+            cout << "She smiles at you kindly." << endl;
+            cout << "\"My name is Sue Davis." << endl;
+            cout << "I'm the Head Chef of this mansion, although my official title is Sous Chef.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "The Strongholds call me Sous Chef because they think it's funny and don't understand cooking terminology." << endl;
+            cout << "Unfortunately, they aren't bright all the time.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "\"Obviously my top priority is finding the killer so I can leave this place for good." << endl;
+            cout << "Without " << get_character_name(DRSTRONGHOLD) << ", this manor will fall apart.\"" << endl;
+            cout << "She frowns rather sincerely while looking at the Grandfather Clock." << endl;
+            cout << "\"Ask me any questions you have. I'm happy to help." << endl;
+            cout << "I'd like you to solve this quickly and efficiently so us innocent folk can go.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("2") == 0) {
-            cout << "FIXME: ADD CHARACTER'S WHEREABOUTS AFTER THE DINNER" << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+            
+            cout << "She stretches for a moment, thinking." << endl;
+            cout << "\"Oh, whereabouts? I didn't do too much today after Dinner." << endl;
+            cout << "After Dinner, I spoke to the Butler in the " << get_room_name(KITCHEN) << " for a bit." << endl;
+            cout << "Then I watched the Gardener harvest some grapes and he let me have some.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "She yawns." << endl;
+            cout << "\"My apologies, it's quite late for me." << endl;
+            cout << "I think after that I checked up on " << get_character_name(MRSSTRONGHOLD) << " during her bath." << endl;
+            cout << "Then I just went to my room for the rest of the night.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "\"Once I was here I took a nap, but I was awoken by " << get_character_name(MRSSTRONGHOLD) << "'s scream." << endl;
+            cout << "Unfortunately, I don't believe anyone can corroberate my story, but it's the truth!\"" << endl;
+            cout << "She smiles sleepily." << endl;
+            cout << "\"In fact, once you leave me here, I think I'll try to finish that nap.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("3") == 0) {
-            cout << "FIXME: ADD CHARACTER'S SUSPICIONS ABOUT OTHERS" << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << get_character_name(SOUSCHEF, INFORMAL) << " sighs." << endl;
+            cout << "\"I don't think I'd feel right accusing anyone outright." << endl;
+            cout << "But, I think several people would have a motive.\""<< endl;
+            type_and_continue();
+
+            cout << "\n" << "\"" << get_character_name(BUTLER, INFORMAL) << " is treated more like a donkey than a worker sometimes.\"" << endl;
+            cout << "He deserves more respect." << endl;
+            type_and_continue();
+
+            cout << "\n" << "\"" << get_character_name(MRSSTRONGHOLD, INFORMAL) << " is a very cold woman, too." << endl;
+            cout << "I could see her slicing any of our throats open really, if she had a reason.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "\"" << "And I don't think " << get_character_name(WINECRAFTER, INFORMAL) << "would kill anyone... " << endl;
+            cout << "But " << get_character_name(DRSTRONGHOLD) << " sold some of " << get_character_name(WINECRAFTER, INFORMAL) << "'s best bottles against his wishes.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("interrogate") == 0) {
 
             //Empties console screen
             system("CLS");
+            //Prints a title that tells the player which character they are questioning / interrogating
+            print_character_questioning_title(roomNum);
+            //Asks player which piece of evidence they'd like to interrogate the suspect about
             print_interrogation_request(roomNum, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
 
                 if (((userKeyword.compare("case") == 0)
-                    || (userKeyword.compare("file") == 0))
+                    || (userKeyword.compare("file") == 0)
+                    || (userKeyword.compare("casefile") == 0))
                     && ((clueList.at(CASEFILE)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO CASEFILE'S CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You hand " << get_character_name(SOUSCHEF) << " the case file. She reads through it palely." << endl;
+                    cout << "\"This is so wrong, detective. To kill someone so grusomely." << endl;
+                    cout << "Whoever slashed " << get_character_name(DRSTRONGHOLD) << "'s throat deserves to rot in prison.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("anonymous") == 0)
+                    || (userKeyword.compare("letter") == 0))
+                    && ((clueList.at(ANONYMOUSLETTER).compare("???") != 0))) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You show " << get_character_name(SOUSCHEF, INFORMAL) << " the anonymous letter. She shakes her head." << endl;
+                    cout << "\"I'd bet this is a letter from one of those silly boys to celebrate the grant." << endl;
+                    cout << "You'd think they could share their emotions freely instead of writing anonymous letters.\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "Worry fills her eyes." << endl;
+                    cout << "\"You don't think this has anything to do with the murder, do you?" << endl;
+                    cout << get_character_name(DRSTRONGHOLD, INFORMAL) << " died in the " << get_room_name(MASTERBEDROOM) << ", didn't he?\"" << endl;
+                    type_and_continue();
+                }
+                else  if (((userKeyword.compare("missing") == 0)
+                    || (userKeyword.compare("knife") == 0))
+                    && ((clueList.at(MISSINGKNIFE)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(SOUSCHEF) << "bites her lip when you ask her about the missing knife." << endl;
+                    cout << "\"Oh... You must think the kitchen knife is the murder weapon since he was killed with a knife.\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "She seems to realize something." << endl;
+                    cout << "\"I think I can help with this question." << endl;
+                    cout << "After Dinner, I talked with " << get_character_name(BUTLER, INFORMAL) << " and " << get_character_name(MRSSTRONGHOLD) << " in the " << get_room_name(KITCHEN) << endl;
+                    cout << "And, just as the Wine Crafter came in to escort me to the " << get_room_name(GREENHOUSE) << ", I noticed a knife was missing." << endl;
+                    cout << "I didn't think much of it then. We went to the " << get_room_name(GREENHOUSE) << " soon after.\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "She yawns." << endl;
+                    cout << "\"But... I was in the " << get_room_name(KITCHEN) << " after Dinner that whole time, and nobody else came in." << endl;
+                    cout << "I think that means one of those two had to have taken it.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("red") == 0)
+                    || (userKeyword.compare("velvet") == 0)
+                    || (userKeyword.compare("chair") == 0)
+                    || (userKeyword.compare("chairs") == 0))
+                    && ((clueList.at(REDVELVETCHAIRS)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You ask " << get_character_name(SOUSCHEF, INFORMAL) << " where she sat during Dinner." << endl;
+                    cout << "She taps her lips with her index finger." << endl;
+                    cout << "\"Well, I wasn't sitting the whole time. I had to cook after all.\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "\"But... I think I sat to the right of " << get_character_name(MRSSTRONGHOLD) << ".\"" << endl;
+                    cout << "We had a nice discussion about... about me making a chocolate cake for " << get_character_name(MRSSTRONGHOLD) << "'s birthday next week.\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "She begins to sniffle." << endl;
+                    cout << "\"Sorry, I think I need a moment.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("nightshade") == 0)
+                    || (userKeyword.compare("nightshades") == 0)
+                    || (userKeyword.compare("cut") == 0)
+                    || (userKeyword.compare("night") == 0)
+                    || (userKeyword.compare("shade") == 0)
+                    || (userKeyword.compare("shades") == 0))
+                    && ((clueList.at(CUTNIGHTSHADE)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You tell " << get_character_name(SOUSCHEF) << " about the cut Nightshades and she frowns." << endl;
+                    cout << "\"Oh, those were so pretty. I don't know why anyone would be cruel enough to cut them.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("blood") == 0)
+                    || (userKeyword.compare("stain") == 0)
+                    || (userKeyword.compare("stains") == 0)
+                    || (userKeyword.compare("bloodstain") == 0)
+                    || (userKeyword.compare("bloodstains") == 0))
+                    && ((clueList.at(BLOODSTAINS)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(SOUSCHEF, INFORMAL) << "looks disturbed." << endl;
+                    cout << "\"I... I'll bet one of those silly boys hurt themselves celebrating." << endl;
+                    cout << "That has to be it. Right?\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("slashed") == 0)
+                    || (userKeyword.compare("throat") == 0))
+                    && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+                    
+                    cout << get_character_name(SOUSCHEF, INFORMAL) << "looks ghastly as you talk about the slashed throat." << endl;
+                    cout << "\"Stop talking about that. Please.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("earring") == 0))
+                    && ((clueList.at(EARRING)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+                    
+                    cout << "You tell her about the earring and she stretches." << endl;
+                    cout << "\"Oh, that's odd. You found this in " << get_character_name(DRSTRONGHOLD) << "'s armoire?" << endl;
+                    cout << "I suppose it must be one of the other girl's earrings. I wonder why that was there?\"" << endl;
+                    type_and_continue();
+                }
+                else {
+                    int replyNum = ((rand() % 4) + 1);
+                    if (replyNum == 1) {
+                        cout << "\n\"I don't know anything about that, Detective.\"" << endl;
+                    }
+                    if (replyNum == 2) {
+                        cout << "\n\"I'm so tired. Stop making me focus on unimportant details.\"" << endl;
+                    }
+                    if (replyNum == 3) {
+                        cout << "\n\"I have nothing to say on that matter.\"" << endl;
+                    }
+                    if (replyNum == 4) {
+                        cout << "\n\"I wish I could help, but I'm not sure what to say.\"" << endl;
+                    }
                     type_and_continue();
                 }
 
                 //Empties console screen
                 system("CLS");
+
                 print_input(userKeyword);
+
+                //Prints a title to tell the player which character they are questioning / interrogating
+                print_character_questioning_title(roomNum);
+                //Asks player which piece of evidence they'd like to interrogate the suspect about
                 print_interrogation_request(roomNum, clueList);
                 userKeyword = get_keyword_input();
             }
@@ -2313,7 +2901,12 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
 
         //Empties console screen
         system("CLS");
+        //Prints a title to tell the player which character they are questioning
+        print_character_questioning_title(roomNum);
+
         print_input(userKeyword);
+
+        //Asks player which questions they'd like to ask the suspect
         print_questioning_request(roomNum);
         userKeyword = get_keyword_input();
     }
@@ -2324,120 +2917,340 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
 
     //Empties console screen
     system("CLS");
-
+    //Prints a title to tell the player which character they are questioning
     print_character_questioning_title(roomNum);
     cout << "As you approach her, she taps her fountain pen on the page blankly." << endl;
     cout << "\"I don't suppose you're just going to stand there, are you?\"" << endl;
+    //Asks player which questions they'd like to ask the suspect
     print_questioning_request(roomNum);
     string userKeyword = get_keyword_input();
 
     //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
     while (userKeyword.compare("stop") != 0) {
 
-        //Don't forget quotes when they speak
+        
         if (userKeyword.compare("1") == 0) {
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << "You ask " << get_character_name(MRSSTRONGHOLD, INFORMAL) << " for an introduction and she scowls at you." << endl;
             cout << "\"I'm Mrs. Stronghold, obviously. Shouldn't you already know that, detective?\"" << endl;
+            cout << "She sighs and returns to her writing." << endl;
             type_and_continue();
         }
         if (userKeyword.compare("2") == 0) {
-            cout << "\"After dinner I went upstairs to take a nice bath and freshen up before bed. \nAs soon as I came out of the bathroom, I saw my husband's body on the bed and screamed for help.\"" << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << get_character_name(MRSSTRONGHOLD, INFORMAL) << " rubs her forehead." << endl;
+            cout << "\"After Dinner, I had a quick chat with my husband. It wasn't about anything particularly exciting." << endl;
+            cout << "He told me he had some paperwork to do, so I went upstairs to take a nice bath and freshen up before bed." << endl;
+            cout << "To my knowledge, he went into his " << get_room_name(OFFICE) << ".\""<< endl;
+            type_and_continue();
+
+            cout << "\n" << get_character_name(MRSSTRONGHOLD) << " takes a moment to collect herself." << endl;
+            cout << "\"Almost an hour into my bath, " << get_character_name(SOUSCHEF, INFORMAL) << " checked up on me." << endl;
+            cout << "She seemed in good spirits, and I was glad for that." << endl;
+            cout << "I finished my skin cleanse soon after, and then the lights shut off.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << get_character_name(MRSSTRONGHOLD, INFORMAL) << " crosses her arms, clearly tensing up." << endl;
+            cout << "\"When the lights shut off, I stayed in my bath for a while after, trying to relax." << endl;
+            cout << "But, frankly, the " << get_room_name(MASTERBEDROOM) << " felt rather eerie in the candlelight." << endl;
+            cout << "Against my better instincts, I came out of the bathroom because I thought I heard my husband!" << endl;
+            cout << "Instead, I found my husband's body on the bed and the balcony door wide open.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("3") == 0) {
-            cout << "Yes, as a matter of fact I do. Sue Davis, our chef, has been acting awfully disgruntled as of late. \nI believe she caught wind of the fact that we were looking to replace her.\"" << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << get_character_name(MRSSTRONGHOLD, INFORMAL) << " smirks." << endl;
+            cout << "\"Yes, as a matter of fact I do." << endl;
+            cout << get_character_name(ASTRONOMER, INFORMAL) << ", my husband's colleague, is a money hungry whore." << endl;
+            cout << "She's so desperate for some money my husband \'owed\' her that she probably slit his throat.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("interrogate") == 0) {
 
             //Empties console screen
             system("CLS");
+            //Prints a title that tells the player which character they are questioning / interrogating
+            print_character_questioning_title(roomNum);
+            //Asks player which piece of evidence they'd like to interrogate the suspect about
             print_interrogation_request(roomNum, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
 
                 if (((userKeyword.compare("case") == 0)
-                    || (userKeyword.compare("file") == 0))
+                    || (userKeyword.compare("file") == 0)
+                    || (userKeyword.compare("casefile") == 0))
                     && ((clueList.at(CASEFILE)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO CASEFILE'S CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You show " << get_character_name(MRSSTRONGHOLD) << " the case file and she crosses her arms." << endl;
+                    cout << "\"I think you added me as a suspect on accident." << endl;
+                    cout << "Perhaps you should remove me from the pool and start looking for the real murderer.\"" << endl;
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("small") == 0)
                     || (userKeyword.compare("safe") == 0))
                     && ((clueList.at(SMALLSAFE)).compare("???") != 0)) {
-                    cout << "\"You guys were able to get into his safe? My husband would never show me what he had in there, and I never could manage to open it myself.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(MRSSTRONGHOLD, INFORMAL) << "glares at you as you talk about the safe." << endl;
+                    cout << "\"Oh, you'd like to look in the safe?" << endl;
+                    cout << "Sure! I can get out my baby pictures and we can invade my privacy together!\"" << endl;
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("insurance") == 0)
                     || (userKeyword.compare("policy") == 0))
                     && ((clueList.at(INSURANCEPOLICY)).compare("???") != 0)) {
-                    cout << "\"Of course we have a life insurance policy. Anyone as wealthy as knows it's simply a smart financial decision to get one. \nHow unfortunate that will be used under these circumstances though...\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You wave the insurance policy in " << get_character_name(MRSSTRONGHOLD) << "'s face and she tears up." << endl;
+                    cout << "\"Don't rub it in, Detective. Just arrest me and move on. Let me rot in peace.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("anonymous") == 0)
+                    || (userKeyword.compare("letter") == 0))
+                    && ((clueList.at(ANONYMOUSLETTER).compare("???") != 0))) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You show " << get_character_name(MRSSTRONGHOLD) << " the letter. She seems concerned." << endl;
+                    cout << "\"I was unaware a letter liked this existed." << endl;
+                    cout << "I don't know why anyone would want him celebrating alone.\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "She looks at you with pained eyes." << endl;
+                    cout << "\"Is there another murderer in this house besides me?\"" << endl;
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("missing") == 0)
                     || (userKeyword.compare("knife") == 0))
                     && ((clueList.at(MISSINGKNIFE)).compare("???") != 0)) {
-                    cout << "\"I had no clue that someone took a knife from my kitcken. Although, this does make sense if Sue killed my husband, as she is always spending her time there.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(MRSSTRONGHOLD) << " cracks her fingers." << endl;
+                    cout << "\"Someone took a knife from my kitchen?" << endl;
+                    cout << "That must be the murder weapon then, yes?\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "\"Perhaps " << get_character_name(SOUSCHEF, INFORMAL) << " is more vicious than I thought.\"" << endl;
+                    cout << "I suppose she chops fish heads. Chopping up a husband would be a simple task for her.\"" << endl;
                     type_and_continue();
                 }
-                else if (((userKeyword.compare("earring") == 0))
-                    && ((clueList.at(EARRING)).compare("???") != 0)) {
-                    cout << "\"An earring? In my husband's armoire? I don't typically wear much jewelry so it can't be mine. Was that man cheating on me?!?!\"" << endl;
-                    type_and_continue();
-                }
-                else if (((userKeyword.compare("washed") == 0)
-                    || (userKeyword.compare("sink") == 0))
-                    && ((clueList.at(WASHEDSINK)).compare("???") != 0)) {
-                    cout << "\"I don't see what's so weird about a wet and soapy sink. \nLike I said earlier, I had just finished using the bathroom when my husband was killed. So, yes I did use the sink, why does it matter?\"" << endl;
-                    type_and_continue();
-                }
-                else if (((userKeyword.compare("slashed") == 0)
-                    || (userKeyword.compare("throat") == 0))
-                    && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
-                    cout << "\"Well, considering I'm the one who found his body, I, unfortunately, got a pretty good look at what happended to my husband. \nAll I can remember clearly is that his throat was sliced open, but beyond that I can't tell you much more.\"" << endl;
-                    type_and_continue();
-                }
-                else if (((userKeyword.compare("foamed") == 0)
-                    || (userKeyword.compare("mouth") == 0))
-                    && ((clueList.at(FOAMEDMOUTH)).compare("???") != 0)) {
-                    cout << "Mrs. Stronghold looks visably shocked when you ask her about Dr. Stronghold's foamy mouth. \n \"Oh, I was told that the cause of death was a knife wound. Does this mean my husband was both stabbed and poisoned?\"" << endl;
+                else if (((userKeyword.compare("red") == 0)
+                    || (userKeyword.compare("velvet") == 0)
+                    || (userKeyword.compare("chair") == 0)
+                    || (userKeyword.compare("chairs") == 0))
+                    && ((clueList.at(REDVELVETCHAIRS)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(MRSSTRONGHOLD, INFORMAL) << " puts down her pen." << endl;
+                    cout << "\"Well, I don't remember too much, but I think I sat directly across from the mayor." << endl;
+                    cout << "And... I think the mayor's wife was to the mayor's left." << endl;
+                    cout << "Why do you ask, Detective? Playing Duck Duck Goose?\"" << endl;
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("small") == 0)
                     || (userKeyword.compare("button") == 0))
                     && ((clueList.at(SMALLBUTTON)).compare("???") != 0)) {
-                    cout << "\"Hmmmm, a button from my husbands clothes was found on the stairs. I must say, that's very strange. \nMy husband always takes the upmost care into how he looks, and would never be so careless as to let buttons come off his clothes.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You offer " << get_character_name(MRSSTRONGHOLD, INFORMAL) << " a chance to inspect the button and she snickers." << endl;
+                    cout << "\"A button? How in God's name is this relevant to the case?\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "She sighs and lays on her escritoire." << endl;
+                    cout << "\"I suppose this is all hopeless. You'll never find the killer, will you?\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("slashed") == 0)
+                    || (userKeyword.compare("throat") == 0))
+                    && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "She rubs her neck at the mention of the slashed throat." << endl;
+                    cout << "\"Yes, considering I found his body, I unfortunately got an excruciatingly long look at my husband's slashed throat." << endl;
+                    cout << "Perhaps next you'd like me to recreate my tears so you can taste them?\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("foamed") == 0)
+                    || (userKeyword.compare("mouth") == 0))
+                    && ((clueList.at(FOAMEDMOUTH)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(MRSSTRONGHOLD) << " looks visably shocked when you ask her about " << get_character_name(DRSTRONGHOLD) << "'s foamed mouth." << endl;
+                    cout << "\"Why are you getting distracted by a foamy mouth? My husband's throat was slashed!" << endl;
+                    cout << "Focus, Detective. Don't start talking about what he ate for breakfast or other nonsense!\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("bloody") == 0)
+                    || (userKeyword.compare("garment") == 0))
+                    && ((clueList.at(BLOODYGARMENT)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(MRSSTRONGHOLD) << " takes a deep breath as you show her the bloody garment." << endl;
+                    cout << "\"I suppose the blood must've dripped under the bed. How awful.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("wet") == 0)
+                    || (userKeyword.compare("boot") == 0)
+                    || (userKeyword.compare("boots") == 0))
+                    && ((clueList.at(WETBOOTS)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You take out the boots and " << get_character_name(MRSSTRONGHOLD) << " gnashes her teeth." << endl;
+                    cout << "\"Oh. Those were in my armoire? How strange.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("earring") == 0))
+                    && ((clueList.at(EARRING)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You hand " << get_character_name(MRSSTRONGHOLD, INFORMAL) << " the earring." << endl;
+                    cout << "\"You found this in my husband's armoire?" << endl;
+                    cout << "I don't typically wear jewelry...\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << get_character_name(MRSSTRONGHOLD) << "'s eyes slowly fill with tears." << endl;
+                    cout << "\"I bet these are that whore " << get_character_name(ASTRONOMER, INFORMAL) << "'s earrings.\"" << endl;
+                    cout << "She looks away to wipe her eyes." << endl;
+                    cout << "\"I... how could she do this to me?\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("washed") == 0)
+                    || (userKeyword.compare("sink") == 0))
+                    && ((clueList.at(WASHEDSINK)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(MRSSTRONGHOLD) << "'s eyes fill with malice." << endl;
+                    cout << "\"I don't see what's so strange about a washed sink." << endl;
+                    cout << "Like I said earlier, I was in the bathroom when my husband was killed." << endl;
+                    cout << "I probably used the sink before my bath. Why does it matter?\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("snowy") == 0)
+                || (userKeyword.compare("foot") == 0)
+                || (userKeyword.compare("prints") == 0)
+                || (userKeyword.compare("footprints") == 0))
+                && ((clueList.at(SNOWYFOOTPRINTS)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(MRSSTRONGHOLD) << " looks at you like you're crazy." << endl;
+                    cout << "\"How could there be two sets of footprints in the snow?" << endl;
+                    cout << "Are you blind, Detective?\"" << endl;
                     type_and_continue();
                 }
                 else {
                     int replyNum = ((rand() % 4) + 1);
                     cout << replyNum;
                     if (replyNum == 1) {
-                        cout << "\"Sorry, I don't know about that.\"" << endl;
+                        cout << "\n\"Why would I know anything about that?\"" << endl;
                     }
                     if (replyNum == 2) {
-                        cout << "\"Why would I know anything about that?\"" << endl;
+                        cout << "\n\"You probably know more about that than me, Detective, since you're so smart.\"" << endl;
                     }
                     if (replyNum == 3) {
-                        cout << "\"I don't really know anything regarding that, sorry.\"" << endl;
+                        cout << "\n\"Do you have to show me every pointless thing you find sniffing around my home?\"" << endl;
                     }
                     if (replyNum == 4) {
-                        cout << "\"You probably know more about that than me.\"" << endl;
+                        cout << "\n\"I have no idea why this \'evidence\' is relevant to your case." << endl;
+                        cout << "Why don't you use those scattered brain cells of yours to determine that yourself?\"" << endl;
                     }
                     type_and_continue();
                 }
+                
                 //Empties console screen
                 system("CLS");
+
                 print_input(userKeyword);
+
+                //Prints a title to tell the player which character they are questioning / interrogating
+                print_character_questioning_title(roomNum);
+                //Asks player which piece of evidence they'd like to interrogate the suspect about
                 print_interrogation_request(roomNum, clueList);
                 userKeyword = get_keyword_input();
+
             }
 
         }
 
         //Empties console screen
         system("CLS");
+        //Prints a title to tell the player which character they are questioning
+        print_character_questioning_title(roomNum);
+
         print_input(userKeyword);
+
+        //Asks player which questions they'd like to ask the suspect
         print_questioning_request(roomNum);
         userKeyword = get_keyword_input();
     }
@@ -2448,10 +3261,11 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
 
     //Empties console screen
     system("CLS");
-
+    //Prints a title to tell the player which character they are questioning
     print_character_questioning_title(roomNum);
     cout << "As you approach him, he drops a handful of grapes into a nearby bucket." << endl;
     cout << "\"Question me, but be quick. Grapes aren't in season forever.\"" << endl;
+    //Asks player which questions they'd like to ask the suspect
     print_questioning_request(roomNum);
     string userKeyword = get_keyword_input();
 
@@ -2460,93 +3274,227 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
 
         //Don't forget quotes when they speak
         if (userKeyword.compare("1") == 0) {
-            cout << "My name is Louis Arbert, Lou for short. I was invited here as a friend and long time colleague of Dr. Stronghold's." << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << "The Wine Crafter shakes your hand sternly." << endl;
+            cout << "\"Nice to meet you, Detective." << endl;
+            cout << "My name is Louis Arbert. Snooping detectives and friends call me Lou.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "He smiles warmly." << endl;
+            cout << "\"Bad joke, my apologies." << endl;
+            cout << "I'm a friend and long time colleague of " << get_character_name(DRSTRONGHOLD) << "'s." << endl;
+            cout << "I came for Dinner tonight because we were supposed to celebrate " << get_character_name(DRSTRONGHOLD) << "'s latest achievement." << endl;
+            cout << "He secured a grant from the local mining town and wanted to get drunk.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("2") == 0) {
-            cout << "I was finishing up my dinner in the kitchen. It was a lovely dinner tonight that I paired with a beautifully simple red wine." << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << get_character_name(WINECRAFTER, INFORMAL) << " sets down his bucket to think." << endl;
+            cout << "\"When everyone left the " << get_room_name(DININGROOM) << " I stayed to finish my meal." << endl;
+            cout << "The Sous Chef prepared me some tender seared scallops that I paired with a beautiful Chenin Blanc." << endl;
+            cout << "I headed to the " << get_room_name(KITCHEN) << " once I finished them.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "He mutters something to himself." << endl;
+            cout << "\"Ah, yes." << endl;
+            cout << "I then offered " << get_character_name(SOUSCHEF, INFORMAL) << " a tour of the " << get_room_name(GREENHOUSE) << " since she'd been so lovely tonight." << endl;
+            cout << "She accepted my offer and I gave her a personalized tour to discuss the vines and the flowers." << endl;
+            cout << "Once we finished the tour she went on her way, and I've been picking grapes since.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "\"Oh, I suppose after that " << get_character_name(BUTLER) << " also came in to grab some logs." << endl;
+            cout << "I presume he had some reason to do so.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("3") == 0) {
-            cout << "From my observations tonight, I must say that the Mrs. Stronghold didn't seem to talk to her husband very much during dinner." << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << "You ask about " << get_character_name(WINECRAFTER, INFORMAL) << "'s suspicions and he takes a deep breath." << endl;
+            cout << "\"I'm not a very insightful person, to be honest." << endl;
+            cout << "I do think, however, that " << get_character_name(MRSSTRONGHOLD) << " was oddly quiet during dinner." << endl;
+            cout << "She seemed quite preoccupied and didn't say a word to her husband. I think that's rather unlike her.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("interrogate") == 0) {
 
             //Empties console screen
             system("CLS");
+            //Prints a title that tells the player which character they are questioning / interrogating
+            print_character_questioning_title(roomNum);
+            //Asks player which piece of evidence they'd like to interrogate the suspect about
             print_interrogation_request(roomNum, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
 
                 if (((userKeyword.compare("case") == 0)
-                    || (userKeyword.compare("file") == 0))
+                    || (userKeyword.compare("file") == 0)
+                    || (userKeyword.compare("casefile") == 0))
                     && ((clueList.at(CASEFILE)).compare("???") != 0)) {
-                    cout << "\"Such a tragedy. We were all celebrating without a care in the world last night too." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(WINECRAFTER, INFORMAL) << " looks over the papers emptily." << endl;
+                    cout << "\"It's such a tragedy. We were celebrating the chance of a better future hours ago." << endl;
+                    cout << "Past grants always brought us good fortune, but this one will just mark" << get_character_name(DRSTRONGHOLD) << "'s bitter end.\"" << endl;
+                    type_and_continue();
+
+                }
+                else if (((userKeyword.compare("expense") == 0)
+                    || (userKeyword.compare("report") == 0)
+                    || (userKeyword.compare("reports") == 0))
+                    && ((clueList.at(EXPENSEREPORTS)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "\"Ah, some of these are from our buisness." << endl;
+                    cout << "We sold my luxury wines together, although " << get_character_name(DRSTRONGHOLD) << " overstepped at times.\"" << endl;
                     type_and_continue();
                 }
-                else if (((userKeyword.compare("foamed") == 0)
-                    || (userKeyword.compare("mouth") == 0))
-                    && ((clueList.at(FOAMEDMOUTH)).compare("???") != 0)) {
-                    cout << "Louis is shocked as you tell him about the state you found Dr. Stronghold in. \n\"I can assure you that no wine we produce or sell has any effect like that.\"" << endl;
+                else if (((userKeyword.compare("anonymous") == 0)
+                    || (userKeyword.compare("letter") == 0))
+                    && ((clueList.at(ANONYMOUSLETTER).compare("???") != 0))) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(WINECRAFTER) << " looks over the letter with shock." << endl;
+                    cout << "\"I was wondering why " << get_character_name(DRSTRONGHOLD) << " didn't call me to celebrate after Dinner." << endl;
+                    cout << "I guess this explains it, but it certainly creates more questions than answers.\"" << endl;
+                }
+                else if (((userKeyword.compare("red") == 0)
+                    || (userKeyword.compare("velvet") == 0)
+                    || (userKeyword.compare("chair") == 0)
+                    || (userKeyword.compare("chairs") == 0))
+                    && ((clueList.at(REDVELVETCHAIRS)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You ask " << get_character_name(WINECRAFTER, INFORMAL) << " where he sat during Dinner." << endl;
+                    cout << "He squeezes some grapes in the bucket." << endl;
+                    cout << "\"Hmm... I believe I was on the third chair to the left of " << get_character_name(DRSTRONGHOLD) << ".\"" << endl;
+                    type_and_continue();
+
+                    cout << "I'm also quite sure " << get_character_name(MRSSTRONGHOLD) << " was sat directly to her husband's right." << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("nightshade") == 0)
+                    || (userKeyword.compare("nightshades") == 0)
+                    || (userKeyword.compare("cut") == 0)
+                    || (userKeyword.compare("night") == 0)
+                    || (userKeyword.compare("shade") == 0)
+                    || (userKeyword.compare("shades") == 0))
+                    && ((clueList.at(CUTNIGHTSHADE)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(WINECRAFTER) << "'s jaw drops." << endl;
+                    cout << "\"That's news to me. Neither of us would ever cut a Nightshade's stem off." << endl;
+                    cout << "Ingesting even a small leaf could kill a man.\"" << endl;
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("empty") == 0)
                     || (userKeyword.compare("display") == 0))
                     && ((clueList.at(EMPTYDISPLAY)).compare("???") != 0)) {
-                    cout << "Lou seems to understand completely when you mention a bottle missing from the wine cellar \n\"We were planning to use that to celebrate tonight. A shame we don't get to drink that anymore.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(WINECRAFTER, INFORMAL) << " nods his head." << endl;
+                    cout << "Yes yes, we were planning to celebrate with that bottle tonight." << endl;
+                    cout << "You're saying it's gone?" << endl;
                     type_and_continue();
-                }
-                else if (((userKeyword.compare("nightshade") == 0)
-                    || (userKeyword.compare("cut") == 0)
-                    || (userKeyword.compare("night") == 0)
-                    || (userKeyword.compare("shade") == 0))
-                    && ((clueList.at(CUTNIGHTSHADE)).compare("???") != 0)) {
-                    cout << "\"Dr. Stronghold likes to keep his plants in good condition so to hear about cut stems is worrying. You know that nightshade can poisonous is the berries are consumed.\"" << endl;
-                    type_and_continue();
-                }
-                else if (((userKeyword.compare("expense") == 0)
-                    || (userKeyword.compare("reports") == 0))
-                    && ((clueList.at(EXPENSEREPORTS)).compare("???") != 0)) {
-                    cout << "\"Of course I know about those. Those are from our buisness. We sold the most luxury wines together.\"" << endl;
+
+                    cout << "\n" << "He crosses his arms, clearly hurt." << endl;
+                    cout << "\"Apparently he celebrated without me.\"" << endl;
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("glass") == 0)
+                    || (userKeyword.compare("shard") == 0)
                     || (userKeyword.compare("shards") == 0))
                     && ((clueList.at(GLASSSHARDS)).compare("???") != 0)) {
-                    cout << "You hand Mr. Arbert a shard of glass. \n\"Yes... This looks as though it came from the bottle we were going to use in celebration tonight. A travesty for such a beautiful wine to go to waste.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You hand Mr. Arbert a shard of glass." << endl;
+                    cout << "\"Yes, this looks as though it came from the bottle we were going to use in celebration tonight.\"" << endl;
+                    cout << "He points to a ripped sticker on the shard's edge." << endl;
+                    cout << "\"I can make out the \'Ala\' of \'Alain Hudelot\' if I look closely.\"" << endl;
                     type_and_continue();
                 }
                 else {
                     int replyNum = ((rand() % 4) + 1);
                     if (replyNum == 1) {
-                        cout << "\"I don't recall.\"" << endl;
+                        cout << "\n\"I'm not sure what that is or what that means, Detective.\"" << endl;
                     }
                     if (replyNum == 2) {
-                        cout << "\"That has nothing to do with wine.\"" << endl;
+                        cout << "\n\"That has nothing to do with wine.\"" << endl;
                     }
                     if (replyNum == 3) {
-                        cout << "\"That has nothing to do with me.\"" << endl;
+                        cout << "\n\"I'll be honest, Detective, that evidence means nothing to me.\"" << endl;
                     }
                     if (replyNum == 4) {
-                        cout << "\"And you think that I did that?.\"" << endl;
+                        cout << "\n\"Please don't show me anything boring or gross, thank you very much.\"" << endl;
                     }
                     type_and_continue();
                 }
 
                 //Empties console screen
                 system("CLS");
+
                 print_input(userKeyword);
+
+                //Prints a title to tell the player which character they are questioning / interrogating
+                print_character_questioning_title(roomNum);
+                //Asks player which piece of evidence they'd like to interrogate the suspect about
                 print_interrogation_request(roomNum, clueList);
                 userKeyword = get_keyword_input();
+
             }
 
         }
 
         //Empties console screen
         system("CLS");
+        //Prints a title to tell the player which character they are questioning
+        print_character_questioning_title(roomNum);
+
         print_input(userKeyword);
+
+        //Asks player which questions they'd like to ask the suspect
         print_questioning_request(roomNum);
         userKeyword = get_keyword_input();
     }
@@ -2557,9 +3505,10 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     //Empties console screen
     system("CLS");
-
+    //Prints a title to tell the player which character they are questioning
     print_character_questioning_title(roomNum);
     cout << "\"Mud. Mud mud mud.\"" << endl;
+    //Asks player which questions they'd like to ask the suspect
     print_questioning_request(roomNum);
     string userKeyword = get_keyword_input();
 
@@ -2583,171 +3532,145 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
 
             //Empties console screen
             system("CLS");
+            //Prints a title that tells the player which character they are questioning / interrogating
+            print_character_questioning_title(roomNum);
+            //Asks player which piece of evidence they'd like to interrogate the suspect about
             print_interrogation_request(roomNum, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
 
-                if (((userKeyword.compare("case") == 0)
-                    || (userKeyword.compare("file") == 0))
-                    && ((clueList.at(CASEFILE)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("expense") == 0)
-                    || (userKeyword.compare("reports") == 0)
-                    || (userKeyword.compare("report") == 0))
-                    && ((clueList.at(EXPENSEREPORTS)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("small") == 0)
-                    || (userKeyword.compare("safe") == 0))
-                    && ((clueList.at(SMALLSAFE)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("insurance") == 0)
-                    || (userKeyword.compare("policy") == 0))
-                    && ((clueList.at(INSURANCEPOLICY)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
                 if (((userKeyword.compare("late") == 0)
                     || (userKeyword.compare("check") == 0))
                     && ((clueList.at(LATECHECK)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "\"Mud. Mud Mud.\"" << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("anonymous") == 0)
+                else if (((userKeyword.compare("anonymous") == 0)
                     || (userKeyword.compare("letter") == 0))
                     && ((clueList.at(ANONYMOUSLETTER)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
                     cout << "\"MUUUDDD!!!\"" << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("locked") == 0)
-                    || (userKeyword.compare("chests") == 0)
-                    || (userKeyword.compare("chest") == 0))
-                    && ((clueList.at(LOCKEDCHESTS)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("missing") == 0)
+                else if (((userKeyword.compare("missing") == 0)
                     || (userKeyword.compare("knife") == 0))
                     && ((clueList.at(MISSINGKNIFE)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
                     cout << "\"Mud is love. Mud is life.\"" << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("red") == 0)
+                else if (((userKeyword.compare("red") == 0)
                     || (userKeyword.compare("velvet") == 0)
-                    || (userKeyword.compare("chairs") == 0)
-                    || (userKeyword.compare("chair") == 0))
+                    || (userKeyword.compare("chair") == 0)
+                    || (userKeyword.compare("chairs") == 0))
                     && ((clueList.at(REDVELVETCHAIRS)).compare("???") != 0)) {
-                    cout << "\"mud....\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "\"Mud....\"" << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("cut") == 0)
+                else if (((userKeyword.compare("cut") == 0)
                     || (userKeyword.compare("night") == 0)
                     || (userKeyword.compare("shade") == 0)
-                    || (userKeyword.compare("nightshade") == 0))
+                    || (userKeyword.compare("shades") == 0)
+                    || (userKeyword.compare("nightshade") == 0)
+                    || (userKeyword.compare("nightshades") == 0))
                     && ((clueList.at(CUTNIGHTSHADE)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
                     cout << "\"Mud???\"" << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("small") == 0)
-                    || (userKeyword.compare("button") == 0))
-                    && ((clueList.at(SMALLBUTTON)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("empty") == 0)
-                    || (userKeyword.compare("display") == 0))
-                    && ((clueList.at(EMPTYDISPLAY)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("blood") == 0)
-                    || (userKeyword.compare("stains") == 0)
-                    || (userKeyword.compare("stain") == 0))
-                    && ((clueList.at(BLOODSTAINS)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("cleaned") == 0)
-                    || (userKeyword.compare("floor") == 0))
-                    && ((clueList.at(CLEANEDFLOOR)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("glass") == 0)
-                    || (userKeyword.compare("shards") == 0)
-                    || (userKeyword.compare("shard") == 0))
-                    && ((clueList.at(GLASSSHARDS)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("broken") == 0)
+                else if (((userKeyword.compare("broken") == 0)
                     || (userKeyword.compare("lock") == 0))
                     && ((clueList.at(BROKENLOCK)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
                     cout << "The Mudman doesn't respond, he simply starts rolling in his mud excitedly." << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("slashed") == 0)
-                    || (userKeyword.compare("throat") == 0))
-                    && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("foamed") == 0)
-                    || (userKeyword.compare("mouth") == 0))
-                    && ((clueList.at(FOAMEDMOUTH)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("bloody") == 0)
-                    || (userKeyword.compare("garment") == 0))
-                    && ((clueList.at(BLOODYGARMENT)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("wet") == 0)
+                else if (((userKeyword.compare("wet") == 0)
+                    || (userKeyword.compare("boot") == 0)
                     || (userKeyword.compare("boots") == 0))
                     && ((clueList.at(WETBOOTS)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
                     cout << "The Mudman seems to become very angry at this question and begins screaming incoherently while he throws mud at you." << endl;
                     type_and_continue();
                 }
-                if (((userKeyword.compare("earring") == 0))
-                    && ((clueList.at(EARRING)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("washed") == 0)
-                    || (userKeyword.compare("sink") == 0))
-                    && ((clueList.at(WASHEDSINK)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
-                    type_and_continue();
-                }
-                if (((userKeyword.compare("snowy") == 0)
-                    || (userKeyword.compare("foot") == 0)
-                    || (userKeyword.compare("prints") == 0)
-                    || (userKeyword.compare("footprints") == 0))
-                    && ((clueList.at(SNOWYFOOTPRINTS)).compare("???") != 0)) {
-                    cout << "\"Mud.\"" << endl;
+                else {
+                    int replyNum = ((rand() % 4) + 1);
+                    if (replyNum == 1) {
+                        cout << "\n\"Mud.\"" << endl;
+                    }
+                    if (replyNum == 2) {
+                        cout << "\n\"Mud Mud Mud.\"" << endl;
+                    }
+                    if (replyNum == 3) {
+                        cout << "\n\"MUD!\"" << endl;
+                    }
+                    if (replyNum == 4) {
+                        cout << "\n\"Mud Mud?\"" << endl;
+                    }
                     type_and_continue();
                 }
 
                 //Empties console screen
                 system("CLS");
+
                 print_input(userKeyword);
+
+                //Prints a title to tell the player which character they are questioning / interrogating
+                print_character_questioning_title(roomNum);
+                //Asks player which piece of evidence they'd like to interrogate the suspect about
                 print_interrogation_request(roomNum, clueList);
                 userKeyword = get_keyword_input();
+
             }
 
         }
 
         //Empties console screen
         system("CLS");
+        //Prints a title to tell the player which character they are questioning
+        print_character_questioning_title(roomNum);
+
         print_input(userKeyword);
+
+        //Asks player which questions they'd like to ask the suspect
         print_questioning_request(roomNum);
         userKeyword = get_keyword_input();
     }
@@ -2758,11 +3681,12 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
 
     //Empties console screen
     system("CLS");
-
+    //Prints a title to tell the player which character they are questioning
     print_character_questioning_title(roomNum);
     cout << "As you approach her, she sits down in a small chair beside the telescope." << endl;
-    cout << "\"It's a shame that the stars aren't out tonight.\"" << endl;
-    cout << "She sighs. \"What can I do for you?\"" << endl;
+    cout << "She sighs. \"It's a shame that the stars aren't out tonight.\"" << endl;
+    cout << "\"What can I do for you?\"" << endl;
+    //Asks player which questions they'd like to ask the suspect
     print_questioning_request(roomNum);
     string userKeyword = get_keyword_input();
 
@@ -2771,72 +3695,213 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
 
         //Don't forget quotes when they speak
         if (userKeyword.compare("1") == 0) {
-            cout << "\"The name is Dr. Jill Tyson, I worked very closely with Dr. Stronghold. It's a real shame what happened to him, he tought me so much throughout my career.\"" << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << "The Astronomer gives you a respectful bow in her chair." << endl;
+            cout << "\"My name is Dr. Jill Tyson." << endl;
+            cout << "I've worked very closely with Dr.Stronghold for years." << endl;
+            cout << "The work we've done through the years has been incredible for our scientific fields.\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "She swears under her breath." << endl;
+            cout << "\"It's not fair that he died in such a cruel fashion." << endl;
+            cout << "He wasn't perfect, but he truly cared about the science. He taught me so much, too.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("2") == 0) {
-            cout << "\"I came straight up to the observatory, of course. Dr. Stronghold has such a nice obsevatory, I was hoping to be able to observe the stars. The storm kind of ruined that...\"" << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << get_character_name(ASTRONOMER) << " nods eagerly." << endl;
+            cout << "\"After Dinner I came straight up to the observatory." << endl;
+            cout << "I'm doing some experiments on fluorescent rocks so I continued my research." << endl;
+            cout << "Some of them glow like fireflies under the purple UV light. It's truly spectacular." << endl;
+            type_and_continue();
+
+            cout << "\n" << get_character_name(ASTRONOMER, INFORMAL) << " scratches her head." << endl;
+            cout << "I had a big problem when the power went out though." << endl;
+            cout << "See, the door to my mini lab is secured with a keycard, so when the power went out I was trapped inside." << endl;
+            type_and_continue();
+
+            cout << "\n" << "She bites her lip." << endl;
+            cout << "The problem is, no one can account for my story." << endl;
+            cout << "See, When the power turned back on, I immediately ran to the " << get_room_name(MASTERBEDROOM) << "." << endl;
+            cout << "Unfortunately, I was much more concerned about " << get_character_name(MRSSTRONGHOLD) << "'s scream than securing an alibi." << endl;
             type_and_continue();
         }
         if (userKeyword.compare("3") == 0) {
-            cout << "\"I don't really know anyone here besides Dr. Stronghold, so it's hard to say if I'm being honest.\"" << endl;
+
+            //Empties console screen
+            system("CLS");
+            //Prints a title to tell the player which character they are questioning
+            print_character_questioning_title(roomNum);
+
+            cout << get_character_name(ASTRONOMER, INFORMAL) << " shrugs when you ask about potential motives." << endl;
+            cout << "\"I don't really know." << endl;
+            cout << "I'm not close with most of the people here... well..." << endl;
+            cout << get_character_name(DRSTRONGHOLD) << " did tell me he was going to fire " << get_character_name(SOUSCHEF) << ".\"" << endl;
+            type_and_continue();
+
+            cout << "\n" << "She ponders something for a moment." << endl;
+            cout << "\"However, I don't think " << get_character_name(DRSTRONGHOLD) << " told her that yet." << endl;
+            cout << "It's not a solid motive if she didn't know she was being fired.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("interrogate") == 0) {
 
             //Empties console screen
             system("CLS");
+            //Prints a title that tells the player which character they are questioning / interrogating
+            print_character_questioning_title(roomNum);
+            //Asks player which piece of evidence they'd like to interrogate the suspect about
             print_interrogation_request(roomNum, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
 
                 if (((userKeyword.compare("case") == 0)
-                    || (userKeyword.compare("file") == 0))
+                    || (userKeyword.compare("file") == 0)
+                    || (userKeyword.compare("casefile") == 0))
                     && ((clueList.at(CASEFILE)).compare("???") != 0)) {
-                    cout << "FIXME: ADD CHARACTER RESPONSE TO CASEFILE'S CONTENTS." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(ASTRONOMER, INFORMAL) << " winces. She seems to be thinking about the murder." << endl;
+                    cout << "\"He deserved to die peacefully." << endl;
+                    cout << "He deserved to discover even more than he had.\"" << endl;
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("small") == 0)
                     || (userKeyword.compare("safe") == 0))
                     && ((clueList.at(SMALLSAFE)).compare("???") != 0)) {
-                    cout << "\"Dr. Stronghold has actually shown me his safe before. He simply keeps legal documents and a bit of money in there.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "She smiles politely." << endl;
+                    cout << "\"You should ask his wife about his safe. I have no knowledge on the matter.\"" << endl;
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("late") == 0)
                     || (userKeyword.compare("check") == 0))
                     && ((clueList.at(LATECHECK)).compare("???") != 0)) {
-                    cout << "\"Awwww, so he was planning on paying me afterall. Dr. Stronghold owed me money for a job we did together, but I was starting to think I wouldn't get payed. \nIt would seem he was planning to pay me tonight.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(ASTRONOMER) << " chuckles solemnly." << endl;
+                    cout << "\"So he was planning on paying me afterall.\"" << endl;
+                    type_and_continue();
+
+                    cout << "\n" << "She gets a little teary." << endl;
+                    cout << "\"He owed me money because I'd come up with an addition for the telescope that he put his name on." << endl;
+                    cout << "He eventually gave me credit, but he was a stubborn man..." << endl;
+                    cout << "I was convinced he wouldn't come through. I guess I was wrong.\"" << endl;
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("anonymous") == 0)
                     || (userKeyword.compare("letter") == 0))
                     && ((clueList.at(ANONYMOUSLETTER)).compare("???") != 0)) {
-                    cout << "\"A letter was found in his safe? I believe I recall the sous chef handing him a piece of paper during dinner, but that could have been many things I suppose.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(ASTRONOMER) << " carefully inspects the letter." << endl;
+                    cout << "\"This is peculiar." << endl;
+                    cout << "I've never seen this before, and I don't recognize this handwriting either." << endl;
+                    cout << "That means " << get_character_name(MRSSTRONGHOLD) << "definitely didn't write this.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("red") == 0)
+                    || (userKeyword.compare("velvet") == 0)
+                    || (userKeyword.compare("chair") == 0)
+                    || (userKeyword.compare("chairs") == 0))
+                    && ((clueList.at(REDVELVETCHAIRS)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(ASTRONOMER, INFORMAL) << " looks up towards the ceiling." << endl;
+                    cout << "\"Hmm... See, I really can't remember where I sat." << endl;
+                    cout << "I just remember that I sat across from the Wine Crafter.\"" << endl;
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("empty") == 0)
                     || (userKeyword.compare("display") == 0))
                     && ((clueList.at(EMPTYDISPLAY)).compare("???") != 0)) {
-                    cout << "\"Dr. Stronghold's prized wine was missing from his display? He was saving that for a special celebration, so it is very possible that he was planning to drink it tonight.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(ASTRONOMER, INFORMAL) << " nods her head at the mention of the display." << endl;
+                    cout << "\"Dr. Stronghold's prized wine was missing from his display?" << endl;
+                    cout << "He was saving that for a special occasion. I guess he decided that occasion was tonight.\"" << endl; 
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("broken") == 0)
                     || (userKeyword.compare("lock") == 0))
                     && ((clueList.at(BROKENLOCK)).compare("???") != 0)) {
-                    cout << "\"Yes, the broken lock seemed strange to me also. \nWhen I came back to the observatory after seeing why Mrs. Stronghold was screaming, the lock had been broken. /nI believe this means someone walked from the murder scene into this room while everyone was distracted using the balcony.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << get_character_name(ASTRONOMER, INFORMAL) << " shivers at the mention of the broken lock." << endl;
+                    cout << "\"I'm relieved it was just a broken lock." << endl;
+                    cout << "When I was trapped in my lab during the blackout, I heard someone forcing the door in." << endl;
+                    cout << "I thought someone had attempted to break into our lab, but now I assume it was the killer.\"" << endl;
                     type_and_continue();
-                }
-                else if (((userKeyword.compare("slashed") == 0)
-                    || (userKeyword.compare("throat") == 0))
-                    && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
-                    cout << "\"From what I understand, and from the glimpses I saw during all the chaos, Dr. Stronghold did, in fact, die from getting his throat slashed. That's the only information I have about that.\"" << endl;
+
+                    cout << "\n" << "\"They likely made their way through the observatory to escape detection from something." << endl;
+                    cout << "I'd presume " << get_character_name(MRSSTRONGHOLD) << " since she was in the Master Bathroom at the time.\"" << endl;
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("foamed") == 0)
                     || (userKeyword.compare("mouth") == 0))
                     && ((clueList.at(FOAMEDMOUTH)).compare("???") != 0)) {
-                    cout << "That's extremely strange and news to me. Why would Dr. Stronghold have signs of poisoning if his killer cut his throat with a knife." << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "\"That's extremely odd." << endl;
+                    cout << "Foaming of the mouth would suggest " << get_character_name(DRSTRONGHOLD) << " was poisoned or had a seizure." << endl;
+                    cout << "He shouldn't have a foamed mouth if his throat was slashed.\"" << endl;
+                    type_and_continue();
+                }
+                else if (((userKeyword.compare("earring") == 0))
+                    && ((clueList.at(EARRING)).compare("???") != 0)) {
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "You hand " << get_character_name(ASTRONOMER, INFORMAL) << " the earring." << endl;
+                    cout << "\"Oh, you found this at the scene of the crime?" << endl;
+                    cout << "No, this isn't my jewelry. It's very extra, don't you think? That doesn't suit me.\"" << endl;
                     type_and_continue();
                 }
                 else if (((userKeyword.compare("snowy") == 0)
@@ -2844,37 +3909,58 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     || (userKeyword.compare("prints") == 0)
                     || (userKeyword.compare("footprints") == 0))
                     && ((clueList.at(SNOWYFOOTPRINTS)).compare("???") != 0)) {
-                    cout << "\"Well I suppose it would make sense that there would be footprints out on the balcony considering the broken lock. It is, however, strange that there are two sets of prints.\"" << endl;
+
+                    //Empties console screen
+                    system("CLS");
+                    //Prints a title to tell the player which character they are questioning
+                    print_character_questioning_title(roomNum);
+
+                    cout << "\"There are two sets of footprints in the snow?" << endl;
+                    cout << "That's peculiar..." << endl;
+                    cout << "If the prints are from two sets of shoes, that would suggest two different people walked across the balcony." << endl;
+                    cout << "There's no way the killer would return to the scene and risk being found, right?\"" << endl;
                     type_and_continue();
                 }
                 else {
                     int replyNum = ((rand() % 4) + 1);
                     if (replyNum == 1) {
-                        cout << "\"Sorry, I don't know about that.\"" << endl;
+                        cout << "\n\"Sorry Detective, I don't know about that.\"" << endl;
                     }
                     if (replyNum == 2) {
-                        cout << "\"Sorry detective, but I haven't heard anything about that.\"" << endl;
+                        cout << "\n\"I think you'd have more expertise in that area.\"" << endl;
                     }
                     if (replyNum == 3) {
-                        cout << "\"I wish I could help you, but I don't have any information about that.\"" << endl;
+                        cout << "\n\"I wish I could help you, but I don't have any information about that.\"" << endl;
                     }
                     if (replyNum == 4) {
-                        cout << "\"I'm sorry I can't be a help to you, Detective, but I don't have a clue regarding that.\"" << endl;
+                        cout << "\n\"That's rather peculiar. I'm not sure what this evidence means.\"" << endl;
                     }
                     type_and_continue();
                 }
+                
                 //Empties console screen
                 system("CLS");
+
                 print_input(userKeyword);
+
+                //Prints a title to tell the player which character they are questioning / interrogating
+                print_character_questioning_title(roomNum);
+                //Asks player which piece of evidence they'd like to interrogate the suspect about
                 print_interrogation_request(roomNum, clueList);
                 userKeyword = get_keyword_input();
+
             }
 
         }
 
         //Empties console screen
         system("CLS");
+        //Prints a title to tell the player which character they are questioning
+        print_character_questioning_title(roomNum);
+
         print_input(userKeyword);
+
+        //Asks player which questions they'd like to ask the suspect
         print_questioning_request(roomNum);
         userKeyword = get_keyword_input();
     }
@@ -2887,6 +3973,13 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
 void print_keyword_request(int roomNum) {
     cout << "\nWhat do you want to investigate in the " << get_room_name(roomNum) << "?" << endl;
     cout << "(Type \"leave\" to move between rooms.)" << endl;
+}
+
+//Asks user what they'd like to investigate further
+//when they're investigating something within an object description
+void print_further_keyword_request() {
+    cout << "\nWhat do you want to investigate further?" << endl;
+    cout << "(Type \"back\" to return to your current room.)" << endl;
 }
 
 //Asks user which room they want to enter
@@ -2914,9 +4007,9 @@ void print_pendleton_help_request(int roomNum) {
 
     cout << "\"1\": What's in the case file?" << endl;
     cout << "\"2\": How do I investigate objects?" << endl;
-    cout << "\"2\": How do I question the suspects?" << endl;
-    cout << "\"3\": How do I save?" << endl;
-    cout << "\"3\": How do I end the game when I've figured out the killer?" << endl;
+    cout << "\"3\": How do I know when I've found a clue?" << endl;
+    cout << "\"4\": How do I question the suspects?" << endl;
+    cout << "\"5\": How do I end the game when I've figured out the killer?" << endl;
 
     cout << "\n(Type \"stop\" to stop questioning your suspect and return to your current room." << endl;
     cout << "Or, if you've asked this character all of the five questions above, you should try typing \"interrogate\"." << endl;
@@ -2929,41 +4022,91 @@ void print_interrogation_request(int roomNum, vector<string>& clueList) {
     cout << "----------------------------------------" << endl;
     switch (roomNum) {
     case CLYDE:
-        for (int i = 0; i < NUMCLUES; i++) {
-            cout << clueList.at(i) << endl;
-        }
+        cout << clueList.at(CASEFILE) << endl;
+        cout << clueList.at(EXPENSEREPORTS) << endl;
+        cout << clueList.at(SMALLSAFE) << endl;
+        cout << clueList.at(LOCKEDCHESTS) << endl;
+        cout << clueList.at(MISSINGKNIFE) << endl;
+        cout << clueList.at(BLOODSTAINS) << endl;
+        cout << clueList.at(CLEANEDFLOOR) << endl;
+        cout << clueList.at(BROKENLOCK) << endl;
+        cout << clueList.at(SLASHEDTHROAT) << endl;
+        cout << clueList.at(FOAMEDMOUTH) << endl;
+        cout << clueList.at(BLOODYGARMENT) << endl;
+        cout << clueList.at(SNOWYFOOTPRINTS) << endl;
+        break;
+
     case BUTLER:
         cout << clueList.at(CASEFILE) << endl;
+        cout << clueList.at(ANONYMOUSLETTER) << endl;
+        cout << clueList.at(LOCKEDCHESTS) << endl;
+        cout << clueList.at(REDVELVETCHAIRS) << endl;
+        cout << clueList.at(SMALLBUTTON) << endl;
+        cout << clueList.at(EMPTYDISPLAY) << endl;
+        cout << clueList.at(CLEANEDFLOOR) << endl;
+        cout << clueList.at(GLASSSHARDS) << endl;
+        cout << clueList.at(SLASHEDTHROAT) << endl;
+        cout << clueList.at(WETBOOTS) << endl;
         break;
+
     case SOUSCHEF:
         cout << clueList.at(CASEFILE) << endl;
+        cout << clueList.at(ANONYMOUSLETTER) << endl;
+        cout << clueList.at(MISSINGKNIFE) << endl;
+        cout << clueList.at(REDVELVETCHAIRS) << endl;
+        cout << clueList.at(CUTNIGHTSHADE) << endl;
+        cout << clueList.at(BLOODSTAINS) << endl;
+        cout << clueList.at(SLASHEDTHROAT) << endl;
+        cout << clueList.at(EARRING) << endl;
         break;
+
     case MRSSTRONGHOLD:
         cout << clueList.at(CASEFILE) << endl;
         cout << clueList.at(SMALLSAFE) << endl;
         cout << clueList.at(INSURANCEPOLICY) << endl;
+        cout << clueList.at(ANONYMOUSLETTER) << endl;
         cout << clueList.at(MISSINGKNIFE) << endl;
-        cout << clueList.at(EARRING) << endl;
-        cout << clueList.at(WASHEDSINK) << endl;
+        cout << clueList.at(REDVELVETCHAIRS) << endl;
+        cout << clueList.at(SMALLBUTTON) << endl;
         cout << clueList.at(SLASHEDTHROAT) << endl;
         cout << clueList.at(FOAMEDMOUTH) << endl;
-        cout << clueList.at(SMALLBUTTON) << endl;
+        cout << clueList.at(BLOODYGARMENT) << endl;
+        cout << clueList.at(WETBOOTS) << endl;
+        cout << clueList.at(EARRING) << endl;
+        cout << clueList.at(WASHEDSINK) << endl;
+        cout << clueList.at(SNOWYFOOTPRINTS) << endl;
         break;
+
     case WINECRAFTER:
         cout << clueList.at(CASEFILE) << endl;
+        cout << clueList.at(EXPENSEREPORTS) << endl;
+        cout << clueList.at(ANONYMOUSLETTER) << endl;
+        cout << clueList.at(REDVELVETCHAIRS) << endl;
+        cout << clueList.at(CUTNIGHTSHADE) << endl;
+        cout << clueList.at(EMPTYDISPLAY) << endl;
+        cout << clueList.at(GLASSSHARDS) << endl;
         break;
+
     case MUDMAN:
-        cout << clueList.at(CASEFILE) << endl;
+        cout << clueList.at(LATECHECK) << endl;
+        cout << clueList.at(ANONYMOUSLETTER) << endl;
+        cout << clueList.at(MISSINGKNIFE) << endl;
+        cout << clueList.at(REDVELVETCHAIRS) << endl;
+        cout << clueList.at(CUTNIGHTSHADE) << endl;
+        cout << clueList.at(BROKENLOCK) << endl;
+        cout << clueList.at(WETBOOTS) << endl;
         break;
+
     case ASTRONOMER:
         cout << clueList.at(CASEFILE) << endl;
         cout << clueList.at(SMALLSAFE) << endl;
         cout << clueList.at(LATECHECK) << endl;
         cout << clueList.at(ANONYMOUSLETTER) << endl;
+        cout << clueList.at(REDVELVETCHAIRS) << endl;
         cout << clueList.at(EMPTYDISPLAY) << endl;
         cout << clueList.at(BROKENLOCK) << endl;
-        cout << clueList.at(SLASHEDTHROAT) << endl;
         cout << clueList.at(FOAMEDMOUTH) << endl;
+        cout << clueList.at(EARRING) << endl;
         cout << clueList.at(SNOWYFOOTPRINTS) << endl;
         break;
     }
