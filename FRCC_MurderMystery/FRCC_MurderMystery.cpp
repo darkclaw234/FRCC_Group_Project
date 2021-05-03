@@ -53,6 +53,7 @@ void print_interrogation_request(int roomNum, vector<bool>& currentUserChoices, 
 string get_room_name(int roomNum);
 void print_room_title(int roomNum);
 void print_adjacent_rooms(int roomNum);
+void print_map(int roomNum);
 
 //This function prints character names.
 string get_character_name(int roomNum, int formality = 0);
@@ -2274,8 +2275,13 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 //Prints adjacent rooms to user and then changes roomNum to newRoomNum based on the user's input
 int leave_room(int roomNum) {
 
+    //Empties console screen
+    system("CLS");
+
     int newRoomNum = roomNum;
 
+    //Prints map of rooms for user's reference
+    print_map(roomNum);
     //Prints adjacent rooms for user's reference
     print_adjacent_rooms(roomNum);
     //Gets user's chosen room
@@ -4621,9 +4627,9 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
         cout << clueList.at(SNOWYFOOTPRINTS) << endl;
 
         cout << "----------------------------------------" << endl;
-
-        cout << "\nType the name of a clue to view it's description:" << endl;
+        cout << "Type the name of a clue to view it's description:" << endl;
         cout << "(Or type \"back\" to return to your current room.)" << endl;
+        cout << "----------------------------------------" << endl;
 
         userKeyword = get_keyword_input();
 
@@ -4994,16 +5000,20 @@ void print_inventory_item_description(int itemNum, vector<bool>& currentUserChoi
 
 //Asks user what they want to investigate
 void print_keyword_request(int roomNum) {
-    cout << "\nWhat do you want to investigate in the " << get_room_name(roomNum) << "?" << endl;
+    cout << "\n----------------------------------------" << endl;
+    cout << "What do you want to investigate in the " << get_room_name(roomNum) << "?" << endl;
     cout << "(Type \"inventory\" to view your clues.)" << endl;
     cout << "(Type \"leave\" to move between rooms.)" << endl;
+    cout << "----------------------------------------" << endl;
 }
 
 //Asks user what they'd like to investigate further
 //when they're investigating something within an object description
 void print_further_keyword_request() {
-    cout << "\nWhat do you want to investigate further?" << endl;
+    cout << "\n----------------------------------------" << endl;
+    cout << "What do you want to investigate further?" << endl;
     cout << "(Type \"back\" to return to your current room.)" << endl;
+    cout << "----------------------------------------" << endl;
 }
 
 //Asks user which room they want to enter
@@ -5385,106 +5395,437 @@ void print_room_title(int roomNum) {
 //Prints the room names of all adjacent rooms associated with roomNum
 void print_adjacent_rooms(int roomNum) {
 
-    cout << "\nAdjacent Rooms: " << endl;
+    cout << "Adjacent Rooms: " << endl;
 
     switch (roomNum) {
 
     case 0:
-        cout << "\"" << get_room_name(1) << "\"" << endl;
+        cout << endl;
+        cout << "[" << get_room_name(1) << "]" << endl;
+        cout << endl;
         break;
 
     case 1:
-        cout << "\"" << get_room_name(0) << "\"" << endl;
-        cout << "\"" << get_room_name(2) << "\"" << endl;
-        cout << "\"" << get_room_name(3) << "\"" << endl;
-        cout << "\"" << get_room_name(4) << "\"" << endl;
-        cout << "\"" << get_room_name(5) << "\"" << endl;
-        cout << "\"" << get_room_name(6) << "\"" << endl;
-        cout << "\"" << get_room_name(7) << "\"" << endl;
-        cout << "\"" << get_room_name(8) << "\"" << endl;
+        cout << "\nWEST WING" << "\t\t\tFRONT AND BACK" << "\t\t\tEAST WING" << endl;
+        cout << "----------------" << "\t\t----------------" << "\t\t----------------" << endl;
+        cout << "[" << get_room_name(2) << "]" << "\t\t\t" << "[" << get_room_name(8) << "]" << "\t\t\t" << "[" << get_room_name(5) << "]" << endl;
+        cout << "[" << get_room_name(3) << "]" << "\t\t" << "[" << get_room_name(0) << "]" << "\t\t\t" << "[" << get_room_name(6) << "]" << endl;
+        cout << "[" << get_room_name(4) << "]" << "\t\t\t\t\t\t\t" << "[" << get_room_name(7) << "]" << endl;
+        cout << endl;
         break;
 
     case 2:
-        cout << "\"" << get_room_name(1) << "\"" << endl;
-        cout << "\"" << get_room_name(3) << "\"" << endl;
-        cout << "\"" << get_room_name(4) << "\"" << endl;
+        cout << endl;
+        cout << "[" << get_room_name(1) << "]" << endl;
+        cout << "[" << get_room_name(3) << "]" << endl;
+        cout << "[" << get_room_name(4) << "]" << endl;
+        cout << endl;
         break;
 
     case 3:
-        cout << "\"" << get_room_name(1) << "\"" << endl;
-        cout << "\"" << get_room_name(2) << "\"" << endl;
-        cout << "\"" << get_room_name(4) << "\"" << endl;
+        cout << endl;
+        cout << "[" << get_room_name(1) << "]" << endl;
+        cout << "[" << get_room_name(2) << "]" << endl;
+        cout << "[" << get_room_name(4) << "]" << endl;
+        cout << endl;
         break;
 
     case 4:
-        cout << "\"" << get_room_name(1) << "\"" << endl;
-        cout << "\"" << get_room_name(2) << "\"" << endl;
-        cout << "\"" << get_room_name(3) << "\"" << endl;
+        cout << endl;
+        cout << "[" << get_room_name(1) << "]" << endl;
+        cout << "[" << get_room_name(2) << "]" << endl;
+        cout << "[" << get_room_name(3) << "]" << endl;
+        cout << endl;
         break;
 
     case 5:
-        cout << "\"" << get_room_name(1) << "\"" << endl;
-        cout << "\"" << get_room_name(6) << "\"" << endl;
-        cout << "\"" << get_room_name(7) << "\"" << endl;
+        cout << endl;
+        cout << "[" << get_room_name(1) << "]" << endl;
+        cout << "[" << get_room_name(6) << "]" << endl;
+        cout << "[" << get_room_name(7) << "]" << endl;
+        cout << endl;
         break;
 
     case 6:
-        cout << "\"" << get_room_name(1) << "\"" << endl;
-        cout << "\"" << get_room_name(5) << "\"" << endl;
-        cout << "\"" << get_room_name(7) << "\"" << endl;
+        cout << endl;
+        cout << "[" << get_room_name(1) << "]" << endl;
+        cout << "[" << get_room_name(5) << "]" << endl;
+        cout << "[" << get_room_name(7) << "]" << endl;
+        cout << endl;
         break;
 
     case 7:
-        cout << "\"" << get_room_name(1) << "\"" << endl;
-        cout << "\"" << get_room_name(5) << "\"" << endl;
-        cout << "\"" << get_room_name(6) << "\"" << endl;
+        cout << endl;
+        cout << "[" << get_room_name(1) << "]" << endl;
+        cout << "[" << get_room_name(5) << "]" << endl;
+        cout << "[" << get_room_name(6) << "]" << endl;
+        cout << endl;
         break;
 
     case 8:
-        cout << "\nUPSTAIRS" << endl;
-        cout << "----------------" << endl;
-        cout << "\"" << get_room_name(11) << "\"" << endl;
-        cout << "\"" << get_room_name(12) << "\"" << endl;
-
-        cout << "\nGROUND FLOOR" << endl;
-        cout << "----------------" << endl;
-        cout << "\"" << get_room_name(1) << "\"" << endl;
-
-        cout << "\nDOWNSTAIRS" << endl;
-        cout << "--------------------" << endl;
-        cout << "\"" << get_room_name(9) << "\"" << endl;
-        cout << "\"" << get_room_name(10) << "\"" << endl;
+        cout << "\nUPSTAIRS" << "\t\t\tMAIN FLOOR" << "\t\t\tDOWNSTAIRS" << endl;
+        cout << "----------------" << "\t\t----------------" << "\t\t----------------" << endl;
+        cout << "[" << get_room_name(11) << "]" << "\t\t\t" << "[" << get_room_name(1) << "]" << "\t\t\t" << "[" << get_room_name(9) << "]" << endl;
+        cout << "[" << get_room_name(12) << "]" << "\t\t\t" << "\t\t\t" << "[" << get_room_name(10) << "]" << endl;
+        cout << endl;
         break;
 
     case 9:
-        cout << "\"" << get_room_name(10) << "\"" << endl;
-        cout << "\"" << get_room_name(8) << "\"" << endl;
+        cout << endl;
+        cout << "[" << get_room_name(10) << "]" << endl;
+        cout << "[" << get_room_name(8) << "]" << endl;
+        cout << endl;
         break;
 
     case 10:
-        cout << "\"" << get_room_name(9) << "\"" << endl;
-        cout << "\"" << get_room_name(8) << "\"" << endl;
+        cout << endl;
+        cout << "[" << get_room_name(9) << "]" << endl;
+        cout << "[" << get_room_name(8) << "]" << endl;
+        cout << endl;
         break;
 
     case 11:
-        cout << "\"" << get_room_name(12) << "\"" << endl;
-        cout << "\"" << get_room_name(13) << "\"" << endl;
-        cout << "\"" << get_room_name(8) << "\"" << endl;
+        cout << endl;
+        cout << "[" << get_room_name(12) << "]" << endl;
+        cout << "[" << get_room_name(13) << "]" << endl;
+        cout << "[" << get_room_name(8) << "]" << endl;
+        cout << endl;
         break;
 
     case 12:
-        cout << "\"" << get_room_name(11) << "\"" << endl;
-        cout << "\"" << get_room_name(13) << "\"" << endl;
-        cout << "\"" << get_room_name(8) << "\"" << endl;
+        cout << endl;
+        cout << "[" << get_room_name(11) << "]" << endl;
+        cout << "[" << get_room_name(13) << "]" << endl;
+        cout << "[" << get_room_name(8) << "]" << endl;
+        cout << endl;
         break;
 
     case 13:
-        cout << "\"" << get_room_name(11) << "\"" << endl;
-        cout << "\"" << get_room_name(12) << "\"" << endl;
+        cout << endl;
+        cout << "[" << get_room_name(11) << "]" << endl;
+        cout << "[" << get_room_name(12) << "]" << endl;
+        cout << endl;
         break;
 
     }
 }
+
+
+void print_map(int roomNum) {
+
+    switch (roomNum) {
+
+    case TROPHYHALL:
+        cout << "You are in the " << get_room_name(roomNum) << " / <TH>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |                    |       " << endl;
+        cout << "  |      |      |      |      |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |           ()        ()           |" << endl;
+        cout << "  |     ()        [BL]        ()     |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      |      |      |      |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                | <TH> |                             |      ()        ()      |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+
+    case BALLROOM:
+        cout << "You are in the " << get_room_name(roomNum) << " / <BL>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |                    |       " << endl;
+        cout << "  |      | [OF] | [ST] | [KT] |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |           ()  [ST]  ()           |" << endl;
+        cout << "  | [LB]()        <BL>        ()[GH] |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      | [SQ] |      | [DR] |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                | [TH] |                             |      ()  [ST]  ()      |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+
+    case OFFICE:
+        cout << "You are in the " << get_room_name(roomNum) << " / <OF>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |                    |       " << endl;
+        cout << "  |      | <OF> |      |      |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |           ()        ()           |" << endl;
+        cout << "  | [LB]()        [BL]        ()     |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      | [SQ] |      |      |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                |      |                             |      ()        ()      |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+
+    case SERVANTSQUARTERS:
+        cout << "You are in the " << get_room_name(roomNum) << " / <SQ>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |                    |       " << endl;
+        cout << "  |      | [OF] |      |      |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |           ()        ()           |" << endl;
+        cout << "  | [LB]()        [BL]        ()     |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      | <SQ> |      |      |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                |      |                             |      ()        ()      |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+
+    case LIBRARY:
+        cout << "You are in the " << get_room_name(roomNum) << " / <LB>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |                    |       " << endl;
+        cout << "  |      | [OF] |      |      |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |           ()        ()           |" << endl;
+        cout << "  | <LB>()        [BL]        ()     |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      | [SQ] |      |      |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                |      |                             |      ()        ()      |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+
+    case KITCHEN:
+        cout << "You are in the " << get_room_name(roomNum) << " / <KT>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |                    |       " << endl;
+        cout << "  |      |      |      | <KT> |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |           ()        ()           |" << endl;
+        cout << "  |     ()        [BL]        ()[GH] |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      |      |      | [DR] |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                |      |                             |      ()        ()      |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+
+    case DININGROOM:
+        cout << "You are in the " << get_room_name(roomNum) << " / <DR>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |                    |       " << endl;
+        cout << "  |      |      |      | [KT] |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |           ()        ()           |" << endl;
+        cout << "  |     ()        [BL]        ()[GH] |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      |      |      | <DR> |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                |      |                             |      ()        ()      |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+
+    case GREENHOUSE:
+        cout << "You are in the " << get_room_name(roomNum) << " / <GH>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |                    |       " << endl;
+        cout << "  |      |      |      | [KT] |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |           ()        ()           |" << endl;
+        cout << "  |     ()        [BL]        ()<GH> |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      |      |      | [DR] |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                |      |                             |      ()        ()      |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+
+    case STAIRWELL:
+        cout << "You are in the " << get_room_name(roomNum) << " / <ST>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |                    |       " << endl;
+        cout << "  |      |      | <ST> |      |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |    [OB]   ()  <ST>  ()   [MB]    |" << endl;
+        cout << "  |     ()        [BL]        ()     |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      |      |      |      |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                |      |                             | [WC] ()  <ST>  () [BR] |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+
+    case WINECELLAR:
+        cout << "You are in the " << get_room_name(roomNum) << " / <WC>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |                    |       " << endl;
+        cout << "  |      |      | [ST] |      |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |           ()  [ST]  ()           |" << endl;
+        cout << "  |     ()                    ()     |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      |      |      |      |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                |      |                             | <WC> ()  [ST]  () [BR] |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+
+    case BOILERROOM:
+        cout << "You are in the " << get_room_name(roomNum) << " / <BR>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |                    |       " << endl;
+        cout << "  |      |      | [ST] |      |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |           ()  [ST]  ()           |" << endl;
+        cout << "  |     ()                    ()     |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      |      |      |      |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                |      |                             | [WC] ()  [ST]  () <BR> |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+
+    case OBSERVATORY:
+        cout << "You are in the " << get_room_name(roomNum) << " / <OB>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |        [BA]        |       " << endl;
+        cout << "  |      |      | [ST] |      |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |    <OB>   ()  [ST]  ()   [MB]    |" << endl;
+        cout << "  |     ()                    ()     |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      |      |      |      |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                |      |                             |      ()  [ST]  ()      |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+
+    case MASTERBEDROOM:
+        cout << "You are in the " << get_room_name(roomNum) << " / <MB>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |        [BA]        |       " << endl;
+        cout << "  |      |      | [ST] |      |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |    [OB]   ()  [ST]  ()   <MB>    |" << endl;
+        cout << "  |     ()                    ()     |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      |      |      |      |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                |      |                             |      ()  [ST]  ()      |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+
+    case BALCONY:
+        cout << "You are in the " << get_room_name(roomNum) << " / <BA>" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "               MAIN FLOOR                                     UPSTAIRS              " << endl;
+        cout << "         ______________________                        ______________________       " << endl;
+        cout << "  ____________________________________                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                 |        <BA>        |       " << endl;
+        cout << "  |      |      |      |      |      |          _______|_()______________()_|_______" << endl;
+        cout << "  |      |      |__()__|      |      |          |            |        |            |" << endl;
+        cout << "  |      ---()---      ---()---      |          |    [OB]   ()        ()   [MB]    |" << endl;
+        cout << "  |     ()                    ()     |          |____________|________|____________|" << endl;
+        cout << "  |      ---()---      ---()---      |                 ______________________       " << endl;
+        cout << "  |      |      |      |      |      |                       DOWNSTAIRS             " << endl;
+        cout << "  |      |      |      |      |      |                 ______________________       " << endl;
+        cout << "  |______|______|__()__|______|______|               __________________________     " << endl;
+        cout << "                |      |                             |       |        |       |     " << endl;
+        cout << "                |      |                             |      ()        ()      |     " << endl;
+        cout << "                |______|                             |_______|________|_______|     " << endl;
+        cout << "\n----------------------------------------" << endl;
+        break;
+    }
+
+}
+
 
 
 //Gets keyword Input from user and sets keyword to lower case so it can be compared with
