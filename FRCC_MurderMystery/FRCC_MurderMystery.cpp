@@ -33,7 +33,8 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
 void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 
-void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
+void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList, string userKeyword);
+void print_inventory_item_description(int itemNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 
 //These functions print requests for user input. 
 //These first two ask the player for a keyword to investigate.
@@ -45,7 +46,7 @@ void print_new_room_request(int roomNum);
 //or which clue they want to interrogate an NPC with.
 void print_questioning_request(int roomNum);
 void print_pendleton_help_request(int roomNum);
-void print_interrogation_request(int roomNum, vector<string>& clueList);
+void print_interrogation_request(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 
 //These functions print a pretty title for each room, the actual name of each room,
 //and the names of adjacent rooms to the player's current location.
@@ -76,6 +77,16 @@ const int MEETCLYDE = 0;
 const int FINDFLASHLIGHT = 1;
 const int FINDUVLIGHT = 2;
 const int ACCUSEMRSSTRONGHOLD = 3;
+const int ASKABOUTEXPENSEREPORTS = 4;
+const int ASKABOUTREDVELVETCHAIRS = 5;
+const int ASKABOUTCUTNIGHTSHADE = 6;
+const int ASKABOUTSTONEBUTTON= 7;
+const int ASKABOUTEMPTYDISPLAY = 8;
+const int ASKABOUTCLEANEDFLOOR = 9;
+const int ASKABOUTGLASSSHARDS = 10;
+const int ASKABOUTFOAMEDMOUTH = 11;
+const int ASKABOUTWETBOOTS = 12;
+const int ASKABOUTCUFFLINK = 13;
 
 //These constants will be used as the indexes of the clues in the clueList vector.
 //They will help title each clue as they are found.
@@ -89,7 +100,7 @@ const int LOCKEDCHESTS = 6;
 const int MISSINGKNIFE = 7;
 const int REDVELVETCHAIRS = 8;
 const int CUTNIGHTSHADE = 9;
-const int SMALLBUTTON = 10;
+const int STONEBUTTON = 10;
 const int EMPTYDISPLAY = 11;
 const int BLOODSTAINS = 12;
 const int CLEANEDFLOOR = 13;
@@ -100,7 +111,7 @@ const int SLASHEDTHROAT = 17;
 const int FOAMEDMOUTH = 18;
 const int BLOODYGARMENT = 19;
 const int WETBOOTS = 20;
-const int EARRING = 21;
+const int CUFFLINK = 21;
 const int WASHEDSINK = 22;
 const int SNOWYFOOTPRINTS = 23;
 
@@ -136,7 +147,7 @@ const int FORMAL = 0;
 const int INFORMAL = 1;
 
 //This constant represents the number of important clues within the game
-const int NUMCLUES = 30;
+const int NUMCLUES = 24;
 
 
 
@@ -165,30 +176,13 @@ int main()
     }
 
     //FIXME: REDISTRIBUTE clues to appropriate places around house
-    clueList.at(CASEFILE) = "\"Case File\" in the " + get_room_name(TROPHYHALL);
-    clueList.at(EXPENSEREPORTS) = "\"Expense Reports\" in the " + get_room_name(OFFICE);
-    clueList.at(SMALLSAFE) = "\"Small Safe\" in the " + get_room_name(OFFICE);
     clueList.at(INSURANCEPOLICY) = "\"Insurance Policy\" in the " + get_room_name(OFFICE);
     clueList.at(LATECHECK) = "\"Late Check\" in the " + get_room_name(OFFICE);
     clueList.at(ANONYMOUSLETTER) = "\"Anonymous Letter\" in the " + get_room_name(OFFICE);
-    clueList.at(LOCKEDCHESTS) = "\"Locked Chests\" in the " + get_room_name(SERVANTSQUARTERS);
-    clueList.at(MISSINGKNIFE) = "\"Missing Knife\" in the " + get_room_name(KITCHEN);
-    clueList.at(REDVELVETCHAIRS) = "\"Red Velvet Chairs\" in the " + get_room_name(DININGROOM);
-    clueList.at(CUTNIGHTSHADE) = "\"Cut Nightshade\" in the " + get_room_name(GREENHOUSE);
-    clueList.at(SMALLBUTTON) = "\"Small Button\" in the " + get_room_name(STAIRWELL);
+    
     clueList.at(EMPTYDISPLAY) = "\"Empty Display\" in the " + get_room_name(WINECELLAR);
     clueList.at(BLOODSTAINS) = "\"Bloodstains\" in the " + get_room_name(WINECELLAR);
     clueList.at(CLEANEDFLOOR) = "\"Cleaned Floor\" in the " + get_room_name(WINECELLAR);
-    clueList.at(GLASSSHARDS) = "\"Glass Shards\" in the " + get_room_name(BOILERROOM);
-    clueList.at(BREAKERBOX) = "\"Breaker Box\" in the " + get_room_name(BOILERROOM);
-    clueList.at(BROKENLOCK) = "\"Broken Lock\" on the " + get_room_name(OBSERVATORY) + "'s door to the " + get_room_name(BALCONY);
-    clueList.at(SLASHEDTHROAT) = "\"Slashed Throat\" of " + get_character_name(DRSTRONGHOLD) + "'s";
-    clueList.at(FOAMEDMOUTH) = "\"Foamed Mouth\" of " + get_character_name(DRSTRONGHOLD) + "'s";
-    clueList.at(BLOODYGARMENT) = "\"Bloody Garment\" in the " + get_room_name(MASTERBEDROOM);
-    clueList.at(WETBOOTS) = "\"Wet Boots\" in the " + get_room_name(MASTERBEDROOM);
-    clueList.at(EARRING) = "\"Earring\" in the " + get_room_name(MASTERBEDROOM);
-    clueList.at(WASHEDSINK) = "\"Washed Sink\" in the " + get_room_name(MASTERBEDROOM);
-    clueList.at(SNOWYFOOTPRINTS) = "\"Snowy Footprints\" on the " + get_room_name(BALCONY);
 
     //FIXME: REMOVE ONCE GAME IS FINISHED
     //Prints clueList
@@ -202,7 +196,7 @@ int main()
     beginning();
 
     //Loops Until roomNum is -1, which will only be the case once the player
-    //Submits their final answer as to who the murderer is etc.
+    //Submits their final answer of who the murderer is etc.
     //Then the end of the game is set in motion and the user exits the loop.
     while (roomNum != -1) {
 
@@ -270,7 +264,7 @@ int main()
                 //Empties console screen
                 system("CLS");
 
-                //Describes Room 0
+                //Describes Room 1
                 describe_room(roomNum, userChoices, clueList);
                 userKeyword = investigate_room(roomNum, userChoices, clueList);
             }
@@ -306,7 +300,7 @@ int main()
                 //Empties console screen
                 system("CLS");
 
-                //Describes Room 0
+                //Describes Room 2
                 describe_room(roomNum, userChoices, clueList);
                 userKeyword = investigate_room(roomNum, userChoices, clueList);
             }
@@ -342,7 +336,7 @@ int main()
                 //Empties console screen
                 system("CLS");
 
-                //Describes Room 0
+                //Describes Room 3
                 describe_room(roomNum, userChoices, clueList);
                 userKeyword = investigate_room(roomNum, userChoices, clueList);
             }
@@ -378,7 +372,7 @@ int main()
                 //Empties console screen
                 system("CLS");
 
-                //Describes Room 0
+                //Describes Room 4
                 describe_room(roomNum, userChoices, clueList);
                 userKeyword = investigate_room(roomNum, userChoices, clueList);
             }
@@ -414,7 +408,7 @@ int main()
                 //Empties console screen
                 system("CLS");
 
-                //Describes Room 0
+                //Describes Room 5
                 describe_room(roomNum, userChoices, clueList);
                 userKeyword = investigate_room(roomNum, userChoices, clueList);
             }
@@ -450,7 +444,7 @@ int main()
                 //Empties console screen
                 system("CLS");
 
-                //Describes Room 0
+                //Describes Room 6
                 describe_room(roomNum, userChoices, clueList);
                 userKeyword = investigate_room(roomNum, userChoices, clueList);
             }
@@ -487,7 +481,7 @@ int main()
                 //Empties console screen
                 system("CLS");
 
-                //Describes Room 0
+                //Describes Room 7
                 describe_room(roomNum, userChoices, clueList);
                 userKeyword = investigate_room(roomNum, userChoices, clueList);
             }
@@ -523,7 +517,7 @@ int main()
                 //Empties console screen
                 system("CLS");
 
-                //Describes Room 0
+                //Describes Room 8
                 describe_room(roomNum, userChoices, clueList);
                 userKeyword = investigate_room(roomNum, userChoices, clueList);
             }
@@ -559,7 +553,7 @@ int main()
                 //Empties console screen
                 system("CLS");
 
-                //Describes Room 0
+                //Describes Room 9
                 describe_room(roomNum, userChoices, clueList);
                 userKeyword = investigate_room(roomNum, userChoices, clueList);
             }
@@ -595,7 +589,7 @@ int main()
                 //Empties console screen
                 system("CLS");
 
-                //Describes Room 0
+                //Describes Room 10
                 describe_room(roomNum, userChoices, clueList);
                 userKeyword = investigate_room(roomNum, userChoices, clueList);
             }
@@ -631,7 +625,7 @@ int main()
                 //Empties console screen
                 system("CLS");
 
-                //Describes Room 0
+                //Describes Room 11
                 describe_room(roomNum, userChoices, clueList);
                 userKeyword = investigate_room(roomNum, userChoices, clueList);
             }
@@ -667,7 +661,7 @@ int main()
                 //Empties console screen
                 system("CLS");
 
-                //Describes Room 0
+                //Describes Room 12
                 describe_room(roomNum, userChoices, clueList);
                 userKeyword = investigate_room(roomNum, userChoices, clueList);
             }
@@ -703,7 +697,7 @@ int main()
                 //Empties console screen
                 system("CLS");
 
-                //Describes Room 0
+                //Describes Room 13
                 describe_room(roomNum, userChoices, clueList);
                 userKeyword = investigate_room(roomNum, userChoices, clueList);
             }
@@ -821,7 +815,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices, vector<string>
             cout << "Dracaena plants cradle some shelves filled with well dusted black and white photos." << endl;
             cout << "There's even a golden lion head attached to the wall, right above the double doors that lead into the mansion's core." << endl;
 
-            cout << "\n" << get_character_name(CLYDE, INFORMAL) << " sits by the plastic table of evidence, prepared to answer any questions you might have." << endl;
+            cout << "\n" << get_character_name(CLYDE, INFORMAL) << " sits by a plastic table of evidence, prepared to answer any questions you might have." << endl;
         }
         //Prints different description if player hasn't met clyde
         else {
@@ -892,7 +886,6 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices, vector<string>
         cout << "You enter the " << get_room_name(KITCHEN) << " through a creaky door." << endl;
         cout << "An industrial stovetop oven and a stainless steel sink are attached to the back counter." << endl;
         cout << "Under the cupboards, there is a block of knives and a basket of kitchen utensils." << endl;
-
         cout << "A tray of Hors d'oeuvres has been set on the counter with a note attached:" << endl;
         cout << "\"Feel free to take some Hors d'oeuvres before you investigate. You'll thoroughly enjoy them.\"" << endl;
         cout << "- Ms. Davis" << endl;
@@ -947,8 +940,6 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices, vector<string>
 
         cout << "\n" << get_character_name(MUDMAN, FORMAL) << ", The Mud Man, stares directly at you." << endl;
         cout << "He's sitting in a pile of dark, sticky mud." << endl;
-        cout << "Besides the whites of his eyes, almost everything is covered in muck." << endl;
-        cout << "\"What do you want? If you're not here for anything important, leave me to my mud.\"" << endl;
         break;
 
     case 11:
@@ -979,7 +970,13 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices, vector<string>
     case 13:
         //FIXME: DESCRIBE ROOM 13
         print_room_title(roomNum);
-        cout << "FIXME: DESCRIBE ROOM 13." << endl;
+        cout << "The " << get_room_name(BALCONY) << " is covered in snow from the storm." << endl;
+        cout << "White flakes of snow from the rooftop are still swirling in the crisp winter air." << endl;
+        cout << "You take a deep breath and enjoy the view. The mountain view is truly incredible." << endl;
+
+        cout << "\nYou focus back on the deck." << endl;
+        cout << "There appear to be two sets of footprints in the snow out here." << endl;
+        cout << "Also, the door to the observatory has clearly been forced open." << endl;
         break;
 
     default:
@@ -1005,12 +1002,19 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
     switch (roomNum) {
     case 0:
 
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
         if ((userKeyword.compare("glass") == 0)
             || (userKeyword.compare("cupboards") == 0)
             || (userKeyword.compare("bronze") == 0)
             || (userKeyword.compare("silver") == 0)
             || (userKeyword.compare("figures") == 0)) {
-            cout << "\nGlass Trophy Cupboards: " << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Glass Trophy Cupboards: " << endl;
             cout << "----------------------------------------" << endl;
             cout << get_character_name(DRSTRONGHOLD) << " has an arrangement of trophies proudly presented in the glass cupboards." << endl;
             cout << "It seems he's achieved quite a lot in the scientific world." << endl;
@@ -1020,7 +1024,10 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
         if ((userKeyword.compare("dracaena") == 0)
             || (userKeyword.compare("plants") == 0)) {
-            cout << "\nDracaena Plants:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Dracaena Plants:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "These plants are low effort shrubs with beautiful green leaves." << endl;
             cout << "Unsurprisingly, the ones in this room are in great condition." << endl;
@@ -1032,7 +1039,10 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
             || (userKeyword.compare("black") == 0)
             || (userKeyword.compare("white") == 0)
             || (userKeyword.compare("photos") == 0)) {
-            cout << "\nWell Dusted Photos:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Well Dusted Photos:" << endl;
             cout << "----------------------------------------" << endl;
             cout << get_character_name(DRSTRONGHOLD) << " was clearly a fan of photos." << endl;
             cout << "He has quite a few of each suspect." << endl;
@@ -1047,7 +1057,10 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
         if ((userKeyword.compare("golden") == 0)
             || (userKeyword.compare("lion") == 0)
             || (userKeyword.compare("head") == 0)) {
-            cout << "\nGolden Lion Head:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Golden Lion Head:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "It's well polished... and quite gratutious." << endl;
             cout << "It doesn't seem particularly relevant to the case, however." << endl;
@@ -1061,10 +1074,17 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 1:
 
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
         if ((userKeyword.compare("sparkling") == 0)
             || (userKeyword.compare("vinyl") == 0)
             || (userKeyword.compare("floor") == 0)) {
-            cout << "\nVinyl Floors:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Vinyl Floors:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "The Butler has clearly been wiping the floors down." << endl;
             cout << "You wonder if there's any reason for that..." << endl;
@@ -1073,7 +1093,10 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
         if ((userKeyword.compare("marble") == 0)
             || (userKeyword.compare("columns") == 0)) {
-            cout << "\nMarble Columns:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Marble Columns:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "If these are important to the case, you're not seeing why." << endl;
             cout << "They're just gorgeous pillars. They don't have much use beyond their appeal to the eye." << endl;
@@ -1081,7 +1104,10 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
         if ((userKeyword.compare("intricate") == 0)
             || (userKeyword.compare("chandeliers") == 0)) {
-            cout << "\nIntricate Chandeliers:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Intricate Chandeliers:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "An old friend told you about a case of theirs where a chandelier fell onto the victim's head." << endl;
             cout << "Luckily these chandeliers seem rather attached to the ceiling." << endl;
@@ -1097,16 +1123,26 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 2:
 
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
         if (userKeyword.compare("paperwork") == 0) {
-            cout << "\nPaperwork:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Paperwork:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "Piles of paperwork have scattered throughout the room." << endl;
-            cout << "It seems " << get_character_name(DRSTRONGHOLD) << "" << endl;
+            cout << "It seems " << get_character_name(DRSTRONGHOLD) << " wasn't particularly organized." << endl;
         }
 
         if ((userKeyword.compare("velvet") == 0)
             || (userKeyword.compare("curtains") == 0)) {
-            cout << "\nVelvet Curtains:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Velvet Curtains:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "Behind the curtains, you find some gleaming stained glass windows." << endl;
             cout << "They're painted and shaped to form the visage of a shooting star." << endl;
@@ -1117,72 +1153,201 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
         if ((userKeyword.compare("rotating") == 0)
             || (userKeyword.compare("bookshelf") == 0)) {
-            cout << "\nSmall Bookshelf:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Rotating Bookshelf:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "There's almost nothing here but dull self help books." << endl;
-            cout << "The only item of interest here is a file of expense reports." << endl;
-        }
-        if ((userKeyword.compare("file") == 0)
-            || (userKeyword.compare("expense") == 0)
-            || (userKeyword.compare("reports") == 0)) {
-            cout << "\nDull Expense Reports:" << endl;
-            cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
+            cout << "You imagine this kind of gimmicky furniture cost the Strongholds a lot of money." << endl;
+            cout << "It seems like quite a waste since there's papers all over the floor." << endl;
+            cout << "There's almost nothing on the bookshelf but some dull self help books and expense reports." << endl;
+
+            while (userKeyword.compare("back") != 0){
+
+                //Asks for user input and gets user input
+                print_further_keyword_request();
+                userKeyword = get_keyword_input();
+
+                if ((userKeyword.compare("expense") == 0)
+                    || (userKeyword.compare("reports") == 0)) {
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Expense Reports:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "These expense reports pertain to " << get_character_name(DRSTRONGHOLD) << "'s business endeavors." << endl;
+                    cout << "However, it's not easy for you to understand their relevance." << endl;
+                    cout << "You should ask around about these to learn more about " << get_character_name(DRSTRONGHOLD) << "'s finances." << endl;
+
+                    type_and_continue();
+                    cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+                    clueList.at(EXPENSEREPORTS) = "\"Expense Reports\" in the " + get_room_name(OFFICE);
+
+                    type_and_continue();
+
+                }
+                else if ((userKeyword.compare("dull") == 0)
+                    || (userKeyword.compare("self") == 0)
+                    || (userKeyword.compare("help") == 0)
+                    || (userKeyword.compare("book") == 0)
+                    || (userKeyword.compare("books") == 0)) {
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Dull Self Help Books:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "You flip through the pages of 10 Tips All Successful People May Or May Not Use:" << endl;
+                    cout << "\"If you wake up at 5 A.M, you too can be tired!\"" << endl;
+                    cout << "\"Don't forget to exercise at least once a year!\"" << endl;
+                    cout << "\"Eat livers for breakfast!\"" << endl;
+
+                    type_and_continue();
+
+                }
+
+                //Empties console screen
+                system("CLS");
+
+                cout << "Rotating Bookshelf:" << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "You imagine this kind of gimmicky furniture cost the Strongholds a lot of money." << endl;
+                cout << "It seems like quite a waste since there's papers all over the floor." << endl;
+                cout << "There's almost nothing on the bookshelf but some dull self help books and expense reports." << endl;
+
+            }
+
         }
 
         if ((userKeyword.compare("crescent") == 0)
             || (userKeyword.compare("moon") == 0)
             || (userKeyword.compare("lamp") == 0)) {
-            cout << "\nCrescent Moon Lamp:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Crescent Moon Lamp:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
+            cout << "It seems incredibly expensive." << endl;
+            cout << "Designed to resemble a crescent moon, its edges seem to have tiny painted craters." << endl;
+            cout << "The detail work must've been excrutiating to paint, but damn, it looks good." << endl;
         }
 
         if ((userKeyword.compare("large") == 0)
             || (userKeyword.compare("oak") == 0)
             || (userKeyword.compare("desk") == 0)) {
-            cout << "\nLarge Oak Desk:" << endl;
-            cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
-        }
-        if ((userKeyword.compare("knick") == 0)
-            || (userKeyword.compare("knacks") == 0)) {
-            cout << "\nKnick Knacks:" << endl;
-            cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
-        }
+            //Empties console screen
+            system("CLS");
 
-        if ((userKeyword.compare("small") == 0)
-            || (userKeyword.compare("safe") == 0)) {
-            cout << "\nSmall Safe:" << endl;
+            cout << "Large Oak Desk:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
+            cout << "For a man bathing in wealth, " << get_character_name(DRSTRONGHOLD) << "'s desk is relatively normal." << endl;
+            cout << "It actually seems quite cozy to sit at." << endl;
+            cout << "Perhaps this desk is older than " << get_character_name(DRSTRONGHOLD) << "'s fortune." << endl;
+            cout << "Inside the desk's top drawer you find some interesting knick knacks." << endl;
+            cout << "But then you find a small safe. Perhaps the knick knacks weren't that interesting after all." << endl;
+        
+            while (userKeyword.compare("back") != 0) {
+
+                //Asks for user input and gets user input
+                print_further_keyword_request();
+                userKeyword = get_keyword_input();
+
+                if ((userKeyword.compare("knick") == 0)
+                    || (userKeyword.compare("knacks") == 0)) {
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Knick Knacks:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "The knick knacks you find in " << get_character_name(DRSTRONGHOLD) << "'s desk are actually quite quaint." << endl;
+                    cout << "There's something rather intimate about the different toys he's collected." << endl;
+                    cout << "Wooden tops from his travels are laid delicately through the drawer." << endl;
+                    cout << "There's also some custom shot glasses, a magnet, and some postcards." << endl;
+                    cout << "You feel their paper surfaces and stare at the splendid backgrounds of places near and far." << endl;
+                    cout << "For a moment, just a moment, " << get_character_name(DRSTRONGHOLD) << " seems rather normal for an rich man." << endl;
+
+                    type_and_continue();
+                }
+
+                if ((userKeyword.compare("small") == 0)
+                    || (userKeyword.compare("safe") == 0)) {
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Small Safe:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "This seems to be the kind of place " << get_character_name(DRSTRONGHOLD) << " would keep his secrets." << endl;
+                    cout << "You'll need a four digit code to open it." << endl;
+
+                    cout << "\nFIXME: Add code that allows player to enter code and open safe." << endl;
+
+                    type_and_continue();
+                    cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+                    clueList.at(SMALLSAFE) = "\"Small Safe\" in the " + get_room_name(OFFICE);
+
+                    type_and_continue();
+                }
+
+                //Empties console screen
+                system("CLS");
+
+                cout << "Large Oak Desk:" << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "For a man bathing in wealth, " << get_character_name(DRSTRONGHOLD) << "'s desk is relatively normal." << endl;
+                cout << "It actually seems quite cozy to sit at." << endl;
+                cout << "Perhaps this desk is older than " << get_character_name(DRSTRONGHOLD) << "'s fortune." << endl;
+                cout << "Inside the desk's top drawer you find some interesting knick knacks." << endl;
+                cout << "But then you find a small safe. Perhaps the knick knacks weren't that interesting after all." << endl;
+
+            }
+
         }
         break;
 
     case 3:
 
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
         if ((userKeyword.compare("twin") == 0)
             || (userKeyword.compare("beds") == 0)) {
-            cout << "\nTwin Beds:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Twin Beds:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
+            cout << "It's crazy how similar the twin beds look." << endl;
+            cout << "Thankfully one of them has short hair so you can tell them apart." << endl;
         }
 
         if ((userKeyword.compare("old") == 0)
             || (userKeyword.compare("fashioned") == 0)
             || (userKeyword.compare("grandfather") == 0)
             || (userKeyword.compare("clock") == 0)) {
-            cout << "\nGrandfather Clock:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Grandfather Clock:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
+            cout << "There's something quite stunning about this clock's complex shape." << endl;
+            cout << "It looks like a wooden hourglass, yet has the functionality of a real clock." << endl;
+            cout << "Its ticking is also rather peaceful. You wish it could be heard throughout the house." << endl;
         }
 
         if ((userKeyword.compare("wooden") == 0)
             || (userKeyword.compare("chests") == 0)) {
-            cout << "\nWooden Chests:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Wooden Chests:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
+            cout << "As you approach the wooden chests, " << get_character_name(SOUSCHEF) << "shoos you away." << endl;
+            cout << "\"Please don't try to sniff out our personal belongings." << endl;
+            cout << get_character_name(BUTLER) << " and I have agreed to keep our treasured possessions private.\"" << endl;
+
+            type_and_continue();
+            cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+            clueList.at(LOCKEDCHESTS) = "\"Locked Chests\" in the " + get_room_name(SERVANTSQUARTERS);
         }
 
         if ((userKeyword.compare("ms.") == 0)
@@ -1196,10 +1361,17 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 4:
 
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
         if ((userKeyword.compare("tall") == 0)
             || (userKeyword.compare("wooden") == 0)
             || (userKeyword.compare("bookcases") == 0)) {
-            cout << "\nTall Wooden Bookcases:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Tall Wooden Bookcases:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "There are more books on these shelves than you could read in a lifetime." << endl;
             cout << "However, the shelves are all quite dirty, and there's nothing in the few clean spots you find." << endl;
@@ -1208,7 +1380,10 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
         if ((userKeyword.compare("antique") == 0)
             || (userKeyword.compare("fireplace") == 0)) {
-            cout << "\nAntique Fireplace:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Antique Fireplace:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "This would certainly be the first place a guilty party would get rid of evidence." << endl;
             cout << "Thankfully, however, it seems recently lit." << endl;
@@ -1218,7 +1393,10 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
         if ((userKeyword.compare("large") == 0)
             || (userKeyword.compare("granite") == 0)
             || (userKeyword.compare("chunks") == 0)) {
-            cout << "\nLarge Granite Chunks:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Large Granite Chunks:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "Just more proof of Dr. Stronghold's influence." << endl;
             cout << "He must've had them delivered from the coal mine..." << endl;
@@ -1234,78 +1412,115 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 5:
 
-        if ((userKeyword.compare("creaky") == 0)
-            || (userKeyword.compare("door") == 0)) {
-            cout << "\nCreaky Door:" << endl;
-            cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
 
         if ((userKeyword.compare("stovetop") == 0)
             || (userKeyword.compare("stove") == 0)
             || (userKeyword.compare("oven") == 0)) {
-            cout << "\nStovetop Oven:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Stovetop Oven:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
+            cout << "Several half-empty skillets and baking trays line the stove." << endl;
+            cout << "They truly had a feast tonight. There's bacon wrapped steaks, some lobster and scallops." << endl;
+            cout << "Although... it may just be a feast to you." << endl;
+            cout << "You couldn't imagine eating this well at home, but they probably considered this dinner to be average." << endl;
         }
 
         if ((userKeyword.compare("stainless") == 0)
             || (userKeyword.compare("steel") == 0)
             || (userKeyword.compare("sink") == 0)) {
-            cout << "\nStainless Steel Sink:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Stainless Steel Sink:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "Dirty plates and silverware fill the sink." << endl;
-            cout << "They're so gaudy you could probably sell one fork for a lot of money." << endl;
+            cout << "You pick up a jewel encrusted fork and imagine that this alone would pay for a trip to the Maldives." << endl;
         }
 
         if (userKeyword.compare("cupboards") == 0) {
-            cout << "\nCupboards:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Cupboards:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
+            cout << "There's nothing interesting in here. Just a lot of glass cups and stained clay bowls." << endl;
         }
 
         if ((userKeyword.compare("knife") == 0)
             || (userKeyword.compare("block") == 0)
             || (userKeyword.compare("knives") == 0)) {
-            cout << "\nKnife Block:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Knife Block:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "A block of different sized knives." << endl;
-            cout << "Next to it is a basket full of spoons and forks." << endl;
-            cout << "One knife is missing from the end of the block." << endl;
+            cout << "The smallest seems too small for human use, while the largest seems less for cutting and more for butchering." << endl;
+            cout << "One of the larger knives is missing from the end of the block." << endl;
+
+            type_and_continue();
+            cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+            clueList.at(MISSINGKNIFE) = "\"Missing Knife\" in the " + get_room_name(KITCHEN);
         }
 
         if ((userKeyword.compare("basket") == 0)
             || (userKeyword.compare("kitchen") == 0)
             || (userKeyword.compare("utensils") == 0)) {
-            cout << "\nKitchen Utensils Basket:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Kitchen Utensils Basket:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
+            cout << "Some wooden spoons, spatulas, and ladles rest in a basket for future use." << endl;
+            cout << "It seems strange to see such old fashioned tools in a sparkling room like this." << endl;
+            cout << "To each their own, you suppose." << endl;
         }
 
         if ((userKeyword.compare("hors") == 0)
             || (userKeyword.compare("d'oeuvres") == 0)
             || (userKeyword.compare("tray") == 0)) {
-            cout << "\nHors D'oeuvres Tray:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Hors D'oeuvres Tray:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
+            cout << "You take an Hors D'oeuvre from the tray and you it it so fast it seems to disappear from your hand." << endl;
+            cout << "That's absolutely delicious. You never imagined ham and roast beef would pair so well." << endl;
         }
         break;
 
     case 6:
 
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
         if ((userKeyword.compare("elegant") == 0)
             || (userKeyword.compare("diamond") == 0)
             || (userKeyword.compare("chandelier") == 0)) {
-            cout << "\nDiamond Chandelier: " << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Diamond Chandelier: " << endl;
             cout << "----------------------------------------" << endl;
-            cout << "You feel like if this chandelier fell on you, your hospital bills would cost less than replacing it." << endl;
+            cout << "You feel like if this chandelier fell on you, your hospital bills would cost less than its replacement." << endl;
         }
 
         if ((userKeyword.compare("ornate") == 0)
             || (userKeyword.compare("dining") == 0)
             || (userKeyword.compare("table") == 0)) {
-            cout << "\nOrnate Dining Table: " << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Ornate Dining Table: " << endl;
             cout << "----------------------------------------" << endl;
+            cout << "This table seems to have one head chair and three chairs on each longer side." << endl;
+            cout << "There's one giant chair at the end of the table for " << get_character_name(DRSTRONGHOLD) << " and three smaller " << endl;
             cout << "Two black stone vases rest near the table's center, offsetting its intricate white surface." << endl;
             cout << "Some Red Dianthus flowers poke out from within them." << endl;
         }
@@ -1313,87 +1528,201 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
         if ((userKeyword.compare("red velvet chairs") == 0)
             || (userKeyword.compare("velvet chairs") == 0)
             || (userKeyword.compare("chairs") == 0)) {
-            cout << "\nRed Velvet Chairs: " << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Red Velvet Chairs: " << endl;
             cout << "----------------------------------------" << endl;
             cout << "You stand beside the chair " << get_character_name(DRSTRONGHOLD) << " used." << endl;
             cout << "You wonder how the conversation went at dinner." << endl;
             cout << "But then you think about what Clyde told you earlier." << endl;
             cout << "Clyde said that including the mining town's mayor and wife, eight people were here for dinner." << endl;
             cout << "However... there's only seven chairs. You should ask around about that." << endl;
+
+            type_and_continue();
+            cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+            clueList.at(REDVELVETCHAIRS) = "\"Red Velvet Chairs\" in the " + get_room_name(DININGROOM);
         }
         break;
 
     case 7:
 
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
         if ((userKeyword.compare("shelves") == 0)
             || (userKeyword.compare("potted") == 0)
             || (userKeyword.compare("plants") == 0)) {
-            cout << "\nPotted Flowers:" << endl;
-            cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
-        }
-        if ((userKeyword.compare("red") == 0)
-            || (userKeyword.compare("dianthus") == 0)) {
-            cout << "\nRed Dianthus Flowers:" << endl;
-            cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
-        }
+            //Empties console screen
+            system("CLS");
 
-        if ((userKeyword.compare("blue") == 0)
-            || (userKeyword.compare("lobelias") == 0)) {
-            cout << "\nBlue Lobelias:" << endl;
+            cout << "Potted Flowers:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
-        }
+            cout << "Shelves of potted plants are scattered throughout the " << get_room_name(GREENHOUSE) << endl;
+            cout << "There seems to be three types of flowers planted." << endl;
+            cout << "There's some maroon ones labeled \"Red Dianthus\"." << endl;
+            cout << "There's some cobalt ones labeled \"Blue Lobelias\"." << endl;
+            cout << "And, there's some purple ones labeled \"Belladonna Nightshades\"." << endl;
 
-        if ((userKeyword.compare("belladonna") == 0)
-            || (userKeyword.compare("nightshades") == 0)) {
-            cout << "\nBelladonna Nightshades:" << endl;
-            cout << "----------------------------------------" << endl;
-            cout << "The flowers of the belladonna are in bloom." << endl;
-            cout << "Dead leaves cover the soil." << endl;
-            cout << "Some of the stems appear to be cut recently." << endl;
-        }
+            while (userKeyword.compare("back") != 0) {
 
+                //Asks for user input and gets user input
+                print_further_keyword_request();
+                userKeyword = get_keyword_input();
+
+                if ((userKeyword.compare("maroon") == 0)
+                    || (userKeyword.compare("red") == 0)
+                    || (userKeyword.compare("dianthus") == 0)) {
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Red Dianthus Flowers:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "The Red Dianthuses float on their stems like sparkling red jellyfish." << endl;
+                    cout << "They produce beautiful waves of red and white color that swirl around each bud." << endl;
+                    cout << "You're truly calmed by their presence." << endl;
+
+                    type_and_continue();
+                }
+
+                if ((userKeyword.compare("cobalt") == 0)
+                    || (userKeyword.compare("blue") == 0)
+                    || (userKeyword.compare("lobelias") == 0)) {
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Blue Lobelias:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "The Blue Lobelias appear to poof out like sugar rich cotton candy." << endl;
+                    cout << "Their scent is that of a berry bush, serene and comforting." << endl;
+                    cout << "You find yourself craving sweets while you stand near them." << endl;
+
+                    type_and_continue();
+                }
+
+                if ((userKeyword.compare("belladonna") == 0)
+                    || (userKeyword.compare("bella") == 0)
+                    || (userKeyword.compare("donna") == 0)
+                    || (userKeyword.compare("nightshade") == 0)
+                    || (userKeyword.compare("nightshades") == 0)
+                    || (userKeyword.compare("night") == 0)
+                    || (userKeyword.compare("shade") == 0)
+                    || (userKeyword.compare("shades") == 0)
+                    || (userKeyword.compare("purple") == 0)) {
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Belladonna Nightshades:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "The flowers of the belladonna are shriveled but still feel powerful." << endl;
+                    cout << "Their leaves emit a fierce air that makes you hesitant to approach them." << endl;
+                    cout << "You pause, concerned. Some of the stems appear to be recently cut." << endl;
+
+                    type_and_continue();
+                    cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+                    clueList.at(CUTNIGHTSHADE) = "\"Cut Nightshade\" in the " + get_room_name(GREENHOUSE);
+
+                    type_and_continue();
+                }
+
+                //Empties console screen
+                system("CLS");
+
+                cout << "Potted Flowers:" << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "Shelves of potted plants are scattered throughout the " << get_room_name(GREENHOUSE) << endl;
+                cout << "There seems to be three types of flowers planted." << endl;
+                cout << "There's some maroon ones labeled \"Red Dianthus\"." << endl;
+                cout << "There's some cobalt ones labeled \"Blue Lobelias\"." << endl;
+                cout << "And, there's some purple ones labeled \"Belladonna Nightshades\"." << endl;
+
+            }
+
+        }
 
         if ((userKeyword.compare("sky") == 0)
             || (userKeyword.compare("skylight") == 0)) {
-            cout << "\nSkylight:" << endl;
-            cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
-        }
+            //Empties console screen
+            system("CLS");
 
+            cout << "Skylight:" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "Moonlight rains through the cloudy sky above." << endl;
+            cout << "The wet plants glisten with little bits of the moonlight, giving the room a luminous glow." << endl;
+            cout << "The effect it has on the room is indescribable. It feels incredibly quaint in here." << endl;
+        }
 
         if ((userKeyword.compare("gardening") == 0)
             || (userKeyword.compare("tools") == 0)) {
-            cout << "\nGardening Tools:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Gardening Tools:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
-        }
-        if (userKeyword.compare("shovel") == 0) {
-            cout << "\nShovel:" << endl;
-            cout << "----------------------------------------" << endl;
-            cout << "A rusty shovel sits against the bag of fertilizer." << endl;
-            cout << "The handle is splintered from years of wear." << endl;
-        }
-        if ((userKeyword.compare("watering") == 0)
-            || (userKeyword.compare("can") == 0)) {
-            cout << "\nWatering Can:" << endl;
-            cout << "----------------------------------------" << endl;
-            cout << "The watering can is half full." << endl;
-            cout << "The water's surface is littered with dead bugs." << endl;
-        }
-        if (userKeyword.compare("fertilizer") == 0) {
-            cout << "\nFertilizer:" << endl;
-            cout << "----------------------------------------" << endl;
-            cout << "The fertilizer is sitting in the corner of the room." << endl;
-            cout << "The top is sealed and the bag looks to be about half empty." << endl;
+            cout << "You find an old shovel resting against the wall." << endl;
+            cout << "There's also a watering can and some fertilizer sitting around." << endl;
+        
+            while (userKeyword.compare("back") != 0) {
+
+                //Asks for user input and gets user input
+                print_further_keyword_request();
+                userKeyword = get_keyword_input();
+
+                if (userKeyword.compare("shovel") == 0) {
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Shovel:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "A rusty shovel sits against the bag of fertilizer." << endl;
+                    cout << "The handle is splintered from years of wear." << endl;
+
+                    type_and_continue();
+                }
+                if ((userKeyword.compare("watering") == 0)
+                    || (userKeyword.compare("can") == 0)) {
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Watering Can:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "The watering can is half full." << endl;
+                    cout << "The water's surface is littered with dead bugs." << endl;
+
+                    type_and_continue();
+                }
+                if (userKeyword.compare("fertilizer") == 0) {
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Fertilizer:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "The fertilizer is sitting in the corner of the room." << endl;
+                    cout << "The top is sealed and the bag looks to be about half empty." << endl;
+
+                    type_and_continue();
+                }
+
+                //Empties console screen
+                system("CLS");
+
+                cout << "Gardening Tools:" << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "You find an old shovel resting against the wall." << endl;
+                cout << "There's also a watering can and some fertilizer sitting around." << endl;
+
+            }
         }
 
         if (userKeyword.compare("logs") == 0) {
-            cout << "\nShovel:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Logs:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
+            cout << "Some thick spruce logs have been set in a pyramid by the gardening supplies." << endl;
+            cout << "These are likely used to fuel the fireplace and fertilize the flowers." << endl;
         }
 
         if ((userKeyword.compare("mr.") == 0)
@@ -1407,105 +1736,199 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 8:
 
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
         if ((userKeyword.compare("aged") == 0)
             || (userKeyword.compare("bathroom") == 0)) {
-            cout << "\nAged Bathroom:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Aged Bathroom:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
+            cout << "The bathroom next to the stairs is pretty worn down." << endl;
+            cout << "It seems to function as both the guest bathroom and the staff bathroom." << endl;
+            cout << "The facilities are not desireable compared to the rest of the mansion." << endl;
         }
 
         if ((userKeyword.compare("worn") == 0)
             || (userKeyword.compare("red") == 0)
             || (userKeyword.compare("carpet") == 0)) {
-            cout << "\nWorn Red Carpet:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Worn Red Carpet:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "FIXME: ADD DESCRIPTION OF ITEM." << endl;
-        }
-        if ((userKeyword.compare("small") == 0)
-            || (userKeyword.compare("button") == 0)) {
-            cout << "\nSmall Button:" << endl;
-            cout << "----------------------------------------" << endl;
-            cout << "You pick up the button and see that it is red and scratched." << endl;
-            cout << "Some fabric hangs out of the holes." << endl;
+            cout << "The carpet here seems almost stretched by time." << endl;
+            cout << "It seems just a year or so away from being ripped with holes." << endl;
+            cout << "Oh. Halfway up them you spot a stone button on the floor." << endl;
+
+            while (userKeyword.compare("back") != 0) {
+
+                //Asks for user input and gets user input
+                print_further_keyword_request();
+                string userKeyword = get_keyword_input();
+
+                if ((userKeyword.compare("stone") == 0)
+                    || (userKeyword.compare("button") == 0)) {
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Stone Button:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "You find a suit button made of granite." << endl;
+                    cout << "Some fabric hangs out of its holes, suggesting it was torn from something." << endl;
+
+                    type_and_continue();
+                    cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+                    clueList.at(STONEBUTTON) = "\"Stone Button\" in the " + get_room_name(STAIRWELL);
+
+                    type_and_continue();
+                }
+
+                //Empties console screen
+                system("CLS");
+
+                cout << "Worn Red Carpet:" << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "The carpet here seems almost stretched by time." << endl;
+                cout << "It seems just a year or so away from being ripped with holes." << endl;
+                cout << "Oh. Halfway up them you spot a stone button on the floor." << endl;
+
+            }
         }
 
         if ((userKeyword.compare("globe") == 0)
             || (userKeyword.compare("light") == 0)
             || (userKeyword.compare("lights") == 0)) {
-            cout << "\nLights:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Globe Lights:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "Small lights line the walls." << endl;
-            cout << "Dust and cobwebs cover their star shaped tops." << endl;
+            cout << "Small spherical lights line the walls." << endl;
+            cout << "Dust and cobwebs cover their rounded tops." << endl;
         }
         break;
 
     case 9:
 
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
         if ((userKeyword.compare("wine") == 0)
             || (userKeyword.compare("bottles") == 0)) {
-            cout << "\nIt's too dark in here to investigate at the moment." << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "It's too dark in here to investigate at the moment." << endl;
         }
 
         if ((userKeyword.compare("ceiling") == 0)
             || (userKeyword.compare("fixtures") == 0)) {
-            cout << "\nCeiling Fixtures:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Ceiling Fixtures:" << endl;
             cout << "These don't seem relevant to the case. They look pretty though, like little firebugs." << endl;
         }
 
         if ((userKeyword.compare("flashlight") == 0)
             && currentUserChoices.at(FINDFLASHLIGHT) == true) {
-            cout << "\nYou can see the Wine Cellar rather clearly now:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "You can see the Wine Cellar rather clearly now:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "While the bottles on the shelves seem unopened, something you couldn't see before pops out at you." << endl;
             cout << "In the back of the room, there's a glass display for a wine bottle, labeled \"Alain Hudelot\"." << endl;
             cout << "However, there's no bottle of wine inside." << endl;
             cout << "Hmm... That's peculiar." << endl;
+
+            type_and_continue();
+            cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+            clueList.at(EMPTYDISPLAY) = "\"Empty Display\" in the " + get_room_name(WINECELLAR);
         }
 
         if (((userKeyword.compare("uv") == 0)
             || (userKeyword.compare("light") == 0))
             && currentUserChoices.at(FINDUVLIGHT) == true) {
-            cout << "\nYou were right to use the Astronomer's UV Light here:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "You were right to use the Astronomer's UV Light here:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "On the floor by the glass display case, there are several spurts of blood." << endl;
             cout << "Getting closer, you smell a hint of bleach. Someone's cleaned the floor here recently." << endl;
+
+            type_and_continue();
+            cout << "You've found two clues! You can now access both clues in your inventory." << endl;
+            clueList.at(BLOODSTAINS) = "\"Bloodstains\" in the " + get_room_name(WINECELLAR);
+            clueList.at(CLEANEDFLOOR) = "\"Cleaned Floor\" in the " + get_room_name(WINECELLAR);
         }
         break;
 
     case 10:
 
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
         if (userKeyword.compare("heater") == 0) {
-            cout << "\nHeater:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Heater:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "You take a moment to enjoy the room's warmth. The heat doesn't seem to carry well upstairs." << endl;
+            cout << "You take a moment to enjoy the room's warmth." << endl;
+            cout << "For whatever reason, the heat doesn't seem to carry well upstairs." << endl;
+            cout << "It's probably because of the winter storm." << endl;
         }
 
         if ((userKeyword.compare("garbage") == 0)
             || (userKeyword.compare("bin") == 0)) {
-            cout << "\nGarbage Bin:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Garbage Bin:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "The smell here is rather atrocious. Half a dozen black bags are stacked up inside." << endl;
             cout << "Hmm... That's odd. A small piece of glass is laying on one of the bags." << endl;
             cout << "Shifting the bags around, you find larger shards of glass beneath them." << endl;
             cout << "Someone definitely tried to hide this glass at the bottom of the bin... but why?" << endl;
+
+            type_and_continue();
+            cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+            clueList.at(GLASSSHARDS) = "\"Glass Shards\" in the " + get_room_name(BOILERROOM);
         }
 
         if ((userKeyword.compare("hanging") == 0)
             || (userKeyword.compare("light") == 0)
             || (userKeyword.compare("lightbulb") == 0)) {
-            cout << "\nHanging Lightbulb:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Hanging Lightbulb:" << endl;
             cout << "----------------------------------------" << endl;
-            cout << "You take a moment to enjoy the room's warmth. The heat doesn't seem to carry well upstairs." << endl;
+            cout << "What a tragedy. It's a shame this lightbulb decided to kill itself." << endl;
         }
 
-        if ((userKeyword.compare("breaker box") == 0)
-            || (userKeyword.compare("breaker") == 0)
+        if ((userKeyword.compare("breaker") == 0)
             || (userKeyword.compare("box") == 0)) {
-            cout << "\nBreaker Box:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Breaker Box:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "Clyde told you that the power was turned off around the time of the murder." << endl;
             cout << "There doesn't seem to be any mechanism to turn off the power in advance though." << endl;
             cout << "That means whoever turned off the mansion's lights had to be in this room around the time of the murder." << endl;
+
+            type_and_continue();
+            cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+            clueList.at(BREAKERBOX) = "\"Breaker Box\" in the " + get_room_name(BOILERROOM);
         }
 
         if ((userKeyword.compare("mud") == 0)
@@ -1516,9 +1939,16 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 11:
 
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
         if ((userKeyword.compare("gigantic") == 0)
             || (userKeyword.compare("telescope") == 0)) {
-            cout << "\nTelescope:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Telescope:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "It's a beautiful mechanical device with too many parts to count." << endl;
             cout << "(FIXME: CREATE NAME) ASTROPHYSICIST/ARCHEOLOGIST walks up to you." << endl;
@@ -1529,17 +1959,21 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
         if ((userKeyword.compare("little") == 0)
             || (userKeyword.compare("statues") == 0)) {
-            cout << "\nAstronomy Displays:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Astronomy Displays:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "Three gorgeous statues have been placed behind glass for your viewing pleasure." << endl;
             cout << "One represents the solar system, another is built to resemble the sun, and the last is a representation of a black hole." << endl;
         }
+
         if ((userKeyword.compare("solar") == 0)
             || (userKeyword.compare("system") == 0)) {
             //Empties console screen
             system("CLS");
+
             cout << "You read the Solar System exhibit's plaque:" << endl;
-            cout << "----------------------------------------" << endl;
             cout << "\"Our solar system rotates our sun like a gracious family, and each planet is a character." << endl;
             cout << "Mercury rests close to home." << endl;
             cout << "Venus absorbs the dark flames of space." << endl;
@@ -1558,9 +1992,11 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
             cout << "and planets of the whole firmament, from the earth and the elements; and so he is their quintessence.\"" << endl;
 
         }
+
         if ((userKeyword.compare("sun") == 0)) {
             //Empties console screen
             system("CLS");
+
             cout << "You read the Sun exhibit's plaque:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "\"The sun is a burning passion we all share.\"" << endl;
@@ -1580,10 +2016,12 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
             cout << "With a love like that," << endl;
             cout << "It lights the whole sky.\"" << endl;
         }
+
         if ((userKeyword.compare("black") == 0)
             || (userKeyword.compare("hole") == 0)) {
             //Empties console screen
             system("CLS");
+
             cout << "You read the Black Hole exhibit's plaque:" << endl;
             cout << "----------------------------------------" << endl;
             cout << "\"A black hole is everything we fear we cannot see." << endl;
@@ -1602,7 +2040,10 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
             || (userKeyword.compare("scientific") == 0)
             || (userKeyword.compare("tools") == 0)
             || (userKeyword.compare("experiments") == 0)) {
-            cout << "\nLab Area:" << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Lab Area:" << endl;
             cout << "Luckily for you, Clyde's cleared out this area with the junior detectives already." << endl;
             cout << "The tools and experiments weren't touched tonight, so there's not anything of interest here." << endl;
         }
@@ -1617,46 +2058,130 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 12:
 
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
         if ((userKeyword.compare("mr.") == 0)
             || (userKeyword.compare("stronghold's") == 0)
             || (userKeyword.compare("stronghold") == 0)
             || (userKeyword.compare("nathan") == 0)
             || (userKeyword.compare("body") == 0)) {
-            cout << "\n" << get_character_name(DRSTRONGHOLD) << "'s Body: " << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << get_character_name(DRSTRONGHOLD) << "'s Body: " << endl;
             cout << "----------------------------------------" << endl;
             cout << "Standing directly over the dead body, it is clear that the victim's throat was slashed." << endl;
             cout << "That was his cause of death on Clyde's report." << endl;
             cout << "However, you can't help but notice how sickly pale Mr. Stronghold's face has become." << endl;
             cout << "Peering closer, you notice something startling. There seems to be some foam in his mouth." << endl;
             cout << "What could this mean?" << endl;
+
+            type_and_continue();
+            cout << "You've found two clues! You can now access both clues in your inventory." << endl;
+            clueList.at(SLASHEDTHROAT) = "\"Slashed Throat\" of " + get_character_name(DRSTRONGHOLD) + "'s";
+            clueList.at(FOAMEDMOUTH) = "\"Foamed Mouth\" of " + get_character_name(DRSTRONGHOLD) + "'s";
         }
 
         if ((userKeyword.compare("lavish") == 0)
             || (userKeyword.compare("blood") == 0)
             || (userKeyword.compare("stained") == 0)
             || (userKeyword.compare("bed") == 0)) {
-            cout << "\nBlood Stained Bed: " << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Blood Stained Bed: " << endl;
             cout << "----------------------------------------" << endl;
-            cout << "Looking more carefully at the bed " << get_character_name(DRSTRONGHOLD, INFORMAL) << "may have died in, you notice the edge of garment poking out from under the bed." << endl;
+            cout << "Looking more carefully at the blood stained bed, you notice a garment poking out from under it." << endl;
             cout << "It seems to be a pair of pajamas... with some blood on the sleeves." << endl;
+
+            type_and_continue();
+            cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+            clueList.at(BLOODYGARMENT) = "\"Bloody Garment\" in the " + get_room_name(MASTERBEDROOM);
         }
 
         if ((userKeyword.compare("victorian") == 0)
             || (userKeyword.compare("era") == 0)
             || (userKeyword.compare("armoires") == 0)
             || (userKeyword.compare("armoire") == 0)) {
-            cout << "\nVictorian Era Armoires: " << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Victorian Era Armoires: " << endl;
             cout << "----------------------------------------" << endl;
-            cout << "Even though you normally wouldn't give a second thought to a victim's clothing closet, you decide taking a look inside the Strongholds' armoires might give good insight." << endl;
-            cout << "Inside Mr. Stronghold's armoire, you find a pair of snow boots, still wet from trecking through snow." << endl;
-            cout << "There had been a big snowstorm the night of the murder, so this didn't seem particularly strange to you, but what was Mr. Stronghold doing outside in such bad weather?" << endl;
-            cout << "As you rumage through the rest of Mr. Stronghold's clothing, a small sparkling object catches your eye." << endl;
-            cout << "You pick up the object, and realize it is a small, yet elegent, diamond earing. What would Mr. Stronghold be doing with a diamond earing in his armoire?" << endl;
-            cout << "Mrs. Stronghold's armoire yeilds no significant evidence." << endl;
+            cout << "It seems " << get_character_name(DRSTRONGHOLD) << " and " << get_character_name(MRSSTRONGHOLD) << "both had their own armoires." << endl;
+            cout << get_character_name(DRSTRONGHOLD) << "'s is sturdy and made of spruce wood." << endl;
+            cout << get_character_name(MRSSTRONGHOLD) << "'s is lighter and made of birch wood." << endl;
+
+            while (userKeyword.compare("back") != 0) {
+
+                //Asks for user input and gets user input
+                print_further_keyword_request();
+                userKeyword = get_keyword_input();
+
+                if ((userKeyword.compare("dr.") == 0)
+                    || (userKeyword.compare("dr") == 0)
+                    || (userKeyword.compare("stronghold") == 0)
+                    || (userKeyword.compare("stronghold's") == 0)
+                    || (userKeyword.compare("sturdy") == 0)
+                    || (userKeyword.compare("spruce") == 0)) {
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << get_character_name(DRSTRONGHOLD) << "'s Armoire:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "Inside " << get_character_name(DRSTRONGHOLD) << "'s armoire you find lots of expensive suits." << endl;
+                    cout << "It seems a man of his stature was always dressing up." << endl;
+                    cout << "But then you pause. You notice a small puddle dripping away from a few dress shirts." << endl;
+                    cout << "Lifting them up, you find a pair of wet boots. They still feel cold..." << endl;
+
+                    type_and_continue();
+                    cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+                    clueList.at(WETBOOTS) = "\"Wet Boots\" in the " + get_room_name(MASTERBEDROOM);
+
+                    type_and_continue();
+                }
+
+                if ((userKeyword.compare("mrs.") == 0)
+                    || (userKeyword.compare("mrs") == 0)
+                    || (userKeyword.compare("stronghold") == 0)
+                    || (userKeyword.compare("stronghold's") == 0)
+                    || (userKeyword.compare("light") == 0)
+                    || (userKeyword.compare("birch") == 0)) {
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << get_character_name(MRSSTRONGHOLD) << "'s Armoire:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "Unsurprisingly, " << get_character_name(MRSSTRONGHOLD) << "'s armoire is filled with a dozen flowing dresses." << endl;
+                    cout << "Hmm... In the corner of the armoire you find a cufflink. That doesn't seem to belong here." << endl;
+                    cout << "Why is there a cufflink in such a feminine closet?" << endl;
+
+                    type_and_continue();
+                    cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+                    clueList.at(CUFFLINK) = "\"Cufflink\" in the " + get_room_name(MASTERBEDROOM);
+
+                    type_and_continue();
+                }
+
+                //Empties console screen
+                system("CLS");
+
+                cout << "Victorian Era Armoires: " << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "It seems " << get_character_name(DRSTRONGHOLD) << " and " << get_character_name(MRSSTRONGHOLD) << "both had their own armoires." << endl;
+                cout << get_character_name(DRSTRONGHOLD) << "'s is sturdy and made of spruce wood." << endl;
+                cout << get_character_name(MRSSTRONGHOLD) << "'s is lighter and made of birch wood." << endl;
+
+            }
         }
 
         if (userKeyword.compare("tub") == 0) {
-            cout << "\nGiant Tub: " << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Giant Tub: " << endl;
             cout << "----------------------------------------" << endl;
             cout << "The tub's still full from " << get_character_name(MRSSTRONGHOLD) << "'s bath." << endl;
             cout << "Some rose scented candles rest nearby. It looks like they've been put out." << endl;
@@ -1665,25 +2190,74 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
         if ((userKeyword.compare("glamorous") == 0)
             || (userKeyword.compare("vanity") == 0)
             || (userKeyword.compare("vanities") == 0)) {
-            cout << "\nBathroom Vanity: " << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Bathroom Vanity: " << endl;
             cout << "----------------------------------------" << endl;
-            cout << "The vanities seem relatively untouched, but when you grow close to them, the smell of lavender overwhelms your nose." << endl;
+            cout << "The vanities seem relatively untouched." << endl;
+            cout << "However, as you grow close to them, the smell of lavender overwhelms your nose." << endl;
             cout << "It's a nice escape from death, but it's peculiar." << endl;
+            type_and_continue();
+
             cout << "You find that the scent is strongest on " << get_character_name(MRSSTRONGHOLD) << "'s side." << endl;
             cout << "It seems to be coming from the sink under her vanity... which is wet and sparkling clean." << endl;
             cout << "Did Mrs. Stronghold clean her sink recently?" << endl;
+
+            type_and_continue();
+            cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+            clueList.at(WASHEDSINK) = "\"Washed Sink\" in the " + get_room_name(MASTERBEDROOM);
         }
 
         if ((userKeyword.compare("golden") == 0)
             || (userKeyword.compare("toilet") == 0)) {
-            cout << "\nGolden Toilet: " << endl;
+            //Empties console screen
+            system("CLS");
+
+            cout << "Golden Toilet: " << endl;
             cout << "----------------------------------------" << endl;
             cout << "If you stole this toilet you could probably buy yourself a new house." << endl;
-            cout << "If only " << get_character_name(CLYDE, INFORMAL) << "was a little less respectful of the rules." << endl;
+            cout << "If only " << get_character_name(CLYDE, INFORMAL) << "was a little less caring for the rules." << endl;
         }
         break;
 
     case 13:
+
+        if ((userKeyword.compare("inventory") == 0)) {
+            view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
+        if ((userKeyword.compare("observatory") == 0)
+            || (userKeyword.compare("door") == 0)
+            || (userKeyword.compare("forced") == 0)
+            || (userKeyword.compare("open") == 0)) {
+            //Empties console screen
+            system("CLS");
+
+            cout << "Broken Lock:" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "It looks like this door was forced open." << endl;
+            cout << "The door's lock has been completely destroyed, along with its handle." << endl;
+
+            clueList.at(BROKENLOCK) = "\"Broken Lock\" on the " + get_room_name(BALCONY) + "'s door to the " + get_room_name(OBSERVATORY);
+        }
+        if ((userKeyword.compare("two") == 0)
+            || (userKeyword.compare("sets") == 0)
+            || (userKeyword.compare("foot") == 0)
+            || (userKeyword.compare("prints") == 0)
+            || (userKeyword.compare("footprints") == 0)
+            || (userKeyword.compare("snow") == 0)) {
+            //Empties console screen
+            system("CLS");
+
+            cout << "Snowy Footprints: " << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "There seems to be two sets of footprints in the snow here." << endl;
+            cout << "One set of prints was made by a large pair of boots, and the other a set of dress shoes." << endl;
+            cout << "The size of the dress shoes seems relatively normal, so it's hard to say whether a man or woman wore them." << endl;
+
+            clueList.at(SNOWYFOOTPRINTS) = "\"Snowy Footprints\" on the " + get_room_name(BALCONY);
+        }
         break;
 
     default:
@@ -1900,6 +2474,9 @@ int leave_room(int roomNum) {
             || userKeyword.compare("bedroom") == 0) {
             newRoomNum = 12;
         }
+        if (userKeyword.compare("balcony") == 0) {
+            newRoomNum = 13;
+        }
         break;
 
     case 12:
@@ -1910,11 +2487,20 @@ int leave_room(int roomNum) {
         if (userKeyword.compare("observatory") == 0) {
             newRoomNum = 11;
         }
+        if (userKeyword.compare("balcony") == 0) {
+            newRoomNum = 13;
+        }
         break;
 
     case 13:
-        cout << "roomNum = 13. FIXME, ROOM13 NOT ADDED" << endl;
-        newRoomNum = 0;
+        if (userKeyword.compare("observatory") == 0) {
+            newRoomNum = 11;
+        }
+        if (userKeyword.compare("master bedroom") == 0
+            || userKeyword.compare("master") == 0
+            || userKeyword.compare("bedroom") == 0) {
+            newRoomNum = 12;
+        }
         break;
 
     default:
@@ -2062,7 +2648,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
             //Prints a title to tell the player which character they are questioning / interrogating
             print_character_questioning_title(roomNum);
             //Asks player which piece of evidence they'd like to interrogate the suspect about
-            print_interrogation_request(roomNum, clueList);
+            print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
@@ -2303,7 +2889,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
                 //Asks player which piece of evidence they'd like to interrogate the suspect about
-                print_interrogation_request(roomNum, clueList);
+                print_interrogation_request(roomNum, currentUserChoices, clueList);
                 userKeyword = get_keyword_input();
             }
 
@@ -2406,7 +2992,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
             //Prints a title that tells the player which character they are questioning / interrogating
             print_character_questioning_title(roomNum);
             //Asks player which piece of evidence they'd like to interrogate the suspect about
-            print_interrogation_request(roomNum, clueList);
+            print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
@@ -2481,10 +3067,13 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "we don't often sit down for the whole of dinner." << endl;
                     cout << "Last night we just popped in and out of the kitchen to check on the guests and used the same empty chair.\"" << endl;
                     type_and_continue();
+
+                    currentUserChoices.at(ASKABOUTREDVELVETCHAIRS) = true;
+
                 }
-                else if (((userKeyword.compare("small") == 0)
+                else if (((userKeyword.compare("stone") == 0)
                     || (userKeyword.compare("button") == 0))
-                    && ((clueList.at(SMALLBUTTON)).compare("???") != 0)) {
+                    && ((clueList.at(STONEBUTTON)).compare("???") != 0)) {
 
                     //Empties console screen
                     system("CLS");
@@ -2492,8 +3081,8 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     print_character_questioning_title(roomNum);
 
                     cout << "The Butler's eyes widen as you hand him the button." << endl;
-                    cout << "\"This button is " << get_character_name(DRSTRONGHOLD) << "'s." << endl;
-                    cout << "It's from the suit jacket he wore tonight...\"" << endl;
+                    cout << "\"This is " << get_character_name(DRSTRONGHOLD) << "'s." << endl;
+                    cout << "It's a part of the suit jacket he wore tonight...\"" << endl;
                     type_and_continue();
 
                     cout << "\n" << "He continues to study it." << endl;
@@ -2501,6 +3090,9 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "He wore it to impress the mayor and his wife..." << endl;
                     cout << "Where did you find this?\"" << endl;
                     type_and_continue();
+
+                    currentUserChoices.at(ASKABOUTSTONEBUTTON) = true;
+
                 }
                 else if (((userKeyword.compare("empty") == 0)
                     || (userKeyword.compare("display") == 0))
@@ -2521,6 +3113,9 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "He liked to recycle them for the townsfolk, and to be honest, he hates cleaning for himself." << endl;
                     cout << "He would've left it on the display and requested I clean it up. I'm sure of it.\"" << endl;
                     type_and_continue();
+
+                    currentUserChoices.at(ASKABOUTEMPTYDISPLAY) = true;
+
                 }
                 else if (((userKeyword.compare("cleaned") == 0)
                     || (userKeyword.compare("floor") == 0))
@@ -2555,6 +3150,9 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "We don't throw away glass in this manor, however." << endl;
                     cout << "We box bottles like these and recycle them for the mining townsfolk.\"" << endl;
                     type_and_continue();
+
+                    currentUserChoices.at(ASKABOUTGLASSSHARDS) = true;
+
                 }
                 else if (((userKeyword.compare("slashed") == 0)
                     || (userKeyword.compare("throat") == 0))
@@ -2581,8 +3179,21 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
 
                     cout << "You mention the boots and " << get_character_name(BUTLER, INFORMAL) << " blinks with confusion." << endl;
                     cout << "\"" << get_character_name(DRSTRONGHOLD) << " is the only one who'd own boots like that." << endl;
-                    cout << "He would have no reason to use them during a party, however.\"" << endl;
+                    cout << "He didn't wear them to Dinner, however, and I doubt he would've gone outside in the storm.\"" << endl;
                     type_and_continue();
+                }
+                else if (((userKeyword.compare("cufflink") == 0))
+                && ((clueList.at(CUFFLINK)).compare("???") != 0)) {
+
+                //Empties console screen
+                system("CLS");
+                //Prints a title to tell the player which character they are questioning
+                print_character_questioning_title(roomNum);
+
+                cout << "You hand " << get_character_name(BUTLER, INFORMAL) << " the cufflink." << endl;
+                cout << "\"Oh, you found this at the scene of the crime?" << endl;
+                cout << "No, this isn't mine. I'm very careful with my belongings. Losing one doesn't suit me.\"" << endl;
+                type_and_continue();
                 }
                 else {
                     int replyNum = ((rand() % 4) + 1);
@@ -2609,7 +3220,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
                 //Asks player which piece of evidence they'd like to interrogate the suspect about
-                print_interrogation_request(roomNum, clueList);
+                print_interrogation_request(roomNum, currentUserChoices, clueList);
                 userKeyword = get_keyword_input();
             }
 
@@ -2723,7 +3334,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
             //Prints a title that tells the player which character they are questioning / interrogating
             print_character_questioning_title(roomNum);
             //Asks player which piece of evidence they'd like to interrogate the suspect about
-            print_interrogation_request(roomNum, clueList);
+            print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
@@ -2858,17 +3469,17 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
                     cout << "\"Stop talking about that. Please.\"" << endl;
                     type_and_continue();
                 }
-                else if (((userKeyword.compare("earring") == 0))
-                    && ((clueList.at(EARRING)).compare("???") != 0)) {
+                else if (((userKeyword.compare("cufflink") == 0))
+                    && ((clueList.at(CUFFLINK)).compare("???") != 0)) {
 
                     //Empties console screen
                     system("CLS");
                     //Prints a title to tell the player which character they are questioning
                     print_character_questioning_title(roomNum);
                     
-                    cout << "You tell her about the earring and she stretches." << endl;
+                    cout << "You tell her about the cufflink and she stretches." << endl;
                     cout << "\"Oh, that's odd. You found this in " << get_character_name(DRSTRONGHOLD) << "'s armoire?" << endl;
-                    cout << "I suppose it must be one of the other girl's earrings. I wonder why that was there?\"" << endl;
+                    cout << "I suppose it must be one of " << get_character_name(BUTLER, INFORMAL) << "'s cufflinks. I wonder why that was there?\"" << endl;
                     type_and_continue();
                 }
                 else {
@@ -2896,7 +3507,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
                 //Asks player which piece of evidence they'd like to interrogate the suspect about
-                print_interrogation_request(roomNum, clueList);
+                print_interrogation_request(roomNum, currentUserChoices, clueList);
                 userKeyword = get_keyword_input();
             }
 
@@ -2990,7 +3601,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
             //Prints a title that tells the player which character they are questioning / interrogating
             print_character_questioning_title(roomNum);
             //Asks player which piece of evidence they'd like to interrogate the suspect about
-            print_interrogation_request(roomNum, clueList);
+            print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
@@ -3090,9 +3701,9 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "Why do you ask, Detective? Playing Duck Duck Goose?\"" << endl;
                     type_and_continue();
                 }
-                else if (((userKeyword.compare("small") == 0)
+                else if (((userKeyword.compare("stone") == 0)
                     || (userKeyword.compare("button") == 0))
-                    && ((clueList.at(SMALLBUTTON)).compare("???") != 0)) {
+                    && ((clueList.at(STONEBUTTON)).compare("???") != 0)) {
 
                     //Empties console screen
                     system("CLS");
@@ -3162,24 +3773,21 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "\"Oh. Those were in my armoire? How strange.\"" << endl;
                     type_and_continue();
                 }
-                else if (((userKeyword.compare("earring") == 0))
-                    && ((clueList.at(EARRING)).compare("???") != 0)) {
+                else if (((userKeyword.compare("cufflink") == 0))
+                    && ((clueList.at(CUFFLINK)).compare("???") != 0)) {
 
                     //Empties console screen
                     system("CLS");
                     //Prints a title to tell the player which character they are questioning
                     print_character_questioning_title(roomNum);
 
-                    cout << "You hand " << get_character_name(MRSSTRONGHOLD, INFORMAL) << " the earring." << endl;
+                    cout << "You hand " << get_character_name(MRSSTRONGHOLD, INFORMAL) << " the cufflink." << endl;
                     cout << "\"You found this in my husband's armoire?" << endl;
-                    cout << "I don't typically wear jewelry...\"" << endl;
+                    cout << "This looks like one of the staff's...\"" << endl;
                     type_and_continue();
 
-                    cout << "\n" << get_character_name(MRSSTRONGHOLD) << "'s eyes slowly fill with tears." << endl;
-                    cout << "\"I bet these are that whore " << get_character_name(ASTRONOMER, INFORMAL) << "'s earrings.\"" << endl;
-                    cout << "She looks away to wipe her eyes." << endl;
-                    cout << "\"I... how could she do this to me?\"" << endl;
-                    type_and_continue();
+                    currentUserChoices.at(ASKABOUTCUFFLINK) = true;
+
                 }
                 else if (((userKeyword.compare("washed") == 0)
                     || (userKeyword.compare("sink") == 0))
@@ -3239,7 +3847,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
                 //Asks player which piece of evidence they'd like to interrogate the suspect about
-                print_interrogation_request(roomNum, clueList);
+                print_interrogation_request(roomNum, currentUserChoices, clueList);
                 userKeyword = get_keyword_input();
 
             }
@@ -3339,7 +3947,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
             //Prints a title that tells the player which character they are questioning / interrogating
             print_character_questioning_title(roomNum);
             //Asks player which piece of evidence they'd like to interrogate the suspect about
-            print_interrogation_request(roomNum, clueList);
+            print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
@@ -3373,6 +3981,8 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                     cout << "\"Ah, some of these are from our buisness." << endl;
                     cout << "We sold my luxury wines together, although " << get_character_name(DRSTRONGHOLD) << " overstepped at times.\"" << endl;
                     type_and_continue();
+
+                    currentUserChoices.at(ASKABOUTEXPENSEREPORTS) = true;
                 }
                 else if (((userKeyword.compare("anonymous") == 0)
                     || (userKeyword.compare("letter") == 0))
@@ -3420,9 +4030,12 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                     print_character_questioning_title(roomNum);
 
                     cout << get_character_name(WINECRAFTER) << "'s jaw drops." << endl;
-                    cout << "\"That's news to me. Neither of us would ever cut a Nightshade's stem off." << endl;
-                    cout << "Ingesting even a small leaf could kill a man.\"" << endl;
+                    cout << "\"That's news to me. As a responsible gardener, I would never cut a Nightshade's stem off without extreme caution." << endl;
+                    cout << "Ingesting even the smallest of its leaves could kill a man.\"" << endl;
                     type_and_continue();
+
+                    currentUserChoices.at(ASKABOUTCUTNIGHTSHADE) = true;
+
                 }
                 else if (((userKeyword.compare("empty") == 0)
                     || (userKeyword.compare("display") == 0))
@@ -3441,6 +4054,9 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                     cout << "\n" << "He crosses his arms, clearly hurt." << endl;
                     cout << "\"Apparently he celebrated without me.\"" << endl;
                     type_and_continue();
+
+                    currentUserChoices.at(ASKABOUTEMPTYDISPLAY) = true;
+
                 }
                 else if (((userKeyword.compare("glass") == 0)
                     || (userKeyword.compare("shard") == 0)
@@ -3457,6 +4073,9 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                     cout << "He points to a ripped sticker on the shard's edge." << endl;
                     cout << "\"I can make out the \'Ala\' of \'Alain Hudelot\' if I look closely.\"" << endl;
                     type_and_continue();
+
+                    currentUserChoices.at(ASKABOUTGLASSSHARDS) = true;
+
                 }
                 else {
                     int replyNum = ((rand() % 4) + 1);
@@ -3483,7 +4102,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
                 //Asks player which piece of evidence they'd like to interrogate the suspect about
-                print_interrogation_request(roomNum, clueList);
+                print_interrogation_request(roomNum, currentUserChoices, clueList);
                 userKeyword = get_keyword_input();
 
             }
@@ -3538,7 +4157,7 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
             //Prints a title that tells the player which character they are questioning / interrogating
             print_character_questioning_title(roomNum);
             //Asks player which piece of evidence they'd like to interrogate the suspect about
-            print_interrogation_request(roomNum, clueList);
+            print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
@@ -3659,7 +4278,7 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
                 //Asks player which piece of evidence they'd like to interrogate the suspect about
-                print_interrogation_request(roomNum, clueList);
+                print_interrogation_request(roomNum, currentUserChoices, clueList);
                 userKeyword = get_keyword_input();
 
             }
@@ -3764,7 +4383,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
             //Prints a title that tells the player which character they are questioning / interrogating
             print_character_questioning_title(roomNum);
             //Asks player which piece of evidence they'd like to interrogate the suspect about
-            print_interrogation_request(roomNum, clueList);
+            print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
             while (userKeyword.compare("end") != 0) {
@@ -3860,6 +4479,9 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     cout << "\"Dr. Stronghold's prized wine was missing from his display?" << endl;
                     cout << "He was saving that for a special occasion. I guess he decided that occasion was tonight.\"" << endl; 
                     type_and_continue();
+
+                    currentUserChoices.at(ASKABOUTEMPTYDISPLAY) = true;
+
                 }
                 else if (((userKeyword.compare("broken") == 0)
                     || (userKeyword.compare("lock") == 0))
@@ -3893,19 +4515,9 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     cout << "Foaming of the mouth would suggest " << get_character_name(DRSTRONGHOLD) << " was poisoned or had a seizure." << endl;
                     cout << "He shouldn't have a foamed mouth if his throat was slashed.\"" << endl;
                     type_and_continue();
-                }
-                else if (((userKeyword.compare("earring") == 0))
-                    && ((clueList.at(EARRING)).compare("???") != 0)) {
 
-                    //Empties console screen
-                    system("CLS");
-                    //Prints a title to tell the player which character they are questioning
-                    print_character_questioning_title(roomNum);
+                    currentUserChoices.at(ASKABOUTFOAMEDMOUTH) = true;
 
-                    cout << "You hand " << get_character_name(ASTRONOMER, INFORMAL) << " the earring." << endl;
-                    cout << "\"Oh, you found this at the scene of the crime?" << endl;
-                    cout << "No, this isn't my jewelry. It's very extra, don't you think? That doesn't suit me.\"" << endl;
-                    type_and_continue();
                 }
                 else if (((userKeyword.compare("snowy") == 0)
                     || (userKeyword.compare("foot") == 0)
@@ -3949,7 +4561,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
                 //Asks player which piece of evidence they'd like to interrogate the suspect about
-                print_interrogation_request(roomNum, clueList);
+                print_interrogation_request(roomNum, currentUserChoices, clueList);
                 userKeyword = get_keyword_input();
 
             }
@@ -3970,13 +4582,420 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
 
 }
 
-void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
+void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList, string userKeyword) {
+
+    while (userKeyword.compare("back") != 0) {
+        //Empties console screen
+        system("CLS");
+        cout << "You are viewing your Inventory:" << endl;
+        cout << "----------------------------------------" << endl;
+
+        cout << clueList.at(CASEFILE) << endl;
+        cout << clueList.at(EXPENSEREPORTS) << endl;
+        cout << clueList.at(SMALLSAFE) << endl;
+
+        if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD) == true) {
+            cout << clueList.at(INSURANCEPOLICY) << endl;
+            cout << clueList.at(LATECHECK) << endl;
+            cout << clueList.at(ANONYMOUSLETTER) << endl;
+        }
+        cout << clueList.at(LOCKEDCHESTS) << endl;
+        cout << clueList.at(MISSINGKNIFE) << endl;
+        cout << clueList.at(REDVELVETCHAIRS) << endl;
+        cout << clueList.at(CUTNIGHTSHADE) << endl;
+        cout << clueList.at(STONEBUTTON) << endl;
+        cout << clueList.at(EMPTYDISPLAY) << endl;
+
+        if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD) == true) {
+            cout << clueList.at(BLOODSTAINS) << endl;
+            cout << clueList.at(CLEANEDFLOOR) << endl;
+        }
+        cout << clueList.at(GLASSSHARDS) << endl;
+        cout << clueList.at(BROKENLOCK) << endl;
+        cout << clueList.at(SLASHEDTHROAT) << endl;
+        cout << clueList.at(FOAMEDMOUTH) << endl;
+        cout << clueList.at(BLOODYGARMENT) << endl;
+        cout << clueList.at(WETBOOTS) << endl;
+        cout << clueList.at(CUFFLINK) << endl;
+        cout << clueList.at(WASHEDSINK) << endl;
+        cout << clueList.at(SNOWYFOOTPRINTS) << endl;
+
+        cout << "----------------------------------------" << endl;
+
+        cout << "\nType the name of a clue to view it's description:" << endl;
+        cout << "(Or type \"back\" to return to your current room.)" << endl;
+
+        userKeyword = get_keyword_input();
+
+        if (((userKeyword.compare("case") == 0)
+            || (userKeyword.compare("file") == 0)
+            || (userKeyword.compare("casefile") == 0))
+            && ((clueList.at(CASEFILE)).compare("???") != 0)) {
+
+            print_inventory_item_description(CASEFILE, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("expense") == 0)
+            || (userKeyword.compare("report") == 0)
+            || (userKeyword.compare("reports") == 0))
+            && ((clueList.at(EXPENSEREPORTS)).compare("???") != 0)) {
+
+            print_inventory_item_description(EXPENSEREPORTS, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("small") == 0)
+            || (userKeyword.compare("safe") == 0))
+            && ((clueList.at(SMALLSAFE)).compare("???") != 0)) {
+
+            print_inventory_item_description(SMALLSAFE, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("insurance") == 0)
+            || (userKeyword.compare("policy") == 0))
+            && ((clueList.at(INSURANCEPOLICY)).compare("???") != 0)) {
+
+            print_inventory_item_description(INSURANCEPOLICY, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("late") == 0)
+            || (userKeyword.compare("check") == 0))
+            && ((clueList.at(LATECHECK)).compare("???") != 0)) {
+
+            print_inventory_item_description(LATECHECK, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("anonymous") == 0)
+            || (userKeyword.compare("letter") == 0))
+            && ((clueList.at(ANONYMOUSLETTER).compare("???") != 0))) {
+
+            print_inventory_item_description(ANONYMOUSLETTER, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("locked") == 0)
+            || (userKeyword.compare("chest") == 0)
+            || (userKeyword.compare("chests") == 0))
+            && ((clueList.at(LOCKEDCHESTS)).compare("???") != 0)) {
+
+            print_inventory_item_description(LOCKEDCHESTS, currentUserChoices, clueList);
+
+        }
+        else  if (((userKeyword.compare("missing") == 0)
+            || (userKeyword.compare("knife") == 0))
+            && ((clueList.at(MISSINGKNIFE)).compare("???") != 0)) {
+
+            print_inventory_item_description(MISSINGKNIFE, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("red") == 0)
+            || (userKeyword.compare("velvet") == 0)
+            || (userKeyword.compare("chair") == 0)
+            || (userKeyword.compare("chairs") == 0))
+            && ((clueList.at(REDVELVETCHAIRS)).compare("???") != 0)) {
+
+            print_inventory_item_description(REDVELVETCHAIRS, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("nightshade") == 0)
+            || (userKeyword.compare("nightshades") == 0)
+            || (userKeyword.compare("cut") == 0)
+            || (userKeyword.compare("night") == 0)
+            || (userKeyword.compare("shade") == 0)
+            || (userKeyword.compare("shades") == 0))
+            && ((clueList.at(CUTNIGHTSHADE)).compare("???") != 0)) {
+
+            print_inventory_item_description(CUTNIGHTSHADE, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("stone") == 0)
+            || (userKeyword.compare("button") == 0))
+            && ((clueList.at(STONEBUTTON)).compare("???") != 0)) {
+
+            print_inventory_item_description(STONEBUTTON, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("empty") == 0)
+            || (userKeyword.compare("display") == 0))
+            && ((clueList.at(EMPTYDISPLAY)).compare("???") != 0)) {
+
+            print_inventory_item_description(EMPTYDISPLAY, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("blood") == 0)
+            || (userKeyword.compare("stain") == 0)
+            || (userKeyword.compare("stains") == 0)
+            || (userKeyword.compare("bloodstain") == 0)
+            || (userKeyword.compare("bloodstains") == 0))
+            && ((clueList.at(BLOODSTAINS)).compare("???") != 0)) {
+
+            print_inventory_item_description(BLOODSTAINS, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("cleaned") == 0)
+            || (userKeyword.compare("floor") == 0))
+            && ((clueList.at(CLEANEDFLOOR)).compare("???") != 0)) {
+
+            print_inventory_item_description(CLEANEDFLOOR, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("glass") == 0)
+            || (userKeyword.compare("shard") == 0)
+            || (userKeyword.compare("shards") == 0))
+            && ((clueList.at(GLASSSHARDS)).compare("???") != 0)) {
+
+            print_inventory_item_description(GLASSSHARDS, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("broken") == 0)
+            || (userKeyword.compare("lock") == 0))
+            && ((clueList.at(BROKENLOCK)).compare("???") != 0)) {
+
+            print_inventory_item_description(BROKENLOCK, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("slashed") == 0)
+            || (userKeyword.compare("throat") == 0))
+            && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
+
+            print_inventory_item_description(SLASHEDTHROAT, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("foamed") == 0)
+            || (userKeyword.compare("mouth") == 0))
+            && ((clueList.at(FOAMEDMOUTH)).compare("???") != 0)) {
+
+            print_inventory_item_description(FOAMEDMOUTH, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("bloody") == 0)
+            || (userKeyword.compare("garment") == 0))
+            && ((clueList.at(BLOODYGARMENT)).compare("???") != 0)) {
+
+            print_inventory_item_description(BLOODYGARMENT, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("wet") == 0)
+            || (userKeyword.compare("boot") == 0)
+            || (userKeyword.compare("boots") == 0))
+            && ((clueList.at(WETBOOTS)).compare("???") != 0)) {
+
+            print_inventory_item_description(WETBOOTS, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("cufflink") == 0))
+            && ((clueList.at(CUFFLINK)).compare("???") != 0)) {
+
+            print_inventory_item_description(CUFFLINK, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("washed") == 0)
+        || (userKeyword.compare("sink") == 0))
+        && ((clueList.at(WASHEDSINK)).compare("???") != 0)) {
+
+            print_inventory_item_description(WASHEDSINK, currentUserChoices, clueList);
+
+        }
+        else if (((userKeyword.compare("snowy") == 0)
+            || (userKeyword.compare("foot") == 0)
+            || (userKeyword.compare("prints") == 0)
+            || (userKeyword.compare("footprints") == 0))
+            && ((clueList.at(SNOWYFOOTPRINTS)).compare("???") != 0)) {
+
+            print_inventory_item_description(SNOWYFOOTPRINTS, currentUserChoices, clueList);
+
+        }
+        else {
+        if (userKeyword.compare("back") != 0) {
+            cout << "That is an invalid inventory item. (Check your spelling.)" << endl;
+            }
+        }
+        
+    }
 
 }
+
+void print_inventory_item_description(int itemNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
+
+    //Empties console screen
+    system("CLS");
+
+    cout << "You are viewing the " << clueList.at(itemNum) << endl;
+    cout << "----------------------------------------" << endl;
+
+    switch (itemNum) {
+    case CASEFILE:
+        cout << "FIXME: ADD CASE FILE CONTENTS." << endl;
+        break;
+
+    case EXPENSEREPORTS:
+        cout << "These are " << get_character_name(DRSTRONGHOLD) << "'s business expense reports." << endl;
+        if (currentUserChoices.at(ASKABOUTEXPENSEREPORTS)) {
+            cout << "They're mostly write ups about recent wine transactions and the grant." << endl;
+        }
+        else {
+            cout << "You can learn about their importance by asking around." << endl;
+        }
+        break;
+
+    case SMALLSAFE:
+        cout << get_character_name(DRSTRONGHOLD) << " has a safe in his " << get_room_name(OFFICE) << "." << endl;
+        cout << "You should try to find a way to open it." << endl;
+        break;
+
+    case INSURANCEPOLICY:
+        cout << "This is a life insurance policy " << get_character_name(MRSSTRONGHOLD) << " prepared for her husband." << endl;
+        cout << "She probably planned on killing him and banking the money." << endl;
+        break;
+
+    case LATECHECK:
+        cout << "This is a late check written out to " << get_character_name(ASTRONOMER) << "." << endl;
+        cout << "You should give this to her." << endl;
+        break;
+
+    case ANONYMOUSLETTER:
+        cout << "This is an anonymous letter written to " << get_character_name(DRSTRONGHOLD) << "." << endl;
+        cout << "It requests " << get_character_name(DRSTRONGHOLD) << " head to the " << get_room_name(WINECELLAR) << " two hours after Dinner." << endl;
+        cout << "In order to find out who wrote it you'll need to figure out where everyone was sitting." << endl;
+        break;
+
+    case LOCKEDCHESTS:
+        cout << "The Butler and Sous Chef have both decided to hide their belongings away in locked chests." << endl;
+        cout << "They don't seem likely to open them." << endl;
+        break;
+
+    case MISSINGKNIFE:
+        cout << "A knife went missing from the kitchen around the time of the murder." << endl;
+        cout << "It was likely used to slash " << get_character_name(DRSTRONGHOLD) << "'s throat." << endl;
+        break;
+
+    case REDVELVETCHAIRS:
+        cout << "There are only seven chairs at the table, but there were eight people at Dinner before the murder." << endl;
+        if (currentUserChoices.at(ASKABOUTREDVELVETCHAIRS)) {
+            cout << "This is because The Butler and The Sous Chef trade chairs whilst taking care of the guests." << endl;
+        }
+        else {
+            cout << "You should find out why that is." << endl;
+        }
+        break;
+
+    case CUTNIGHTSHADE:
+        cout << "Some of the Belladonna Nightshades were cut near the time of the murder." << endl;
+        if (currentUserChoices.at(ASKABOUTCUTNIGHTSHADE)) {
+            cout << "They're quite poisonous... Perhaps they were used for sinister purposes?" << endl;
+        }
+        else {
+            cout << "You are unsure why that is." << endl;
+        }
+        break;
+
+    case STONEBUTTON:
+        cout << "A small button was found on the stairs to the " << get_room_name(MASTERBEDROOM) << endl;
+        if (currentUserChoices.at(ASKABOUTSTONEBUTTON)) {
+            cout << "It was ripped out of the suit " << get_character_name(DRSTRONGHOLD) << " wore to Dinner." << endl;
+        }
+        else {
+            cout << "It seems to be ripped out of something, but you're not sure what." << endl;
+        }
+        break;
+
+    case EMPTYDISPLAY:
+        cout << "The display case for one of " << get_character_name(DRSTRONGHOLD) << "'s prized wines was empty." << endl;
+        if (currentUserChoices.at(ASKABOUTEXPENSEREPORTS)) {
+            cout << "It's likely because " << get_character_name(DRSTRONGHOLD) << " planned on celebrating his grant with a drink." << endl;
+        }
+        else {
+            cout << "There must be a reason for that, but what is it?" << endl;
+        }
+        break;
+
+    case BLOODSTAINS:
+        cout << "Bloodstains were found on the floor of the " << get_room_name(WINECELLAR) << "." << endl;
+        cout << "They form less of a pool and seem more like spurts of blood." << endl;
+        break;
+
+    case CLEANEDFLOOR:
+        break;
+
+    case GLASSSHARDS:
+        cout << "Glass shards were found at the bottom of the " << get_room_name(BOILERROOM) << "'s trash bin." << endl;
+        if (currentUserChoices.at(ASKABOUTGLASSSHARDS)) {
+            cout << "They appear to be fragments of a wine bottle." << endl;
+        }
+        else {
+            cout << "You're not sure where they came from." << endl;
+        }
+        break;
+
+    case BREAKERBOX:
+        cout << "The power was turned off last night around the time of the murder." << endl;
+        cout << "Because you can't turn off the power remotely or on a timer, the murderer had to be here to turn them off." << endl;
+        break;
+
+    case BROKENLOCK:
+        cout << "The door to the " << get_room_name(OBSERVATORY) << "was forced open around the time of the murder." << endl;
+        cout << "The lock was completely destroyed." << endl;
+        break;
+
+    case SLASHEDTHROAT:
+        cout << get_character_name(DRSTRONGHOLD) << " had his throat slashed with a knife." << endl;
+        cout << "This is the most likely cause of death." << endl;
+        break;
+
+    case FOAMEDMOUTH:
+        cout << "Small bubbles had formed at the edges of " << get_character_name(DRSTRONGHOLD) << "'s mouth around the time of his death." << endl;
+        if (currentUserChoices.at(ASKABOUTFOAMEDMOUTH)) {
+            cout << "It's possible this foam formed because " << get_character_name(DRSTRONGHOLD) << " was poisoned or had a seizure." << endl;
+        }
+        else {
+            cout << "That doesn't seem normal." << endl;
+        }
+        break;
+
+    case BLOODYGARMENT:
+        cout << "A bloody garment was found underneath the bed " << get_character_name(DRSTRONGHOLD) << " died in." << endl;
+        cout << "It seems to be a set of pajamas." << endl;
+        break;
+
+    case WETBOOTS:
+        cout << "You found some wet boots inside of " << get_character_name(DRSTRONGHOLD) << "'s armoire." << endl;
+        if (currentUserChoices.at(ASKABOUTWETBOOTS)) {
+            cout << "They were his, but he didn't wear them tonight." << endl;
+        }
+        else {
+            cout << "You're not sure why they're important." << endl;
+        }
+        break;
+
+    case CUFFLINK:
+        cout << "A cufflink was found inside of " << get_character_name(MRSSTRONGHOLD) << "'s armoire." << endl;
+        if (currentUserChoices.at(ASKABOUTCUFFLINK)) {
+            cout << "The cufflink may belong to The Butler or The Sous Chef." << endl;
+        }
+        else {
+            cout << "You can learn about their importance by asking around." << endl;
+        }
+        break;
+
+    case WASHEDSINK:
+        cout << "The sink inside the Master Bathroom was recently washed." << endl;
+        cout << "Did " << get_character_name(MRSSTRONGHOLD) << "clean it? Why?" << endl;
+        break;
+
+    case SNOWYFOOTPRINTS:
+        cout << "There are two sets of footprints on the " << get_room_name(BALCONY) << " heading toward the " << get_room_name(OBSERVATORY) << "." << endl;
+        cout << "One set of footprints was made by a pair of large boots, and the other was made by a pair of indistinguishable dress shoes." << endl;
+        break;
+    }
+
+    type_and_continue();
+
+}
+
+
 
 //Asks user what they want to investigate
 void print_keyword_request(int roomNum) {
     cout << "\nWhat do you want to investigate in the " << get_room_name(roomNum) << "?" << endl;
+    cout << "(Type \"inventory\" to view your clues.)" << endl;
     cout << "(Type \"leave\" to move between rooms.)" << endl;
 }
 
@@ -4022,97 +5041,181 @@ void print_pendleton_help_request(int roomNum) {
 }
 
 //Asks user what clue they want to interrogate a suspect with
-void print_interrogation_request(int roomNum, vector<string>& clueList) {
+void print_interrogation_request(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
     cout << "Which clue do you want to use to interrogate " << get_character_name(roomNum) << "?" << endl;
     cout << "----------------------------------------" << endl;
     switch (roomNum) {
     case CLYDE:
-        cout << clueList.at(CASEFILE) << endl;
-        cout << clueList.at(EXPENSEREPORTS) << endl;
-        cout << clueList.at(SMALLSAFE) << endl;
-        cout << clueList.at(LOCKEDCHESTS) << endl;
-        cout << clueList.at(MISSINGKNIFE) << endl;
-        cout << clueList.at(BLOODSTAINS) << endl;
-        cout << clueList.at(CLEANEDFLOOR) << endl;
-        cout << clueList.at(BROKENLOCK) << endl;
-        cout << clueList.at(SLASHEDTHROAT) << endl;
-        cout << clueList.at(FOAMEDMOUTH) << endl;
-        cout << clueList.at(BLOODYGARMENT) << endl;
-        cout << clueList.at(SNOWYFOOTPRINTS) << endl;
+        if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
+            cout << clueList.at(CASEFILE) << endl;
+            cout << clueList.at(EXPENSEREPORTS) << endl;
+            cout << clueList.at(SMALLSAFE) << endl;
+            cout << clueList.at(LOCKEDCHESTS) << endl;
+            cout << clueList.at(MISSINGKNIFE) << endl;
+            cout << clueList.at(BLOODSTAINS) << endl;
+            cout << clueList.at(CLEANEDFLOOR) << endl;
+            cout << clueList.at(BROKENLOCK) << endl;
+            cout << clueList.at(SLASHEDTHROAT) << endl;
+            cout << clueList.at(FOAMEDMOUTH) << endl;
+            cout << clueList.at(BLOODYGARMENT) << endl;
+            cout << clueList.at(SNOWYFOOTPRINTS) << endl;
+        }
+        else {
+            cout << clueList.at(CASEFILE) << endl;
+            cout << clueList.at(EXPENSEREPORTS) << endl;
+            cout << clueList.at(SMALLSAFE) << endl;
+            cout << clueList.at(LOCKEDCHESTS) << endl;
+            cout << clueList.at(MISSINGKNIFE) << endl;
+            cout << clueList.at(BROKENLOCK) << endl;
+            cout << clueList.at(SLASHEDTHROAT) << endl;
+            cout << clueList.at(FOAMEDMOUTH) << endl;
+            cout << clueList.at(BLOODYGARMENT) << endl;
+            cout << clueList.at(SNOWYFOOTPRINTS) << endl;
+        }
         break;
 
     case BUTLER:
-        cout << clueList.at(CASEFILE) << endl;
-        cout << clueList.at(ANONYMOUSLETTER) << endl;
-        cout << clueList.at(LOCKEDCHESTS) << endl;
-        cout << clueList.at(REDVELVETCHAIRS) << endl;
-        cout << clueList.at(SMALLBUTTON) << endl;
-        cout << clueList.at(EMPTYDISPLAY) << endl;
-        cout << clueList.at(CLEANEDFLOOR) << endl;
-        cout << clueList.at(GLASSSHARDS) << endl;
-        cout << clueList.at(SLASHEDTHROAT) << endl;
-        cout << clueList.at(WETBOOTS) << endl;
+        if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
+            cout << clueList.at(CASEFILE) << endl;
+            cout << clueList.at(ANONYMOUSLETTER) << endl;
+            cout << clueList.at(LOCKEDCHESTS) << endl;
+            cout << clueList.at(REDVELVETCHAIRS) << endl;
+            cout << clueList.at(STONEBUTTON) << endl;
+            cout << clueList.at(EMPTYDISPLAY) << endl;
+            cout << clueList.at(CLEANEDFLOOR) << endl;
+            cout << clueList.at(GLASSSHARDS) << endl;
+            cout << clueList.at(SLASHEDTHROAT) << endl;
+            cout << clueList.at(WETBOOTS) << endl;
+            cout << clueList.at(CUFFLINK) << endl;
+        }
+        else {
+            cout << clueList.at(CASEFILE) << endl;
+            cout << clueList.at(LOCKEDCHESTS) << endl;
+            cout << clueList.at(REDVELVETCHAIRS) << endl;
+            cout << clueList.at(STONEBUTTON) << endl;
+            cout << clueList.at(EMPTYDISPLAY) << endl;
+            cout << clueList.at(GLASSSHARDS) << endl;
+            cout << clueList.at(SLASHEDTHROAT) << endl;
+            cout << clueList.at(WETBOOTS) << endl;
+            cout << clueList.at(CUFFLINK) << endl;
+        }
         break;
 
     case SOUSCHEF:
-        cout << clueList.at(CASEFILE) << endl;
-        cout << clueList.at(ANONYMOUSLETTER) << endl;
-        cout << clueList.at(MISSINGKNIFE) << endl;
-        cout << clueList.at(REDVELVETCHAIRS) << endl;
-        cout << clueList.at(CUTNIGHTSHADE) << endl;
-        cout << clueList.at(BLOODSTAINS) << endl;
-        cout << clueList.at(SLASHEDTHROAT) << endl;
-        cout << clueList.at(EARRING) << endl;
+        if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
+            cout << clueList.at(CASEFILE) << endl;
+            cout << clueList.at(ANONYMOUSLETTER) << endl;
+            cout << clueList.at(MISSINGKNIFE) << endl;
+            cout << clueList.at(REDVELVETCHAIRS) << endl;
+            cout << clueList.at(CUTNIGHTSHADE) << endl;
+            cout << clueList.at(BLOODSTAINS) << endl;
+            cout << clueList.at(SLASHEDTHROAT) << endl;
+            cout << clueList.at(CUFFLINK) << endl;
+        }
+        else {
+            cout << clueList.at(CASEFILE) << endl;
+            cout << clueList.at(MISSINGKNIFE) << endl;
+            cout << clueList.at(REDVELVETCHAIRS) << endl;
+            cout << clueList.at(CUTNIGHTSHADE) << endl;
+            cout << clueList.at(SLASHEDTHROAT) << endl;
+            cout << clueList.at(CUFFLINK) << endl;
+        }
         break;
 
     case MRSSTRONGHOLD:
-        cout << clueList.at(CASEFILE) << endl;
-        cout << clueList.at(SMALLSAFE) << endl;
-        cout << clueList.at(INSURANCEPOLICY) << endl;
-        cout << clueList.at(ANONYMOUSLETTER) << endl;
-        cout << clueList.at(MISSINGKNIFE) << endl;
-        cout << clueList.at(REDVELVETCHAIRS) << endl;
-        cout << clueList.at(SMALLBUTTON) << endl;
-        cout << clueList.at(SLASHEDTHROAT) << endl;
-        cout << clueList.at(FOAMEDMOUTH) << endl;
-        cout << clueList.at(BLOODYGARMENT) << endl;
-        cout << clueList.at(WETBOOTS) << endl;
-        cout << clueList.at(EARRING) << endl;
-        cout << clueList.at(WASHEDSINK) << endl;
-        cout << clueList.at(SNOWYFOOTPRINTS) << endl;
+        if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
+            cout << clueList.at(CASEFILE) << endl;
+            cout << clueList.at(SMALLSAFE) << endl;
+            cout << clueList.at(INSURANCEPOLICY) << endl;
+            cout << clueList.at(ANONYMOUSLETTER) << endl;
+            cout << clueList.at(MISSINGKNIFE) << endl;
+            cout << clueList.at(REDVELVETCHAIRS) << endl;
+            cout << clueList.at(STONEBUTTON) << endl;
+            cout << clueList.at(SLASHEDTHROAT) << endl;
+            cout << clueList.at(FOAMEDMOUTH) << endl;
+            cout << clueList.at(BLOODYGARMENT) << endl;
+            cout << clueList.at(WETBOOTS) << endl;
+            cout << clueList.at(CUFFLINK) << endl;
+            cout << clueList.at(WASHEDSINK) << endl;
+            cout << clueList.at(SNOWYFOOTPRINTS) << endl;
+        }
+        else {
+            cout << clueList.at(CASEFILE) << endl;
+            cout << clueList.at(SMALLSAFE) << endl;
+            cout << clueList.at(MISSINGKNIFE) << endl;
+            cout << clueList.at(REDVELVETCHAIRS) << endl;
+            cout << clueList.at(STONEBUTTON) << endl;
+            cout << clueList.at(SLASHEDTHROAT) << endl;
+            cout << clueList.at(FOAMEDMOUTH) << endl;
+            cout << clueList.at(BLOODYGARMENT) << endl;
+            cout << clueList.at(WETBOOTS) << endl;
+            cout << clueList.at(CUFFLINK) << endl;
+            cout << clueList.at(WASHEDSINK) << endl;
+            cout << clueList.at(SNOWYFOOTPRINTS) << endl;
+        }
         break;
 
     case WINECRAFTER:
-        cout << clueList.at(CASEFILE) << endl;
-        cout << clueList.at(EXPENSEREPORTS) << endl;
-        cout << clueList.at(ANONYMOUSLETTER) << endl;
-        cout << clueList.at(REDVELVETCHAIRS) << endl;
-        cout << clueList.at(CUTNIGHTSHADE) << endl;
-        cout << clueList.at(EMPTYDISPLAY) << endl;
-        cout << clueList.at(GLASSSHARDS) << endl;
+        if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
+            cout << clueList.at(CASEFILE) << endl;
+            cout << clueList.at(EXPENSEREPORTS) << endl;
+            cout << clueList.at(ANONYMOUSLETTER) << endl;
+            cout << clueList.at(REDVELVETCHAIRS) << endl;
+            cout << clueList.at(CUTNIGHTSHADE) << endl;
+            cout << clueList.at(EMPTYDISPLAY) << endl;
+            cout << clueList.at(GLASSSHARDS) << endl;
+        }
+        else {
+            cout << clueList.at(CASEFILE) << endl;
+            cout << clueList.at(EXPENSEREPORTS) << endl;
+            cout << clueList.at(REDVELVETCHAIRS) << endl;
+            cout << clueList.at(CUTNIGHTSHADE) << endl;
+            cout << clueList.at(EMPTYDISPLAY) << endl;
+            cout << clueList.at(GLASSSHARDS) << endl;
+        }
         break;
 
     case MUDMAN:
-        cout << clueList.at(LATECHECK) << endl;
-        cout << clueList.at(ANONYMOUSLETTER) << endl;
-        cout << clueList.at(MISSINGKNIFE) << endl;
-        cout << clueList.at(REDVELVETCHAIRS) << endl;
-        cout << clueList.at(CUTNIGHTSHADE) << endl;
-        cout << clueList.at(BROKENLOCK) << endl;
-        cout << clueList.at(WETBOOTS) << endl;
+        if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
+            cout << clueList.at(LATECHECK) << endl;
+            cout << clueList.at(ANONYMOUSLETTER) << endl;
+            cout << clueList.at(MISSINGKNIFE) << endl;
+            cout << clueList.at(REDVELVETCHAIRS) << endl;
+            cout << clueList.at(CUTNIGHTSHADE) << endl;
+            cout << clueList.at(BROKENLOCK) << endl;
+            cout << clueList.at(WETBOOTS) << endl;
+        }
+        else {
+            cout << clueList.at(LATECHECK) << endl;
+            cout << clueList.at(MISSINGKNIFE) << endl;
+            cout << clueList.at(REDVELVETCHAIRS) << endl;
+            cout << clueList.at(CUTNIGHTSHADE) << endl;
+            cout << clueList.at(BROKENLOCK) << endl;
+            cout << clueList.at(WETBOOTS) << endl;
+        }
         break;
 
     case ASTRONOMER:
-        cout << clueList.at(CASEFILE) << endl;
-        cout << clueList.at(SMALLSAFE) << endl;
-        cout << clueList.at(LATECHECK) << endl;
-        cout << clueList.at(ANONYMOUSLETTER) << endl;
-        cout << clueList.at(REDVELVETCHAIRS) << endl;
-        cout << clueList.at(EMPTYDISPLAY) << endl;
-        cout << clueList.at(BROKENLOCK) << endl;
-        cout << clueList.at(FOAMEDMOUTH) << endl;
-        cout << clueList.at(EARRING) << endl;
-        cout << clueList.at(SNOWYFOOTPRINTS) << endl;
+        if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
+            cout << clueList.at(CASEFILE) << endl;
+            cout << clueList.at(SMALLSAFE) << endl;
+            cout << clueList.at(LATECHECK) << endl;
+            cout << clueList.at(ANONYMOUSLETTER) << endl;
+            cout << clueList.at(REDVELVETCHAIRS) << endl;
+            cout << clueList.at(EMPTYDISPLAY) << endl;
+            cout << clueList.at(BROKENLOCK) << endl;
+            cout << clueList.at(FOAMEDMOUTH) << endl;
+            cout << clueList.at(SNOWYFOOTPRINTS) << endl;
+        }
+        else {
+            cout << clueList.at(CASEFILE) << endl;
+            cout << clueList.at(SMALLSAFE) << endl;
+            cout << clueList.at(REDVELVETCHAIRS) << endl;
+            cout << clueList.at(EMPTYDISPLAY) << endl;
+            cout << clueList.at(BROKENLOCK) << endl;
+            cout << clueList.at(FOAMEDMOUTH) << endl;
+            cout << clueList.at(SNOWYFOOTPRINTS) << endl;
+        }
         break;
     }
     cout << "(Type \"end\" to end the interrogation with " << get_character_name(roomNum) << " and return to the character interaction menu.)" << endl;
@@ -4265,7 +5368,7 @@ string get_room_name(int roomNum) {
         return "Master Bedroom";
 
     case 13:
-        return "ROOM 13 N/A";
+        return "Balcony";
 
     default:
         return "UNKNOWN ROOM N/A";
@@ -4365,17 +5468,19 @@ void print_adjacent_rooms(int roomNum) {
 
     case 11:
         cout << "\"" << get_room_name(12) << "\"" << endl;
+        cout << "\"" << get_room_name(13) << "\"" << endl;
         cout << "\"" << get_room_name(8) << "\"" << endl;
         break;
 
     case 12:
         cout << "\"" << get_room_name(11) << "\"" << endl;
+        cout << "\"" << get_room_name(13) << "\"" << endl;
         cout << "\"" << get_room_name(8) << "\"" << endl;
         break;
 
     case 13:
-        //FIXME : COUT ADJACENT ROOMS
-        cout << "FIXME: ROOM 13 DOES NOT EXIST YET, ADD ADJACENT ROOMS" << endl;
+        cout << "\"" << get_room_name(11) << "\"" << endl;
+        cout << "\"" << get_room_name(12) << "\"" << endl;
         break;
 
     }
