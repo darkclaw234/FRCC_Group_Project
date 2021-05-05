@@ -199,6 +199,8 @@ int main()
     //Prints introduction to story
     beginning();
 
+    enter_tutorial(userChoices, clueList);
+
     //Loops Until roomNum is -1, which will only be the case once the player
     //Submits their final answer of who the murderer is etc.
     //Then the end of the game is set in motion and the user exits the loop.
@@ -218,11 +220,6 @@ int main()
             //Describes Room 0
             describe_room(roomNum, userChoices, clueList);
 
-            //Enters tutorial for player if they're just starting the game
-            if (userChoices.at(MEETCLYDE) == false) {
-                enter_tutorial(userChoices, clueList);
-                describe_room(roomNum, userChoices, clueList);
-            }
 
             //Investigates chosen keyword from room 0 description, prints info about keyword
             userKeyword = investigate_room(roomNum, userChoices, clueList);
@@ -743,9 +740,44 @@ void beginning() {
     //Declares user input string
     string userInput;
 
-    //FIXME: ADD INTRODUCTION, ATMOSPHERE BUILDING HERE
-    cout << "FIXME: ADD BEGINNING TO STORY." << endl;
-    cout << "Beginning of story, eventual intro." << endl;
+    system("CLS");
+
+    cout << "At the edge of the Black Hills in South Dakota, a storm is swirling over the peaks of the lowest mountains." << endl;
+    cout << "The only lights visible through the thick snow come from one of two places: " << endl;
+    cout << "A small mining town deeper in the mountain's crest, and a lone mansion tucked in the side of Black Elk's Peak. " << endl;
+    cout << "As you travel up the hill towards the mansion, you prepare yourself for the night to come. " << endl;
+     
+    type_and_continue();
+
+    cout << "\nYou roll down your car window and listen to the rustling wind through the thick snow." << endl;
+    cout << "It makes a whistling sound, as if nature itself is gleefully snapping branches and pounding the forest into the ground." << endl;
+    cout << "There's nothing quite this forest in the middle of a storm." << endl;
+    cout << "Luckily you're making your way towards a much more hypothetical storm." << endl;
+
+    type_and_continue();
+
+    cout << "\nAs the mansion grows closer on the horizon, the wind seems to die down a little." << endl;
+    cout << "You imagine this won't be easy. It's your first real murder investigation, after all." << endl;
+    cout << "But you're not easily pushed over. You'll figure out exactly who murdered Dr. Stronghold." << endl;
+
+    type_and_continue();
+
+    system("CLS");
+
+
+    cout << "BBBB" << "  L" << "      AAA " << "  CCCC" << " K   K" << "     EEEEE" << " L" << "     K   K" << endl;
+    cout << "B  BB" << " L" << "     A   A" << " CC" << "    K  K" << "      E " << "    L" << "     K  K" << endl;
+    cout << "BBBB" << "  L" << "     AAAAA" << " C" << "     KKK" << "       EEEEE" << " L" << "     KKK" << endl;
+    cout << "B  BB" << " L" << "     A   A" << " CC" << "    K  K" << "      E " << "    L" << "     K  K" << endl;
+    cout << "BBBB" << "  LLLLL" << " A   A" << "  CCCC" << " K   K" << "     EEEEE" << " LLLLL" << " K   K" << endl;
+
+    type_and_continue();
+
+    cout << "\nWelcome to Black Elk Manor!" << endl;
+    cout << "----------------------------------------" << endl;
+    cout << "This is a text adventure meant to simulate a murder mystery!" << endl;
+    cout << "You can interact with your environment by typing keywords when prompted." << endl;
+    cout << "Keywords will always be in the room description unless you need to uncover other mysteries first." << endl;
 
     type_and_continue();
 }
@@ -757,14 +789,22 @@ void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) 
     //Declares user input string
     string userKeyword;
 
-    //FIXME: DETERMINE GAME NAME
-    cout << "\nFIXME: DETERMINE GAME NAME" << endl;
-    cout << "\nWelcome to INSERT GAME NAME!" << endl;
+    system("CLS");
 
-    cout << "\nThis is a text adventure meant to simulate a murder mystery!" << endl;
-    cout << "You can interact with your environment by typing keywords when prompted." << endl;
-    cout << "Keywords will always be in the room description unless you need to uncover other mysteries first." << endl;
-    cout << "Try typing \"clyde\" to talk to your investigative partner." << endl;
+
+
+    print_room_title(TROPHYHALL);
+    cout << "You enter the mansion and find yourself in an ornate " << get_room_name(TROPHYHALL) << "." << endl;
+    cout << "Glass cupboards line the edges of the room with glimmering bronze and silver figures." << endl;
+    cout << "Dracaena plants cradle some shelves filled with well dusted black and white photos." << endl;
+    cout << "There's even a golden lion head attached to the wall, right above the double doors that lead into the mansion's core." << endl;
+
+    cout << "\nSeveral junior recruits are sitting around a plastic table that clashes with the mansion's sophisticated decor." << endl;
+    cout << "They've set up the evidence table for your convenience." << endl;
+    cout << "Your closest confidant, " << get_character_name(CLYDE, FORMAL) << ", seems eager to greet you." << endl;
+    cout << "He probably has a case file prepared for you." << endl;
+
+    cout << "\nTry typing \"clyde\" to talk to your investigative partner." << endl;
 
     //Gets userInput and sets it to lowercase
     userKeyword = get_keyword_input();
@@ -780,8 +820,47 @@ void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) 
 
     }
 
-    //FIXME: ADD VISIT WITH CLYDE
-    cout << "\nFIXME: describe visit with clyde." << endl;
+    system("CLS");
+
+    cout << "You are talking to " << get_character_name(TROPHYHALL) << ":" << endl;
+    cout << "----------------------------------------" << endl;
+    cout << "\"Welcome Detective!" << endl;
+    cout << "We need to go over some things before we get started with this case." << endl;
+    cout << "It is important that you know how to interact with different clues.\"" << endl;
+    cout << endl << get_character_name(TROPHYHALL) << " hands you the case file." << endl;
+    cout << "\"Try typing \'case file\' to investigate that clue.\"" << endl;
+
+    userKeyword = get_keyword_input();
+    while (userKeyword.compare("Mud") != 0)
+    {
+        if ((userKeyword.compare("case") == 0)
+            || (userKeyword.compare("file") == 0))
+        {
+            cout << "\n\"Great job detective!\"" << endl;
+            if ((clueList.at(CASEFILE)).compare("???") == 0) {
+                cout << "\n----------------------------------------" << endl;
+                cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+                cout << "----------------------------------------" << endl;
+                clueList.at(CASEFILE) = "\"Case File\" in the " + get_room_name(TROPHYHALL);
+            }
+            type_and_continue();
+            break;
+        }
+        cout << "\nIncorrect input." << endl;
+        cout << "Try typing \"case file\"." << endl;
+        userKeyword = get_keyword_input();
+    }
+
+    system("CLS");
+
+    cout << "You are talking to " << get_character_name(TROPHYHALL) << ":" << endl;
+    cout << "----------------------------------------" << endl;
+    cout << "\"That should be all you need to know for now." << endl;
+    cout << "Be sure to investigate as much as possible." << endl;
+    cout << "Good luck, Detective.\"" << endl;
+
+
+
     currentUserChoices.at(MEETCLYDE) = true;
 
     type_and_continue();
@@ -5193,7 +5272,11 @@ void print_inventory_item_description(int itemNum, vector<bool>& currentUserChoi
 
     switch (itemNum) {
     case CASEFILE:
-        cout << "FIXME: ADD CASE FILE CONTENTS." << endl;
+        cout << "\n" << get_character_name(MRSSTRONGHOLD) << " is the widow of the late " << get_character_name(DRSTRONGHOLD) << endl;
+        cout << "The Butler cleaned for " << get_character_name(DRSTRONGHOLD, INFORMAL) << " and maintained the grounds." << endl;
+        cout << "The Sous Chef was " << get_character_name(DRSTRONGHOLD, INFORMAL) << "'s personal chef." << endl;
+        cout << "The Wine Crafter was a bussiness partner of " << get_character_name(DRSTRONGHOLD, INFORMAL) << "'s." << endl;
+        cout << "And lastly, the Astronomer was an old friend and associate of " << get_character_name(DRSTRONGHOLD) << "'s." << endl;
         break;
 
     case EXPENSEREPORTS:
@@ -5374,6 +5457,7 @@ void print_inventory_item_description(int itemNum, vector<bool>& currentUserChoi
 void print_keyword_request(int roomNum) {
     cout << "\n----------------------------------------" << endl;
     cout << "What do you want to investigate in the " << get_room_name(roomNum) << "?" << endl;
+    cout << "(Type a word from the room description to investigate that item.)" << endl;
     cout << "(Type \"inventory\" to view your clues.)" << endl;
     cout << "(Type \"leave\" to move between rooms.)" << endl;
     cout << "----------------------------------------" << endl;
