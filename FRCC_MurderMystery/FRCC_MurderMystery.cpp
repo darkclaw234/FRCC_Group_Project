@@ -36,6 +36,8 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
 void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList, string userKeyword);
 void print_inventory_item_description(int itemNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 
+int count_clues(vector<string>& clueList)
+
 //These seven functions print requests for user input. 
 //This function asks what a user wants to investigate in their current room
 void print_keyword_request(int roomNum);
@@ -876,15 +878,7 @@ void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) 
 void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
     //Empties console screen
     system("CLS");
-
-    //FIXME: RETURN USER'S DESIRED ROOMNUM
-    cout << "FIXME: ADD ENDING TO STORY." << endl;
-    cout << "This is the end." << endl;
-
-}
-
-
-
+    
 //Describes current room, and may change description based on user choices
 void describe_room(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
 
@@ -1090,6 +1084,92 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
+        }
+
+        if ((userKeyword.compare("plastic") == 0)
+            || (userKeyword.compare("table") == 0)
+            || (userKeyword.compare("evidence") == 0)) {
+            //Empties console screen
+            system("CLS");
+
+            if ((userKeyword.compare("plastic") == 0)
+                || (userKeyword.compare("table") == 0)) {
+                //Empties console screen
+                system("CLS");
+
+                cout << "Plastic Table of Evidence: " << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "On the plastic table of evidence sits a case file that contains an overview of the murder case, as well as a pair of handcuffs." << endl;
+                cout << "Type 'case file' to open the case file, or 'handcuffs' to accuse a suspect." << endl;
+
+                while (userKeyword.compare("back") != 0) {
+
+                    //Asks for user input and gets user input
+                    print_further_keyword_request();
+                    userKeyword = get_keyword_input();
+
+                    if ((userKeyword.compare("case") == 0)
+                        || (userKeyword.compare("file") == 0)) {
+                        //Empties console screen
+                        system("CLS");
+
+                        cout << "\n" << get_character_name(MRSSTRONGHOLD) << " is the widow of the late " << get_character_name(DRSTRONGHOLD) << endl;
+                        cout << "The Butler cleaned for " << get_character_name(DRSTRONGHOLD, INFORMAL) << " and maintained the grounds." << endl;
+                        cout << "The Sous Chef was " << get_character_name(DRSTRONGHOLD, INFORMAL) << "'s personal chef." << endl;
+                        cout << "The Wine Crafter was a bussiness partner of " << get_character_name(DRSTRONGHOLD, INFORMAL) << "'s." << endl;
+                        cout << "And lastly, the Astronomer was an old friend and associate of " << get_character_name(DRSTRONGHOLD) << "'s." << endl;
+                        cout << get_character_name(BUTLER) << " did some cleaning in the ballroom" << endl;
+                        cout << get_character_name(SOUSCHEF) << " went to the kitchen to clean." << endl;
+                        cout << get_character_name(MRSSTRONGHOLD) << " took a bath." << endl;
+                        cout << get_character_name(WINECRAFTER) << " collected some grapes." << endl;
+                        cout << get_character_name(ASTRONOMER) << " conducted an experiment in her lab." << endl;
+                        cout << "\n" << get_character_name(DRSTRONGHOLD) << " was found on his bed in the masterbedroom." << endl;
+                        cout << "He was found with his throat slashed." << endl;
+
+                        if ((clueList.at(CASEFILE)).compare("???") == 0) {
+                            type_and_continue();
+                            cout << "\n----------------------------------------" << endl;
+                            cout << "You've found a clue! You can now access this clue in your inventory." << endl;
+                            cout << "----------------------------------------" << endl;
+                            clueList.at(CASEFILE) = "\"Case File\" in the " + get_room_name(TROPHYHALL);
+                        }
+
+                        type_and_continue();
+                    }
+
+                    if ((userKeyword.compare("handcuffs") == 0)
+                        || (userKeyword.compare("hand") == 0)
+                        || (userKeyword.compare("cuffs") == 0)) {
+                        //Empties console screen
+                        system("CLS");
+
+                        cout << "Handcuffs: " << endl;
+                        cout << "----------------------------------------" << endl;
+                        cout << "A pair of silver handcuffs." << endl;
+
+                        if (count_clues(clueList) >= 10 || count_clues(clueList) <= 19) {
+                            type_and_continue();
+                            ending(currentUserChoices, clueList);
+                        }
+                        else if (count_clues(clueList) > 19) {
+                            roomNum = -1;
+                            break;
+                        }
+                        else {
+                            cout << "You need at least ten clues to accuse a suspect." << endl;
+                            type_and_continue();
+                        }
+                        
+                    }
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Plastic Table of Evidence: " << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "On the plastic table of evidence sits a case file that contains an overview of the murder case, as well as a pair of handcuffs." << endl;
+                    cout << "Type 'case file' to open the case file, or 'handcuffs' to accuse a suspect." << endl;
+                }
+            }
         }
 
         if ((userKeyword.compare("glass") == 0)
@@ -5451,7 +5531,16 @@ void print_inventory_item_description(int itemNum, vector<bool>& currentUserChoi
 
 }
 
-
+int count_clues(vector<string>& clueList) {
+    int numClues = 0;
+    for (int i = 0; i < clueList.size(); i++) {
+        if ((clueList.at(i)).compare("???") != 0){
+        // numClues++
+        numClues++;
+        }
+    }
+    return numClues;
+}
 
 //Asks user what they want to investigate
 void print_keyword_request(int roomNum) {
