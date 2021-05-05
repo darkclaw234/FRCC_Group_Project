@@ -36,7 +36,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
 void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList, string userKeyword);
 void print_inventory_item_description(int itemNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 
-int count_clues(vector<string>& clueList)
+int count_clues(vector<string>& clueList);
 
 //These seven functions print requests for user input. 
 //This function asks what a user wants to investigate in their current room
@@ -878,6 +878,7 @@ void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) 
 void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
     //Empties console screen
     system("CLS");
+}
     
 //Describes current room, and may change description based on user choices
 void describe_room(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
