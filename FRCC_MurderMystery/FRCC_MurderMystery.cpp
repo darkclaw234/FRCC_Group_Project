@@ -185,18 +185,7 @@ int main()
         clueList.at(i) = "???";
     }
 
-    //FIXME: REDISTRIBUTE clues to appropriate places around house
 
-    userChoices.at(ACCUSEMRSSTRONGHOLD) = true;
-    userChoices.at(GETUVLIGHT) = true;
-
-    //FIXME: REMOVE ONCE GAME IS FINISHED
-    //Prints clueList
-    for (size_t i = 0; i < clueList.size(); i++) {
-        cout << clueList.at(i) << endl;
-    }
-
-    type_and_continue();
 
     //Prints introduction to story
     beginning();
@@ -793,8 +782,6 @@ void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) 
 
     system("CLS");
 
-
-
     print_room_title(TROPHYHALL);
     cout << "You enter the mansion and find yourself in an ornate " << get_room_name(TROPHYHALL) << "." << endl;
     cout << "Glass cupboards line the edges of the room with glimmering bronze and silver figures." << endl;
@@ -838,7 +825,14 @@ void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) 
         if ((userKeyword.compare("case") == 0)
             || (userKeyword.compare("file") == 0))
         {
+            cout << "You look over the case file." << endl;
+            cout << "It has information on the suspects, alibis, and an autopsy." << endl;
+            cout << "You'll look at it more later in your inventory." << endl;
+            type_and_continue();
+            
+            cout << get_character_name(CLYDE) << " smiles at you." << endl;
             cout << "\n\"Great job detective!\"" << endl;
+
             if ((clueList.at(CASEFILE)).compare("???") == 0) {
                 cout << "\n----------------------------------------" << endl;
                 cout << "You've found a clue! You can now access this clue in your inventory." << endl;
@@ -861,8 +855,6 @@ void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) 
     cout << "Be sure to investigate as much as possible." << endl;
     cout << "Good luck, Detective.\"" << endl;
 
-
-
     currentUserChoices.at(MEETCLYDE) = true;
 
     type_and_continue();
@@ -876,8 +868,1040 @@ void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) 
 
 //Prints ending on the story, which may differ based on userChoices
 void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
-    //Empties console screen
-    system("CLS");
+
+    //Defines string for user input
+    string userKeyword;
+    //Gets userInput and set it to lowercase
+    userKeyword = get_keyword_input();
+
+    //Defines how many wrong answers player has chosen
+    int numMistakes = 0;
+
+    //Defines the number of clues found
+    int numClues = count_clues(clueList);
+
+    if (numClues >= 17 && numClues <= 19) {
+        //Empties console screen
+        system("CLS");
+
+        cout << "It's been long enough. You've practically found every clue available to you." << endl;
+        cout << "Something still feels kind of off, but you can't do much about that now. It's time to accuse someone!" << endl;
+
+        type_and_continue();
+        //Empties console screen
+        system("CLS");
+
+        print_room_title(BALLROOM);
+        cout << "You gather up the houseguests in the " << get_room_name(BALLROOM) << " to accuse one of them." << endl;
+        cout << "As the suspects stand around, bewildered, " << get_character_name(MRSSTRONGHOLD) << " clears her throat." << endl;
+        cout << "\"Well, Detective, have you finally found our murderer? If so, I'll give you the honor of revealing their identity.\"" << endl;
+        type_and_continue();
+
+        cout << "\nIt's time to accuse the murderer. Who is it?" << endl;
+        cout << "Is it the Butler " << get_character_name(DRSTRONGHOLD) << " trusted to maintain his image?" << endl;
+        cout << "Is it the Sous-" << endl;
+        cout << get_character_name(SOUSCHEF, INFORMAL) << " scowls at you." << endl;
+        cout << "I mean, Head Chef that " << get_character_name(DRSTRONGHOLD) << " counted on to maintain his quality of life?" << endl;
+        cout << "Is it the recently Widow who " << get_character_name(DRSTRONGHOLD) << " loved for so long?" << endl;
+        cout << "Is it the Wine Crafter " << get_character_name(DRSTRONGHOLD) << " made a business with?" << endl;
+        cout << "Or, is it the Astronomer " << get_character_name(DRSTRONGHOLD) << " created his greatest scientific work with?" << endl;
+        type_and_continue();
+
+        cout << "\nEnter Your Answer Now: " << endl;
+        cout << "(Type \'1\' to accuse The Butler.)" << endl;
+        cout << "(Type \'2\' to accuse The Sous Chef.)" << endl;
+        cout << "(Type \'3\' to accuse The Widow.)" << endl;
+        cout << "(Type \'4\' to accuse The Wine Crafter.)" << endl;
+        cout << "(Type \'5\' to accuse The Astronomer.)" << endl;
+        cout << "----------------------------------------" << endl;
+        userKeyword = get_keyword_input();
+
+        while ((userKeyword.compare("1") != 0)
+            && (userKeyword.compare("2") != 0)
+            && (userKeyword.compare("3") != 0)
+            && (userKeyword.compare("4") != 0)
+            && (userKeyword.compare("5") != 0)
+            && ((userKeyword.compare("clyde") != 0) && (userKeyword.compare("pendleton") != 0))
+            && ((userKeyword.compare("mud") != 0) && (userKeyword.compare("man") != 0))
+            && (userKeyword.compare("body") != 0)) {
+
+            //Accuses The Butler
+            if (userKeyword.compare("1") == 0) {
+                //Empties console screen
+                system("CLS");
+
+                cout << get_character_name(BUTLER) << "'s jaw drops." << endl;
+                cout << "\"What? Detective... I've been such a help to you.\"" << endl;
+                type_and_continue();
+
+                cout << "He sighs and stares you straight in the eyes." << endl;
+                cout << "\"Okay Detective. Lock me up for a crime I didn't commit." << endl;
+                cout << "But you should be disappointed in yourself. You couldn't even solve your first case.\"" << endl;
+                type_and_continue();
+
+                cout << "You put the handcuffs around " << get_character_name(BUTLER) << "'s wrists hesitantly." << endl;
+                cout << "\"Come on, Detective. Those handcuffs need to be tighter." << endl;
+                cout << "After all, I'm an unhinged criminal in your eyes.\"" << endl;
+                type_and_continue();
+
+
+                cout << "As you put him into the back of your police car, he scoffs." << endl;
+                cout << "My my. I've always had a clean record. I suppose this is a mess I cannot clean." << endl;
+
+                cout << "\nBAD ENDING: INCORRECT ACCUSATION" << endl;
+                type_and_continue();
+
+                exit(0);
+            }
+            //Accuses The Sous Chef
+            if (userKeyword.compare("2") == 0) {
+                //Empties console screen
+                system("CLS");
+
+                cout << get_character_name(SOUSCHEF) << " turns red with fury." << endl;
+                cout << "\"Are you insane, Detective? How could you get this wrong?" << endl;
+                type_and_continue();
+
+                cout << "She turns to " << get_character_name(MRSSTRONGHOLD) << "." << endl;
+                cout << "\"How could you not figure out that she stabbed her husband!" << endl;
+                cout << "She stabbed him! She killed him and you're arresting me!\"" << endl;
+                type_and_continue();
+
+                cout << "She scratches and screams, but you drag her to the car anyhow." << endl;
+                cout << "\"I hope you realize one day that you're an arrogant fool." << endl;
+                cout << "I'm glad that you let a murderer walk away though. It shows how splendid you truly are.\"" << endl;
+
+                cout << "\nBAD ENDING: INCORRECT ACCUSATION" << endl;
+                type_and_continue();
+
+                exit(0);
+            }
+            //Accuses The Widow
+            if (userKeyword.compare("3") == 0) {
+                //Empties console screen
+                system("CLS");
+
+                cout << get_character_name(MRSSTRONGHOLD) << " rolls up her sleeves." << endl;
+                cout << "I said to accuse the murderer, Detective, not randomly accuse someone." << endl;
+                type_and_continue();
+
+                cout << "\nYou express your confidence in your claim and she chuckles." << endl;
+                cout << "\"Alright then, Detective. Use that brain of yours." << endl;
+                cout << "How did I kill my husband then?\"" << endl;
+                type_and_continue();
+
+                cout << "\nWhat did " << get_character_name(MRSSTRONGHOLD) << " use to kill her husband?" << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "(Type \'1\' to say she used a kitchen knife.)" << endl;
+                cout << "(Type \'2\' to say she used a shovel.)" << endl;
+                cout << "(Type \'3\' to say she used some poison.)" << endl;
+                cout << "(Type \'4\' to say she beat him to death.)" << endl;
+                userKeyword = get_keyword_input();
+
+                while(userKeyword.compare("1") != 0) {
+
+                    if (userKeyword.compare("1") == 0) {
+                        break;
+                    }
+                    if (userKeyword.compare("2") == 0) {
+                        cout << get_character_name(CLYDE) << " sighs." << endl;
+                        cout << "\"Do I need to take away your badge?\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+                    if (userKeyword.compare("3") == 0) {
+                        cout << get_character_name(CLYDE) << " frowns." << endl;
+                        cout << "\"Really, Detective?\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+                    if (userKeyword.compare("4") == 0) {
+                        cout << get_character_name(CLYDE) << "'s eyes go wide." << endl;
+                        cout << "\"What is she, a wrestler?\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "\nWhat did " << get_character_name(MRSSTRONGHOLD) << " use to kill her husband?" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "(Type \'1\' to say she used a kitchen knife.)" << endl;
+                    cout << "(Type \'2\' to say she used a shovel.)" << endl;
+                    cout << "(Type \'3\' to say she used some poison.)" << endl;
+                    cout << "(Type \'4\' to say she beat him to death.)" << endl;
+                    userKeyword = get_keyword_input();
+                }
+
+                if (numMistakes >= 5) {
+                    cout << get_character_name(CLYDE) << " smacks you." << endl;
+                    cout << "Detective, that's it! You clearly don't know what you're talking about." << endl;
+                    cout << "Go do some more investigating first!" << endl;
+                    type_and_continue();
+                    return;
+                }
+
+
+
+                cout << "You explain that " << get_character_name(MRSSTRONGHOLD) << " definitely used the kitchen knife." << endl;
+                cout << "She keeps her expression cool." << endl;
+                cout << "\"Interesting idea you have there.\"" << endl;
+                type_and_continue();
+
+                cout << "\nShe wags her finger." << endl;
+                cout << "\"But you're wrong Detective, and you can't prove I took that knife." << endl;
+                type_and_continue();
+
+                cout << "Is there evidence " << get_character_name(MRSSTRONGHOLD) << " took the knife?" << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "(Type \'1\' to say the knife was in her armoire.)" << endl;
+                cout << "(Type \'2\' to say someone saw her wielding the knife.)" << endl;
+                cout << "(Type \'3\' to say someone saw her near the knife.)" << endl;
+                cout << "(Type \'4\' to say she cut herself while using it.)" << endl;
+                userKeyword = get_keyword_input();
+
+                while (userKeyword.compare("3") != 0) {
+
+                    if (userKeyword.compare("1") == 0) {
+                        cout << get_character_name(CLYDE) << " shakes his head." << endl;
+                        cout << "\"You're just lying now?\"" << endl;
+                        numMistakes++;
+                        type_and_continue();
+                    }
+                    if (userKeyword.compare("2") == 0) {
+                        cout << get_character_name(CLYDE) << " makes a face." << endl;
+                        cout << "\"Who said that, Detective? Don't you think they would've spoken sooner?\"" << endl;
+                        numMistakes++;
+                        type_and_continue();
+                    }
+                    if (userKeyword.compare("3") == 0) {
+                        break;
+                    }
+                    if (userKeyword.compare("4") == 0) {
+                        cout << get_character_name(CLYDE) << " looks speechless." << endl;
+                        cout << "\"What? Just... what?\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Is there evidence " << get_character_name(MRSSTRONGHOLD) << " took the knife?" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "(Type \'1\' to say the knife was in her armoire.)" << endl;
+                    cout << "(Type \'2\' to say someone saw her wielding the knife.)" << endl;
+                    cout << "(Type \'3\' to say someone saw her near the knife.)" << endl;
+                    cout << "(Type \'4\' to say she cut herself while using it.)" << endl;
+                    userKeyword = get_keyword_input();
+                }
+
+                if (numMistakes >= 5) {
+                    cout << get_character_name(CLYDE) << " resists the urge to smack you." << endl;
+                    cout << "Detective, stop spitting out wild theories!" << endl;
+                    cout << "Go investigate some more!" << endl;
+                    type_and_continue();
+                    return;
+                }
+
+
+
+                //Empties console screen
+                system("CLS");
+
+                cout << "You ask " << get_character_name(SOUSCHEF) << " to recall who entered the kitchen." << endl;
+                cout << "\"I only saw" << get_character_name(BUTLER) << " and " << get_character_name(MRSSTRONGHOLD) << " enter the kitchen before it disappeared.\"" << endl;
+                type_and_continue();
+                
+                cout << get_character_name(MRSSTRONGHOLD) << " squeezes her fists shut tight." << endl;
+                cout << "\"Well, it must've been one of them then! Detective, I was alone in my tub!" << endl;
+                cout << "I just got out and found my husband's body! I didn't do anything else!" << endl;
+                type_and_continue();
+
+                cout << "What proof is there that " << get_character_name(MRSSTRONGHOLD) << " did more than \'nothing\'?" << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "(Type \'1\' to say she blew out her candles.)" << endl;
+                cout << "(Type \'2\' to say she washed her sink.)" << endl;
+                cout << "(Type \'3\' to say she murdered her husband.)" << endl;
+                cout << "(Type \'4\' to say she put on her pajamas.)" << endl;
+                userKeyword = get_keyword_input();
+
+                while (userKeyword.compare("2") != 0) {
+
+                    if (userKeyword.compare("1") == 0) {
+                        cout << get_character_name(CLYDE) << " nods." << endl;
+                        cout << "\"That's a great point, except for the fact that it's not.\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+                    if (userKeyword.compare("2") == 0) {
+                        break;
+                    }
+                    if (userKeyword.compare("3") == 0) {
+                        cout << get_character_name(CLYDE) << " smacks his forehead." << endl;
+                        cout << "\"Wow, Detective. I think I've been convinced.\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+                    if (userKeyword.compare("4") == 0) {
+                        cout << get_character_name(CLYDE) << " seems frustrated." << endl;
+                        cout << "\"Why does that matter?\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Is there evidence " << get_character_name(MRSSTRONGHOLD) << " did more than she's saying?" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "(Type \'1\' to say she blew out her candles.)" << endl;
+                    cout << "(Type \'2\' to say she washed her sink.)" << endl;
+                    cout << "(Type \'3\' to say she murdered her husband.)" << endl;
+                    cout << "(Type \'4\' to say she put on her pajamas.)" << endl;
+                    userKeyword = get_keyword_input();
+                }
+
+                if (numMistakes >= 5) {
+                    cout << get_character_name(CLYDE) << " scowls at you." << endl;
+                    cout << "\"Detective, you have some good points, but you also have a lot of bad ones." << endl;
+                    cout << "Come back with more real evidence.\"" << endl;
+                    type_and_continue();
+                    return;
+                }
+
+
+
+                //Empties console screen
+                system("CLS");
+                type_and_continue();
+
+                cout << "You explain that " << get_character_name(MRSSTRONGHOLD) << " washed her sink, which was still wet."<< endl;
+                cout << "She almost screams, but takes a deep breath." << endl;
+                cout << "How does that matter to the case in the slightest?" << endl;
+                type_and_continue();
+
+                cout << get_character_name(CLYDE) << " shuts her down." << endl;
+                cout << "\"Please stop talking. I... I'm actually quite interested to hear about this." << endl;
+                cout << "Detective, why does the sink matter to this case?" << endl;
+                type_and_continue();
+
+                cout << "Why was " << get_character_name(MRSSTRONGHOLD) << " using the sink?" << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "(Type \'1\' to say she cleaned off the real murder weapon)" << endl;
+                cout << "(Type \'2\' to say she cleaned some blood off of her)" << endl;
+                cout << "(Type \'3\' to say she washed snow off of some boots)" << endl;
+                cout << "(Type \'4\' to say she threw up after murdering her husband)" << endl;
+                userKeyword = get_keyword_input();
+
+                while (userKeyword.compare("2") != 0) {
+
+                    if (userKeyword.compare("1") == 0) {
+                        cout << get_character_name(CLYDE) << " rolls his eyes." << endl;
+                        cout << "\"Didn't you say the murder weapon was the kitchen knife?\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+                    if (userKeyword.compare("2") == 0) {
+                        break;
+                    }
+                    if (userKeyword.compare("3") == 0) {
+                        cout << get_character_name(CLYDE) << " sighs." << endl;
+                        cout << "\"Why would she do that?\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+                    if (userKeyword.compare("4") == 0) {
+                        cout << get_character_name(CLYDE) << " looks at you, unamused." << endl;
+                        cout << "\"You don't have any proof for that claim, do you?\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+
+                    //Empties console screen
+                    system("CLS");
+                    type_and_continue();
+
+                    cout << "Why was " << get_character_name(MRSSTRONGHOLD) << " using the sink?" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "(Type \'1\' to say she cleaned off the real murder weapon)" << endl;
+                    cout << "(Type \'2\' to say she cleaned the blood off of her)" << endl;
+                    cout << "(Type \'3\' to say she washed the snow off some boots)" << endl;
+                    cout << "(Type \'4\' to say she threw up after murdering her husband)" << endl;
+                    cout << "----------------------------------------" << endl;
+                    userKeyword = get_keyword_input();
+                }
+
+                if (numMistakes >= 5) {
+                    cout << get_character_name(CLYDE) << " sighs." << endl;
+                    cout << "\"I actually thought you were going somewhere with this." << endl;
+                    cout << "How foolish of me.\"" << endl;
+                    type_and_continue();
+                    return;
+                }
+
+
+
+                //Empties console screen
+                system("CLS");
+
+                cout << "You explain that " << get_character_name(MRSSTRONGHOLD) << " needed to wash the blood off after killing." << endl;
+                cout << "She really screams now." << endl;
+                cout << "NO YOU DIDN'T! PROOF! SHOW ME THE PROOF!" << endl;
+                type_and_continue();
+
+                cout << "What proof is there that " << get_character_name(MRSSTRONGHOLD) << " had blood on her?" << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "(Type \'1\' to say she left a bloody tissue in the golden toilet)" << endl;
+                cout << "(Type \'2\' to say she left some bloody boots in the armoire)" << endl;
+                cout << "(Type \'3\' to say she left some blood on her pajamas)" << endl;
+                cout << "(Type \'4\' to say she has blood on her right now)" << endl;
+                cout << "----------------------------------------" << endl;
+                userKeyword = get_keyword_input();
+
+                while (userKeyword.compare("3") != 0) {
+
+                    if (userKeyword.compare("1") == 0) {
+                        cout << get_character_name(CLYDE) << " goes red." << endl;
+                        cout << "\"Don't... why?\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+                    if (userKeyword.compare("2") == 0) {
+                        cout << get_character_name(CLYDE) << " looks like he's about to snap." << endl;
+                        cout << "\"No there weren't, Detective. I checked the armoires.\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+                    if (userKeyword.compare("3") == 0) {
+                        break;
+                    }
+                    if (userKeyword.compare("4") == 0) {
+                        cout << get_character_name(CLYDE) << " bites his tongue." << endl;
+                        cout << "\"That's so clearly false that I don't even know what to say.\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Why was " << get_character_name(MRSSTRONGHOLD) << " using the sink?" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "(Type \'1\' to say she cleaned off the real murder weapon)" << endl;
+                    cout << "(Type \'2\' to say she cleaned the blood off of her)" << endl;
+                    cout << "(Type \'3\' to say she washed the snow off some boots)" << endl;
+                    cout << "(Type \'4\' to say she threw up after murdering her husband)" << endl;
+                    cout << "----------------------------------------" << endl;
+                    userKeyword = get_keyword_input();
+                }
+
+                if (numMistakes >= 5) {
+                    cout << get_character_name(CLYDE) << " shakes his head." << endl;
+                    cout << "\"Detective, I think you're on the right track, but you need harder evidence.\"" << endl;
+                    type_and_continue();
+                    return;
+                }
+
+
+
+                //Empties console screen
+                system("CLS");
+
+                cout << "You show off the bloody pajamas and the room goes silent. You turn to " << get_character_name(SOUSCHEF) << "." << endl;
+                cout << "You ask her if these pajamas look like the ones she brought " << get_character_name(MRSSTRONGHOLD) << endl;
+                cout << "\"... Yes. Those look exactly like the ones I brought her.\"" << endl;
+                type_and_continue();
+
+                cout << get_character_name(MRSSTRONGHOLD) << " seems to be holding in a tidal wave of fury." << endl;
+                cout << "\"What about the footprints outside? The broken lock on the " << get_room_name(OBSERVATORY) << "?" << endl;
+                cout << "I just missed the killer as they ran for the door, and the lights turned on just as they broke through!" << endl;
+                type_and_continue();
+
+                cout << get_character_name(CLYDE) << " ponders the question." << endl;
+                cout << "\"What about it, Detective? Is this another lie?\"" << endl;
+
+                cout << "Does " << get_character_name(MRSSTRONGHOLD) << "'s story make sense?" << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "(Type \'1\' to say this part of her story is true)" << endl;
+                cout << "(Type \'2\' to say the order of events is wrong)" << endl;
+                cout << "(Type \'3\' to say she actually chased after the killer)" << endl;
+                cout << "(Type \'4\' to say the timing is wrong)" << endl;
+                cout << "----------------------------------------" << endl;
+                userKeyword = get_keyword_input();
+
+                while (userKeyword.compare("4") != 0) {
+
+                    if (userKeyword.compare("1") == 0) {
+                        cout << get_character_name(CLYDE) << " smiles." << endl;
+                        cout << "\"Oh, good... Wait, what?\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+                    if (userKeyword.compare("2") == 0) {
+                        cout << get_character_name(CLYDE) << " clears his throat." << endl;
+                        cout << "\"How is the order of events wrong, Detective? The door broke and then she screamed.\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+                    if (userKeyword.compare("3") == 0) {
+                        cout << get_character_name(CLYDE) << " shakes his head." << endl;
+                        cout << "\"That would explain the two sets of footprints, but you literally just accused her of murder.\"" << endl;
+                        cout << "No takebacksies.\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+                    if (userKeyword.compare("4") == 0) {
+                        break;
+                    }
+
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Does " << get_character_name(MRSSTRONGHOLD) << "'s story make sense?" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "(Type \'1\' to say this part of her story is true)" << endl;
+                    cout << "(Type \'2\' to say the order of events is wrong)" << endl;
+                    cout << "(Type \'3\' to say she actually chased after the killer)" << endl;
+                    cout << "(Type \'4\' to say the timing is wrong)" << endl;
+                    cout << "----------------------------------------" << endl;
+                    userKeyword = get_keyword_input();
+                }
+
+                if (numMistakes >= 5) {
+                    cout << get_character_name(CLYDE) << " pats you on the shoulder." << endl;
+                    cout << "\"Detective, you need to clear your heard for a moment and come back." << endl;
+                    cout << "I'm sure you'll figure it out soon enough.\"" << endl;
+                    type_and_continue();
+                    return;
+                }
+
+
+
+                //Empties console screen
+                system("CLS");
+
+                cout << "You turn to the Astronomer and ask when the door broke down. She thinks for a moment." << endl;
+                cout << "\"It was broken open several minutes before the power turned back on." << endl;
+                type_and_continue();
+
+                cout << get_character_name(CLYDE) << "'s eyes go wide." << endl;
+                cout << "\"Then that's a flat out lie since " << get_character_name(ASTRONOMER) << " couldn't have stabbed " << get_character_name(DRSTRONGHOLD) << "." << endl;
+                type_and_continue();
+
+                cout << get_character_name(CLYDE) << " turns to you." << endl;
+                cout << "But why? Why would she lie about that?" << endl;
+                type_and_continue();
+
+                cout << "Why did " << get_character_name(MRSSTRONGHOLD) << " lie about what time the door was broken through?" << endl;
+                cout << "----------------------------------------" << endl;
+                cout << "(Type \'1\' to say she broke it down herself)" << endl;
+                cout << "(Type \'2\' to say she got someone to break it down for her)" << endl;
+                cout << "(Type \'3\' to say she didn't want to reveal the real murderer)" << endl;
+                cout << "(Type \'4\' to say she has dementia)" << endl;
+                cout << "----------------------------------------" << endl;
+                userKeyword = get_keyword_input();
+
+                while (userKeyword.compare("1") != 0) {
+
+                    if (userKeyword.compare("1") == 0) {
+                        break;
+                    }
+                    if (userKeyword.compare("2") == 0) {
+                        cout << get_character_name(CLYDE) << " makes a face." << endl;
+                        cout << "\"Who would do that for her? That doesn't make much sense.\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+                    if (userKeyword.compare("3") == 0) {
+                        cout << get_character_name(CLYDE) << " nods." << endl;
+                        cout << "\"That would be interesting if it made any sense." << endl;
+                        cout << "She seems much too self interested to help another killer.\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+                    if (userKeyword.compare("4") == 0) {
+                        cout << get_character_name(CLYDE) << " nods." << endl;
+                        cout << "\"Ah, okay. So you have no evidence then?\"" << endl;
+                        type_and_continue();
+                        numMistakes++;
+                    }
+
+                    //Empties console screen
+                    system("CLS");
+
+                    cout << "Why did " << get_character_name(MRSSTRONGHOLD) << " lie about what time the door was broken through?" << endl;
+                    cout << "----------------------------------------" << endl;
+                    cout << "(Type \'1\' to say she broke it down herself)" << endl;
+                    cout << "(Type \'2\' to say she got someone to break it down for her)" << endl;
+                    cout << "(Type \'3\' to say she didn't want to reveal the real murderer)" << endl;
+                    cout << "(Type \'4\' to say she has dementia)" << endl;
+                    cout << "----------------------------------------" << endl;
+                    userKeyword = get_keyword_input();
+                }
+
+                //Turns true when you successfully accuse Mrs. Stronghold
+                currentUserChoices.at(ACCUSEMRSSTRONGHOLD) = true;
+
+                //Empties console screen
+                system("CLS");
+
+                cout << "You explain that " << get_character_name(MRSSTRONGHOLD) << "broke it open to make her seem innocent." << endl;
+                cout << "She seems to lose her fighting spirit." << endl;
+                cout << "\"Alright Detective, we get it. You're so incredibly smart and handsome.\"" << endl;
+                type_and_continue();
+
+                cout << get_character_name(MRSSTRONGHOLD) << " turns away, clearly upset." << endl;
+                cout << "\"You don't have to ask any further... I did everything you said I did." << endl;
+                cout << "I used the boots to go outside and smash the door open." << endl;
+                cout << "Then I went back to the bathroom and... freshened up.\"" << endl;
+                type_and_continue();
+
+                cout << "But then " << get_character_name(MRSSTRONGHOLD) << " seems to spruce up." << endl;
+                cout << "\"However, there is another killer, Detective. I'm sure of it." << endl;
+                type_and_continue();
+
+                cout << "The suspects all begin to talk over each other at once." << endl;
+                cout << get_character_name(MRSSTRONGHOLD) << " grins and cuts them all off." << endl;
+                cout << "I don't know who it is, but I have a feeling you agree with me, Detective." << endl;
+                type_and_continue();
+
+                //Empties console screen
+                system("CLS");
+
+                cout << get_character_name(MRSSTRONGHOLD) << " looks at you with a genuine frown." << endl;
+                cout << "There are too many questions left to answer." << endl;
+                if (clueList.at(SNOWYFOOTPRINTS).compare("???") != 0) {
+                    cout << "Why are there two sets of footprints?" << endl;
+                }
+                if (clueList.at(GLASSSHARDS).compare("???") != 0) {
+                    cout << "Who put glass shards in the garbage bin?" << endl;
+                }
+                if (clueList.at(CUTNIGHTSHADE).compare("???") != 0) {
+                    cout << "Why did someone cut the nightshades?" << endl;
+                }
+                if (clueList.at(STONEBUTTON).compare("???") != 0) {
+                    cout << "How did my husband's button get ripped off?" << endl;
+                }
+                cout << "You must've wondered these things at some point, right?" << endl;
+                type_and_continue();
+
+                cout << get_character_name(MRSSTRONGHOLD) << " writes quickly writes something down." << endl;
+                cout << "Look, I'll give you access to my safe. Use its contents as you please." << endl;
+                cout << "Just please, don't let me go to prison like this." << endl;
+                cout << "I'm not the only sick mind here. The other one needs to be punished." << endl;
+
+                type_and_continue();
+
+                cout << "Will you take " << get_character_name(MRSSTRONGHOLD) << "'s offer?" << endl;
+                cout << "(Type \'yes\' to take her offer.)" << endl;
+                cout << "(Type \'no\' to ignore her.)" << endl;
+                cout << "----------------------------------------" << endl;
+
+                while ((userKeyword.compare("yes") != 0)
+                    && (userKeyword.compare("no") != 0)) {
+
+                    if (userKeyword.compare("yes") == 0) {
+                        cout << get_character_name(MRSSTRONGHOLD) << " smiles at you." << endl;
+                        cout << "\"You won't regret it. Find them quickly so we may both burn in hell together.\"" << endl;
+                        return;
+                    }
+                    if (userKeyword.compare("no") == 0) {
+                        cout << get_character_name(MRSSTRONGHOLD) << " starts to panic." << endl;
+                        cout << "\"No. Wait, no! You can't do this! Don't you realize what you're doing?\"" << endl;
+                        type_and_continue();
+
+                        cout << "She wails as you begin to arrest her." << endl;
+                        cout << "\"What do you want, money? Power? Please, I know there's another killer!\"" << endl;
+                        type_and_continue();
+
+                        cout << "You begin to lead her out and she glares at the other suspects." << endl;
+                        cout << "\"You maniacs! Which one of you tried to kill my husband?\"" << endl;
+                        type_and_continue();
+                        
+                        cout << "As she slides into the police car, she begins to whimper." << endl;
+                        cout << "\"I don't... how... how could you let them get away?\"" << endl;
+
+                        cout << "BAD ENDING: ONE KILLER IS GOOD ENOUGH" << endl;
+                        type_and_continue();
+
+                        exit(0);
+                    }
+                }
+            }
+            //Accuses The Wine Crafter
+            if (userKeyword.compare("4") == 0) {
+                //Empties console screen
+                system("CLS");
+
+                cout << get_character_name(WINECRAFTER) << " blinks, clearly stunned." << endl;
+                cout << "\"Detective, are you an idiot?\"" << endl;
+                type_and_continue();
+
+                cout << "He grinds his teeth." << endl;
+                cout << "\"You're the most idiotic man I've ever met in my life." << endl;
+                cout << "How did I murder " << get_character_name(WINECRAFTER) << ", hm?\"" << endl;
+                type_and_continue();
+
+                cout << "You put the handcuffs around " << get_character_name(BUTLER) << "'s wrists as he struggles." << endl;
+                cout << "\"Get off me! I didn't do it!" << endl;
+                cout << "Why are you doing this to me? I've done nothing!" << endl;
+
+                cout << "You force him in the back of the car and he slumps back in his seat, defeated." << endl;
+                cout << "I hope the murderer kills you next, you ignorant fool." << endl;
+
+                cout << "\nBAD ENDING: INCORRECT ACCUSATION" << endl;
+                type_and_continue();
+
+                exit(0);
+            }
+            //Accuses The Astronomer
+            if (userKeyword.compare("5") == 0) {
+                //Empties console screen
+                system("CLS");
+
+                cout << get_character_name(ASTRONOMER) << " begins to tear up." << endl;
+                cout << "\"Detective. I thought you'd come through for " << get_character_name(DRSTRONGHOLD) << "..." << endl;
+                cout << "I guess I was wrong.\"" << endl;
+                type_and_continue();
+
+                cout << "She wipes her tears and gets in the handcuffs willingly." << endl;
+                cout << "\"I suppose you need to take someone away for this crime." << endl;
+                cout << "I guess it's better me than any other innocent guest at this estate.\"" << endl;
+                type_and_continue();
+
+                cout << "As you leave the mansion, she looks at the stars above whilst tears run down her face." << endl;
+                cout << "\"Detective, did I ever tell you " << get_character_name(DRSTRONGHOLD) << "'s favorite planet?" << endl;
+                cout << "It was Saturn... try to remember that, Detective. Please look at it sometime in my place." << endl;
+                type_and_continue();
+
+                cout << "She weeps as you set her down in the car." << endl;
+                cout << "\"But I'm telling you, Detective. You're wrong about me. I didn't do a thing." << endl;
+                cout << "It's okay though... I'm not upset... Just find the real murderer next time.\"" << endl;
+
+                cout << "\nBAD ENDING: INCORRECT ACCUSATION" << endl;
+                type_and_continue();
+
+                exit(0);
+            }
+
+            if ((userKeyword.compare("clyde") == 0)
+                || (userKeyword.compare("pendleton") == 0)) {
+                //Empties console screen
+                system("CLS");
+
+                cout << get_character_name(CLYDE) << " looks at you in disbelief." << endl;
+                cout << "\"You're fired.\"" << endl;
+
+                cout << "\nBAD ENDING: YOU ACCUSED YOUR BOSS OF MURDER" << endl;
+                type_and_continue();
+
+                exit(0);
+            }
+
+            if ((userKeyword.compare("mud") == 0)
+                || (userKeyword.compare("man") == 0)) {
+                //Empties console screen
+                system("CLS");
+
+                cout << "Everyone gasps as you say Mud Man's name." << endl;
+                type_and_continue();
+
+                cout << "\n" << get_character_name(BUTLER) << " scoffs at you." << endl;
+                cout << "It can't be Mud Man! I've known him since childhood!" << endl;
+                type_and_continue();
+
+                cout << "\n" << get_character_name(SOUSCHEF) << " hisses." << endl;
+                cout << "Accusing Mud Man is like accusing all of us! We will not stand for this!" << endl;
+                type_and_continue();
+
+                cout << "\n" << get_character_name(MRSSTRONGHOLD) << " sighs." << endl;
+                cout << "I'm furious even though I killed him! How could you accuse Mud Man over ME?" << endl;
+                type_and_continue();
+
+                cout << "\n" << get_character_name(WINECRAFTER) << " screeches." << endl;
+                cout << "MUD! MUDDD!" << endl;
+                cout << get_character_name(ASTRONOMER) << " slaps you across the face." << endl;
+                type_and_continue();
+
+                cout << "\n" << get_character_name(MUDMAN) << " furiously runs into the room at the sound of his name." << endl;
+                cout << "MUD! MUD MUD? MUUUUUD!" << endl;
+                type_and_continue();
+
+                //Empties console screen
+                system("CLS");
+                cout << "Faster than you even realize, Mud Man begins tying you up with a rope made of mud." << endl;
+                cout << "Then, he drags you all the way to the boiler room." << endl;
+                type_and_continue();
+
+                cout << "In the background, you hear the chanting of all the guests at once." << endl;
+                cout << "MUD! MUD! MUD! KILL THE NAYSAYER! SACRIFICE THE WATER MAN!" << endl;
+                type_and_continue();
+
+                cout << "And as you struggle, Mud Man shoves you into the mud, and slowly but surely, everything becomes mud." << endl;
+
+                cout << "\nTRUE ENDING: YOU HAVE DIED IN A PIT OF MUD" << endl;
+                type_and_continue();
+
+                exit(0);
+            }
+
+            if (userKeyword.compare("body") == 0) {
+                //Empties console screen
+                system("CLS");
+
+                cout << "You hear clapping from behind you." << endl;
+                cout << "\"Well done, Detective." << endl;
+                cout << "You figured it out.\"" << endl;
+                type_and_continue();
+
+                cout << "\nThe corpse of " << get_character_name(DRSTRONGHOLD) << "appears in the " << get_room_name(STAIRWELL) << " doorway." << endl;
+                cout << "\"This was all just a training simulation set up by " << get_character_name(CLYDE) << "." << endl;
+                cout << "I was never actually dead. You couldn't tell because I'm such a great actor.\n" << endl;
+                type_and_continue();
+
+                cout << "\n" << get_character_name(CLYDE, INFORMAL) << " smiles at you with pride." << endl;
+                cout << "\"I'm glad you were so attentive, Detective." << endl;
+                cout << "As we all know, people don't die in real life.\"" << endl;
+                type_and_continue();
+
+                cout << "\n" << get_character_name(CLYDE, INFORMAL) << " puts his arm around your shoulder." << endl;
+                cout << "\"Now then, let's go get some ice cream!\"" << endl;
+                cout << "Everyone cheers and you all head out to get some delicious sweet treats." << endl;
+
+                cout << "GOOD ENDING: YOU GOT ICE CREAM" << endl;
+                type_and_continue();
+
+                exit(0);
+            }
+
+            print_room_title(BALLROOM);
+            cout << "You gather up the houseguests in the " << get_room_name(BALLROOM) << " to accuse one of them." << endl;
+            cout << "As the suspects stand around, bewildered, " << get_character_name(MRSSTRONGHOLD) << " clears her throat." << endl;
+            cout << "\"Well, Detective, have you finally found our murderer? If so, I'll give you the honor of revealing their identity.\"" << endl;
+            type_and_continue();
+
+            cout << "\nIt's time to accuse the murderer. Who is it?" << endl;
+            cout << "Is it " << get_character_name(BUTLER) << ", the Butler " << get_character_name(DRSTRONGHOLD) << " trusted to maintain his image?" << endl;
+            cout << "Is it " << get_character_name(SOUSCHEF) << ", the Sous-" << endl;
+            cout << get_character_name(SOUSCHEF) << " scowls at you." << endl;
+            cout << "I mean, Head Chef that " << get_character_name(DRSTRONGHOLD) << " counted on to maintain his exuberant quality of life?" << endl;
+            cout << "Is it " << get_character_name(MRSSTRONGHOLD) << ", the recently made widow who " << get_character_name(DRSTRONGHOLD) << " loved for so long?" << endl;
+            cout << "Is it " << get_character_name(WINECRAFTER) << ", the Wine Crafter " << get_character_name(DRSTRONGHOLD) << " made a business with?" << endl;
+            cout << "Or, is it " << get_character_name(ASTRONOMER) << ", the Astronomer " << get_character_name(DRSTRONGHOLD) << " made his greatest scientific work with?" << endl;
+            type_and_continue();
+
+            cout << "\nEnter Your Answer: " << endl;
+            cout << "(Type \'1\' to accuse The Butler.)" << endl;
+            cout << "(Type \'2\' to accuse The Sous Chef.)" << endl;
+            cout << "(Type \'3\' to accuse The Widow.)" << endl;
+            cout << "(Type \'4\' to accuse The Wine Crafter.)" << endl;
+            cout << "(Type \'5\' to accuse The Astronomer.)" << endl;
+            cout << "----------------------------------------" << endl;
+            userKeyword = get_keyword_input();
+
+        }
+    }
+    else if (count_clues(clueList) > 19) {
+        //Empties console screen
+        system("CLS");
+
+        type_and_continue();
+        //Empties console screen
+        system("CLS");
+
+        print_room_title(BALLROOM);
+        cout << "You gather up the houseguests in the " << get_room_name(BALLROOM) << " again." << endl;
+        cout << "The suspects look more sullen now." << endl;
+        cout << get_character_name(MRSSTRONGHOLD) << " sighs at you." << endl;
+        cout << "\"Detective, just spit it out already. Who killed my husband before I could?\"" << endl;
+        cout << "Who should be sitting in that car beside me?" << endl;
+        type_and_continue();
+
+        cout << "\nIt's time to accuse the second murderer. Who is it?" << endl;
+        cout << "Is it the Butler?" << endl;
+        cout << "Is it the Sous Chef?" << endl;
+        cout << "Is it the Widow?" << endl;
+        cout << "Is it the Wine Crafter?" << endl;
+        cout << "Or, is it the Astronomer?" << endl;
+        type_and_continue();
+
+        cout << "\nEnter Your Final Answer: " << endl;
+        cout << "(Type \'1\' to accuse The Butler.)" << endl;
+        cout << "(Type \'2\' to accuse The Sous Chef.)" << endl;
+        cout << "(Type \'3\' to accuse The Widow.)" << endl;
+        cout << "(Type \'4\' to accuse The Wine Crafter.)" << endl;
+        cout << "(Type \'5\' to accuse The Astronomer.)" << endl;
+        cout << "----------------------------------------" << endl;
+        userKeyword = get_keyword_input();
+
+        while ((userKeyword.compare("1") != 0)
+            && (userKeyword.compare("2") != 0)
+            && (userKeyword.compare("3") != 0)
+            && (userKeyword.compare("4") != 0)
+            && (userKeyword.compare("5") != 0)) {
+
+            //Accuses The Butler
+            if (userKeyword.compare("1") == 0) {
+                //Empties console screen
+                system("CLS");
+
+                cout << get_character_name(BUTLER) << "'s jaw drops." << endl;
+                cout << "\"What? Detective... I've been such a help to you.\"" << endl;
+                type_and_continue();
+
+                cout << "He sighs and stares you straight in the eyes." << endl;
+                cout << "\"Fine, Detective. Lock me up for a crime I didn't commit." << endl;
+                cout << "But you should be disappointed in yourself. You couldn't even solve your first case.\"" << endl;
+                type_and_continue();
+
+                cout << "You put the handcuffs around " << get_character_name(BUTLER) << "'s wrists hesitantly." << endl;
+                cout << "But you're not sure you guessed correctly." << endl;
+                cout << "As you put him into the back of your police car, you feel a great sense of dread overcome you." << endl;
+
+                cout << "\nBAD ENDING: INCORRECT SECOND ACCUSATION" << endl;
+                type_and_continue();
+
+                exit(0);
+            }
+            //Accuses The Sous Chef
+            if (userKeyword.compare("2") == 0) {
+                //Empties console screen
+                system("CLS");
+
+                cout << get_character_name(SOUSCHEF) << " giggles." << endl;
+                cout << "\"Aw, found me out?\"" << endl;
+                type_and_continue();
+
+                cout << "She brushes her hair to the side." << endl;
+                cout << "\"I'll admit it, Detective. I killed " << get_character_name(DRSTRONGHOLD) << "." << endl;
+                cout << "I cut some Nightshades from the " << get_room_name(GREENHOUSE) << " and poisoned him with his wine.\"" << endl;
+                type_and_continue();
+
+                cout << "You put the handcuffs around her wrists tightly." << endl;
+                cout << "\"Well, it's been a pleasure Detective. Take me away.\"" << endl;
+
+                cout << "\nTRUE ENDING: SUCCESSFULLY GUESSED BOTH KILLERS" << endl;
+                type_and_continue();
+
+            }
+            //Accuses The Widow
+            if (userKeyword.compare("3") == 0) {
+                //Empties console screen
+                system("CLS");
+
+                cout << get_character_name(MRSSTRONGHOLD) << " furrows her brow." << endl;
+                cout << "What? This doesn't even make sense." << endl;
+                type_and_continue();
+
+                cout << "You put two sets of handcuffs on her since she's a double murderer. She groans at you." << endl;
+                cout << "\"I shouldn't have to say this to you, but I didn't murder my husband twice?\"" << endl;
+                type_and_continue();
+
+                cout << "You put her in the police car, then pull her back out, and then put her in again for good measure." << endl;
+                cout << "\"I hate you.\"" << endl;
+
+                cout << "\nBAD ENDING: DOUBLE MURDERER" << endl;
+                type_and_continue();
+
+                exit(0);
+            }
+            //Accuses The Wine Crafter
+            if (userKeyword.compare("4") == 0) {
+                //Empties console screen
+                system("CLS");
+
+                cout << get_character_name(WINECRAFTER) << " blinks, clearly stunned." << endl;
+                cout << "\"Detective... you're an ignorant fool.\"" << endl;
+                type_and_continue();
+
+                cout << "He grinds his teeth as you put his handcuffs on. He glares at " << get_character_name(MRSSTRONGHOLD) << "." << endl;
+                cout << "\"I can't believe I'm getting the same treatment as a cold blooded murderer.\"" << endl;
+                type_and_continue();
+
+                cout << get_character_name(MRSSTRONGHOLD) << " laughs in response." << endl;
+                cout << "\"You should be arrested for your terrible wine alone.\"" << endl;
+                type_and_continue();
+
+                cout << get_character_name(WINECRAFTER, INFORMAL) << " takes a deep breath as you lead them both to the car." << endl;
+                cout << "I wish you had been poisoned instead." << endl;
+                type_and_continue();
+
+                cout << get_character_name(MRSSTRONGHOLD) << " smiles coldly at him." << endl;
+                cout << "What a shame I wasn't." << endl;
+
+                cout << "\nBAD ENDING: INCORRECT SECOND ACCUSATION" << endl;
+                type_and_continue();
+
+                exit(0);
+            }
+            //Accuses The Astronomer
+            if (userKeyword.compare("5") == 0) {
+                //Empties console screen
+                system("CLS");
+
+                cout << get_character_name(ASTRONOMER) << " begins to tear up." << endl;
+                cout << "\"Detective. I thought you'd come through for " << get_character_name(DRSTRONGHOLD) << "..." << endl;
+                cout << "I guess I was wrong.\"" << endl;
+                type_and_continue();
+
+                cout << "\n" << "She wipes her tears and gets in the handcuffs as " << get_character_name(CLYDE) << "arrests" << get_character_name(MRSSTRONGHOLD) << "." << endl;
+                cout << "\"I suppose even if there's two killers, you've at least found one.\"" << endl;
+                type_and_continue();
+
+                cout << "\n" << "The Astronomer looks to " << get_character_name(MRSSTRONGHOLD) << "." << endl;
+                cout << "\"I don't know how you could do something like that to him, " << get_character_name(MRSSTRONGHOLD, INFORMAL) << ".\"" << endl;
+                type_and_continue();
+
+                cout << "\n" << get_character_name(MRSSTRONGHOLD) << " frowns at " << get_character_name(ASTRONOMER) << "." << endl;
+                cout << "\"You should've had the guts to kill him yourself. He took too much from you, dear.\"" << endl;
+                type_and_continue();
+
+                cout << "As you step outside," << get_character_name(ASTRONOMER, INFORMAL) << " looks at the stars with tears." << endl;
+                cout << "\"" << get_character_name(MRSSTRONGHOLD, INFORMAL) << ", did you ever love him?\"" << endl;
+                type_and_continue();
+
+                cout << "\n" << get_character_name(MRSSTRONGHOLD) << " chuckles." << endl;
+                cout << "\"As much as I could. But, some things don't work out, dear. Sometimes you want to watch the world burn.\"" << endl;
+
+                cout << "\nBAD ENDING: INCORRECT SECOND ACCUSATION" << endl;
+                type_and_continue();
+
+                exit(0);
+            }
+
+            print_room_title(BALLROOM);
+            cout << "You gather up the houseguests in the " << get_room_name(BALLROOM) << " again." << endl;
+            cout << "The suspects look more sullen now." << endl;
+            cout << get_character_name(MRSSTRONGHOLD) << " sighs at you." << endl;
+            cout << "\"Detective, just spit it out already. Who killed my husband before I could?\"" << endl;
+            cout << "Who should be sitting in that car beside me?" << endl;
+            type_and_continue();
+
+            cout << "\nIt's time to accuse the second murderer. Who is it?" << endl;
+            cout << "Is it the Butler?" << endl;
+            cout << "Is it the Sous Chef?" << endl;
+            cout << "Is it the Widow?" << endl;
+            cout << "Is it the Wine Crafter?" << endl;
+            cout << "Or, is it the Astronomer?" << endl;
+            type_and_continue();
+
+            cout << "\nEnter Your Final Answer: " << endl;
+            cout << "(Type \'1\' to accuse The Butler.)" << endl;
+            cout << "(Type \'2\' to accuse The Sous Chef.)" << endl;
+            cout << "(Type \'3\' to accuse The Widow.)" << endl;
+            cout << "(Type \'4\' to accuse The Wine Crafter.)" << endl;
+            cout << "(Type \'5\' to accuse The Astronomer.)" << endl;
+            cout << "----------------------------------------" << endl;
+            userKeyword = get_keyword_input();
+        }
+    }
+    else {
+        //Empties console screen
+        system("CLS");
+        cout << "Mudman says: \"You broke the game dumbbbbbbo! IDIOT! MUDUDDHUUUU\"" << endl;
+    }
 }
     
 //Describes current room, and may change description based on user choices
@@ -930,8 +1954,6 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices, vector<string>
         cout << "The " << get_room_name(OFFICE) << " is covered in paperwork." << endl;
         cout << "Velvet curtains line the left and right walls and a rotating bookshelf hides in the corner." << endl;
         cout << "In the middle of the room, light radiates from a crescent moon shaped lamp sitting on a large oak desk." << endl;
-        cout << "Looking in its drawers you find some interesting knick knacks, but your attention is stolen soon after." << endl;
-        cout << "In the victim's bottom drawer there is a small safe. You'll need a four digit code to open it." << endl;
         break;
 
     case 3:
@@ -1071,14 +2093,6 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
     print_keyword_request(roomNum);
     string userKeyword = get_keyword_input();
 
-    //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
-    if ((userKeyword.compare("leave") != 0)
-        && (userKeyword.compare("back") != 0)
-        && (userKeyword.compare("close") != 0)
-        && (userKeyword.compare("stop") != 0)) {
-        print_input(userKeyword);
-    }
-
     //Prints descriptions of object within current room if user keyword matches item name
     switch (roomNum) {
     case 0:
@@ -1148,16 +2162,17 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
                         cout << "----------------------------------------" << endl;
                         cout << "A pair of silver handcuffs." << endl;
 
-                        if (count_clues(clueList) >= 10 || count_clues(clueList) <= 19) {
+                        if (count_clues(clueList) >= 17 || count_clues(clueList) <= 19) {
                             type_and_continue();
                             ending(currentUserChoices, clueList);
                         }
                         else if (count_clues(clueList) > 19) {
-                            roomNum = -1;
+                            type_and_continue();
+                            ending(currentUserChoices, clueList);
                             break;
                         }
                         else {
-                            cout << "You need at least ten clues to accuse a suspect." << endl;
+                            cout << "You need at least 17 clues to accuse a suspect." << endl;
                             type_and_continue();
                         }
                         
@@ -1247,7 +2262,8 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
         if ((userKeyword.compare("sparkling") == 0)
             || (userKeyword.compare("vinyl") == 0)
-            || (userKeyword.compare("floor") == 0)) {
+            || (userKeyword.compare("floor") == 0)
+            || (userKeyword.compare("dance") == 0)) {
             //Empties console screen
             system("CLS");
 
@@ -2456,7 +3472,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
             cout << "Victorian Era Armoires: " << endl;
             cout << "----------------------------------------" << endl;
-            cout << "It seems " << get_character_name(DRSTRONGHOLD) << " and " << get_character_name(MRSSTRONGHOLD) << "both had their own armoires." << endl;
+            cout << "It seems " << get_character_name(DRSTRONGHOLD) << " and " << get_character_name(MRSSTRONGHOLD) << " both had their own armoires." << endl;
             cout << get_character_name(DRSTRONGHOLD) << "'s is sturdy and made of spruce wood." << endl;
             cout << get_character_name(MRSSTRONGHOLD) << "'s is lighter and made of birch wood." << endl;
 
@@ -2575,7 +3591,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
             cout << "Golden Toilet: " << endl;
             cout << "----------------------------------------" << endl;
             cout << "If you stole this toilet you could probably buy yourself a new house." << endl;
-            cout << "If only " << get_character_name(CLYDE, INFORMAL) << "was a little less caring for the rules." << endl;
+            cout << "If only " << get_character_name(CLYDE, INFORMAL) << " was a little less caring for the rules." << endl;
         }
         break;
 
@@ -2617,6 +3633,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
             cout << "Snowy Footprints: " << endl;
             cout << "----------------------------------------" << endl;
             cout << "There seems to be two sets of footprints in the snow here." << endl;
+            cout << "Both of them lead from the " << get_room_name(MASTERBEDROOM) << " to the " << get_room_name(OBSERVATORY) << "." << endl;
             cout << "One set of prints was made by a large pair of boots, and the other a set of dress shoes." << endl;
             cout << "The size of the dress shoes seems relatively normal, so it's hard to say whether a man or woman wore them." << endl;
 
@@ -2662,7 +3679,8 @@ int leave_room(int roomNum) {
     switch (roomNum) {
 
     case 0:
-        if (userKeyword.compare("ballroom") == 0) {
+        if ((userKeyword.compare("ballroom") == 0)
+            || (userKeyword.compare("bl") == 0)) {
             newRoomNum = 1;
         }
         break;
@@ -2670,151 +3688,182 @@ int leave_room(int roomNum) {
     case 1:
         if ((userKeyword.compare("trophy hall") == 0)
             || (userKeyword.compare("trophy") == 0)
-            || (userKeyword.compare("hall") == 0)) {
+            || (userKeyword.compare("hall") == 0)
+            || (userKeyword.compare("th") == 0)) {
             newRoomNum = 0;
         }
-        if (userKeyword.compare("office") == 0) {
+        if ((userKeyword.compare("office") == 0)
+            || (userKeyword.compare("of") == 0)) {
             newRoomNum = 2;
         }
         if ((userKeyword.compare("servant's") == 0)
             || (userKeyword.compare("servants") == 0)
             || (userKeyword.compare("servant") == 0)
             || (userKeyword.compare("quarters") == 0)
-            || (userKeyword.compare("quarter") == 0)) {
+            || (userKeyword.compare("quarter") == 0)
+            || (userKeyword.compare("sq") == 0)) {
             newRoomNum = 3;
         }
-        if (userKeyword.compare("library") == 0) {
+        if ((userKeyword.compare("library") == 0)
+            || (userKeyword.compare("lb") == 0)) {
             newRoomNum = 4;
         }
-        if (userKeyword.compare("kitchen") == 0) {
+        if ((userKeyword.compare("kitchen") == 0)
+            || (userKeyword.compare("kt") == 0)) {
             newRoomNum = 5;
         }
         if ((userKeyword.compare("dining room") == 0)
             || (userKeyword.compare("dining") == 0)
-            || (userKeyword.compare("room") == 0)) {
+            || (userKeyword.compare("room") == 0)
+            || (userKeyword.compare("dr") == 0)) {
             newRoomNum = 6;
         }
         if ((userKeyword.compare("greenhouse") == 0)
             || (userKeyword.compare("green") == 0)
-            || (userKeyword.compare("house") == 0)) {
+            || (userKeyword.compare("house") == 0)
+            || (userKeyword.compare("gh") == 0)) {
             newRoomNum = 7;
         }
         if ((userKeyword.compare("stairwell") == 0)
             || (userKeyword.compare("stair") == 0)
             || (userKeyword.compare("well") == 0)
-            || (userKeyword.compare("stairs") == 0)) {
+            || (userKeyword.compare("stairs") == 0)
+            || (userKeyword.compare("st") == 0)) {
             newRoomNum = 8;
         }
         break;
 
     case 2:
-        if (userKeyword.compare("ballroom") == 0) {
+        if ((userKeyword.compare("ballroom") == 0)
+            || (userKeyword.compare("bl") == 0)) {
             newRoomNum = 1;
         }
         if ((userKeyword.compare("servant's") == 0)
             || (userKeyword.compare("servants") == 0)
             || (userKeyword.compare("servant") == 0)
             || (userKeyword.compare("quarters") == 0)
-            || (userKeyword.compare("quarter") == 0)) {
+            || (userKeyword.compare("quarter") == 0)
+            || (userKeyword.compare("sq") == 0)) {
             newRoomNum = 3;
         }
-        if (userKeyword.compare("library") == 0) {
+        if ((userKeyword.compare("library") == 0)
+            || (userKeyword.compare("lb") == 0)) {
             newRoomNum = 4;
         }
         break;
 
     case 3:
-        if (userKeyword.compare("ballroom") == 0) {
+        if ((userKeyword.compare("ballroom") == 0)
+            || (userKeyword.compare("bl") == 0)) {
             newRoomNum = 1;
         }
-        if (userKeyword.compare("office") == 0) {
+        if ((userKeyword.compare("office") == 0)
+            || (userKeyword.compare("of") == 0)) {
             newRoomNum = 2;
         }
-        if (userKeyword.compare("library") == 0) {
+        if ((userKeyword.compare("library") == 0)
+            || (userKeyword.compare("lb") == 0)) {
             newRoomNum = 4;
         }
         break;
 
     case 4:
-        if (userKeyword.compare("ballroom") == 0) {
+        if ((userKeyword.compare("ballroom") == 0)
+            || (userKeyword.compare("bl") == 0)) {
             newRoomNum = 1;
         }
-        if (userKeyword.compare("office") == 0) {
+        if ((userKeyword.compare("office") == 0)
+            || (userKeyword.compare("of") == 0)) {
             newRoomNum = 2;
         }
         if ((userKeyword.compare("servant's") == 0)
             || (userKeyword.compare("servants") == 0)
             || (userKeyword.compare("servant") == 0)
             || (userKeyword.compare("quarters") == 0)
-            || (userKeyword.compare("quarter") == 0)) {
+            || (userKeyword.compare("quarter") == 0)
+            || (userKeyword.compare("sq") == 0)) {
             newRoomNum = 3;
         }
         break;
 
     case 5:
-        if (userKeyword.compare("ballroom") == 0) {
+        if ((userKeyword.compare("ballroom") == 0)
+            || (userKeyword.compare("bl") == 0)) {
             newRoomNum = 1;
         }
         if ((userKeyword.compare("dining room") == 0)
             || (userKeyword.compare("dining") == 0)
-            || (userKeyword.compare("room") == 0)) {
+            || (userKeyword.compare("room") == 0)
+            || (userKeyword.compare("dr") == 0)) {
             newRoomNum = 6;
         }
         if ((userKeyword.compare("greenhouse") == 0)
             || (userKeyword.compare("green") == 0)
-            || (userKeyword.compare("house") == 0)) {
+            || (userKeyword.compare("house") == 0)
+            || (userKeyword.compare("gh") == 0)) {
             newRoomNum = 7;
         }
         break;
 
     case 6:
-        if (userKeyword.compare("ballroom") == 0) {
+        if ((userKeyword.compare("ballroom") == 0)
+            || (userKeyword.compare("bl") == 0)) {
             newRoomNum = 1;
         }
-        if (userKeyword.compare("kitchen") == 0) {
+        if ((userKeyword.compare("kitchen") == 0)
+            || (userKeyword.compare("kt") == 0)) {
             newRoomNum = 5;
         }
         if ((userKeyword.compare("greenhouse") == 0)
             || (userKeyword.compare("green") == 0)
-            || (userKeyword.compare("house") == 0)) {
+            || (userKeyword.compare("house") == 0)
+            || (userKeyword.compare("gh") == 0)) {
             newRoomNum = 7;
         }
         break;
 
     case 7:
-        if (userKeyword.compare("ballroom") == 0) {
+        if ((userKeyword.compare("ballroom") == 0)
+            || (userKeyword.compare("bl") == 0)) {
             newRoomNum = 1;
         }
-        if (userKeyword.compare("kitchen") == 0) {
+        if ((userKeyword.compare("kitchen") == 0)
+            || (userKeyword.compare("kt") == 0)) {
             newRoomNum = 5;
         }
         if ((userKeyword.compare("dining room") == 0)
             || (userKeyword.compare("dining") == 0)
-            || (userKeyword.compare("room") == 0)) {
+            || (userKeyword.compare("room") == 0)
+            || (userKeyword.compare("dr") == 0)) {
             newRoomNum = 6;
         }
         break;
 
     case 8:
-        if (userKeyword.compare("ballroom") == 0) {
+        if ((userKeyword.compare("ballroom") == 0)
+            || (userKeyword.compare("bl") == 0)) {
             newRoomNum = 1;
         }
-        if (userKeyword.compare("wine cellar") == 0
-            || userKeyword.compare("wine") == 0
-            || userKeyword.compare("cellar") == 0) {
+        if ((userKeyword.compare("wine cellar") == 0)
+            || (userKeyword.compare("wine") == 0)
+            || (userKeyword.compare("cellar") == 0)
+            || (userKeyword.compare("wc") == 0)) {
             newRoomNum = 9;
         }
-        if (userKeyword.compare("boiler room") == 0
-            || userKeyword.compare("boiler") == 0
-            || userKeyword.compare("room") == 0) {
+        if ((userKeyword.compare("boiler room") == 0)
+            || (userKeyword.compare("boiler") == 0)
+            || (userKeyword.compare("room") == 0)
+            || (userKeyword.compare("br") == 0)) {
             newRoomNum = 10;
         }
-        if (userKeyword.compare("observatory") == 0) {
+        if ((userKeyword.compare("observatory") == 0)
+            || (userKeyword.compare("ob") == 0)) {
             newRoomNum = 11;
         }
-        if (userKeyword.compare("master bedroom") == 0
-            || userKeyword.compare("master") == 0
-            || userKeyword.compare("bedroom") == 0) {
+        if ((userKeyword.compare("master bedroom") == 0)
+            || (userKeyword.compare("master") == 0)
+            || (userKeyword.compare("bedroom") == 0)
+            || (userKeyword.compare("mb") == 0)) {
             newRoomNum = 12;
         }
         break;
@@ -2823,12 +3872,14 @@ int leave_room(int roomNum) {
         if ((userKeyword.compare("stairwell") == 0)
             || (userKeyword.compare("stair") == 0)
             || (userKeyword.compare("well") == 0)
-            || (userKeyword.compare("stairs") == 0)) {
+            || (userKeyword.compare("stairs") == 0)
+            || (userKeyword.compare("st") == 0)) {
             newRoomNum = 8;
         }
-        if (userKeyword.compare("boiler room") == 0
-            || userKeyword.compare("boiler") == 0
-            || userKeyword.compare("room") == 0) {
+        if ((userKeyword.compare("boiler room") == 0)
+            || (userKeyword.compare("boiler") == 0)
+            || (userKeyword.compare("room") == 0)
+            || (userKeyword.compare("br") == 0)) {
             newRoomNum = 10;
         }
         break;
@@ -2837,12 +3888,14 @@ int leave_room(int roomNum) {
         if ((userKeyword.compare("stairwell") == 0)
             || (userKeyword.compare("stair") == 0)
             || (userKeyword.compare("well") == 0)
-            || (userKeyword.compare("stairs") == 0)) {
+            || (userKeyword.compare("stairs") == 0)
+            || (userKeyword.compare("st") == 0)) {
             newRoomNum = 8;
         }
-        if (userKeyword.compare("wine cellar") == 0
-            || userKeyword.compare("wine") == 0
-            || userKeyword.compare("cellar") == 0) {
+        if ((userKeyword.compare("wine cellar") == 0)
+            || (userKeyword.compare("wine") == 0)
+            || (userKeyword.compare("cellar") == 0)
+            || (userKeyword.compare("wc") == 0)) {
             newRoomNum = 9;
         }
         break;
@@ -2851,15 +3904,18 @@ int leave_room(int roomNum) {
         if ((userKeyword.compare("stairwell") == 0)
             || (userKeyword.compare("stair") == 0)
             || (userKeyword.compare("well") == 0)
-            || (userKeyword.compare("stairs") == 0)) {
+            || (userKeyword.compare("stairs") == 0)
+            || (userKeyword.compare("st") == 0)) {
             newRoomNum = 8;
         }
-        if (userKeyword.compare("master bedroom") == 0
-            || userKeyword.compare("master") == 0
-            || userKeyword.compare("bedroom") == 0) {
+        if ((userKeyword.compare("master bedroom") == 0)
+            || (userKeyword.compare("master") == 0)
+            || (userKeyword.compare("bedroom") == 0)
+            || (userKeyword.compare("mb") == 0)) {
             newRoomNum = 12;
         }
-        if (userKeyword.compare("balcony") == 0) {
+        if ((userKeyword.compare("balcony") == 0)
+            || (userKeyword.compare("ba") == 0)) {
             newRoomNum = 13;
         }
         break;
@@ -2868,24 +3924,29 @@ int leave_room(int roomNum) {
         if ((userKeyword.compare("stairwell") == 0)
             || (userKeyword.compare("stair") == 0)
             || (userKeyword.compare("well") == 0)
-            || (userKeyword.compare("stairs") == 0)) {
+            || (userKeyword.compare("stairs") == 0)
+            || (userKeyword.compare("st") == 0)) {
             newRoomNum = 8;
         }
-        if (userKeyword.compare("observatory") == 0) {
+        if ((userKeyword.compare("observatory") == 0)
+            || (userKeyword.compare("ob") == 0)) {
             newRoomNum = 11;
         }
-        if (userKeyword.compare("balcony") == 0) {
+        if ((userKeyword.compare("balcony") == 0)
+            || (userKeyword.compare("ba") == 0)) {
             newRoomNum = 13;
         }
         break;
 
     case 13:
-        if (userKeyword.compare("observatory") == 0) {
+        if ((userKeyword.compare("observatory") == 0)
+            || (userKeyword.compare("ob") == 0)) {
             newRoomNum = 11;
         }
-        if (userKeyword.compare("master bedroom") == 0
-            || userKeyword.compare("master") == 0
-            || userKeyword.compare("bedroom") == 0) {
+        if ((userKeyword.compare("master bedroom") == 0)
+            || (userKeyword.compare("master") == 0)
+            || (userKeyword.compare("bedroom") == 0)
+            || (userKeyword.compare("mb") == 0)) {
             newRoomNum = 12;
         }
         break;
@@ -3270,8 +4331,6 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
 
                 //Empties console screen
                 system("CLS");
-                
-                print_input(userKeyword);
 
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
@@ -3286,9 +4345,8 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
         system("CLS");
         //Prints a title to tell the player which character they are questioning
         print_character_questioning_title(roomNum);
-
-        print_input(userKeyword);
-
+        cout << "As you approach him, he smiles at you with confidence." << endl;
+        cout << "\"Hello, Detective. What do you need?\"" << endl;
         //Asks player which questions they'd like to ask Pendleton
         print_pendleton_help_request(roomNum);
         userKeyword = get_keyword_input();
@@ -3337,8 +4395,8 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
             //Prints a title to tell the player which character they are questioning
             print_character_questioning_title(roomNum);
 
-            cout << "\"He pauses to think for a moment." << endl;
-            cout << "After Dinner, I grabbed a hors d'oeuvre or two from the " << get_room_name(KITCHEN) << "." << endl;
+            cout << "He pauses to think for a moment." << endl;
+            cout << "\"After Dinner, I grabbed a hors d'oeuvre or two from the " << get_room_name(KITCHEN) << "." << endl;
             cout << "I started cleaning the " << get_room_name(BALLROOM) << ", and did so for an hour or so.\"" << endl;
             type_and_continue();
 
@@ -3347,12 +4405,12 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
             cout << "I gathered some firewood from the " << get_room_name(GREENHOUSE) << " and saw the Wine Crafter." << endl;
             cout << "Then I grabbed some hors d'oeuvres for " << get_character_name(MRSSTRONGHOLD) << " and made my way to the " << get_room_name(LIBRARY) << "." << endl;
             cout << "Around the time I finished lighting the fire, " << get_character_name(MRSSTRONGHOLD) << " screamed." << endl;
-            cout << "I made my way to the " << get_room_name(MASTERBEDROOM) << " and nobody left each other's sides since." << endl;
+            cout << "I made my way to the " << get_room_name(MASTERBEDROOM) << " and nobody left each other's sides since.\"" << endl;
             type_and_continue();
 
-            cout << "\n" << "\"It's a shame though. I wanted to finish cleaning the " << get_room_name(BALLROOM) << " today." << endl;
+            cout << "\n" << "\"It's a shame though. I wanted to finish cleaning the " << get_room_name(BALLROOM) << " today.\"" << endl;
             cout << "The Butler gets a little teary eyed." << endl;
-            cout << "I've been cleaning all week, but I couldn't finish " << get_character_name(DRSTRONGHOLD) << "'s final order before he died.\"" << endl;
+            cout << "\"I've been cleaning all week, but I couldn't finish " << get_character_name(DRSTRONGHOLD) << "'s final order before he died.\"" << endl;
             type_and_continue();
         }
         if (userKeyword.compare("3") == 0) {
@@ -3620,8 +4678,6 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                 //Empties console screen
                 system("CLS");
 
-                print_input(userKeyword);
-
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
                 //Asks player which piece of evidence they'd like to interrogate the suspect about
@@ -3635,9 +4691,8 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
         system("CLS");
         //Prints a title to tell the player which character they are questioning
         print_character_questioning_title(roomNum);
-
-        print_input(userKeyword);
-
+        cout << "As you approach him, he bows to you with great fervor." << endl;
+        cout << "\"Hello, Detective. I can be at your service whenever you wish.\"" << endl;
         //Asks player which questions they'd like to ask the suspect
         print_questioning_request(roomNum);
         userKeyword = get_keyword_input();
@@ -3672,12 +4727,14 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
             cout << "I'm the Head Chef of this mansion, although my official title is Sous Chef.\"" << endl;
             type_and_continue();
 
-            cout << "\n" << "The Strongholds call me Sous Chef because they think it's funny and don't understand cooking terminology." << endl;
+            cout << "\n" << "\"The Strongholds call me Sous Chef because they think it's funny and don't understand cooking terminology." << endl;
             cout << "Unfortunately, they aren't bright all the time.\"" << endl;
             type_and_continue();
 
             cout << "\n" << "\"Obviously my top priority is finding the killer so I can leave this place for good." << endl;
             cout << "Without " << get_character_name(DRSTRONGHOLD) << ", this manor will fall apart.\"" << endl;
+            type_and_continue();
+
             cout << "She frowns rather sincerely while looking at the Grandfather Clock." << endl;
             cout << "\"Ask me any questions you have. I'm happy to help." << endl;
             cout << "I'd like you to solve this quickly and efficiently so us innocent folk can go.\"" << endl;
@@ -3699,6 +4756,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
             cout << "\n" << "She yawns." << endl;
             cout << "\"My apologies, it's quite late for me." << endl;
             cout << "I think after that I checked up on " << get_character_name(MRSSTRONGHOLD) << " during her bath." << endl;
+            cout << "I left her some pajamas next to the tub." << endl;
             cout << "Then I just went to my room for the rest of the night.\"" << endl;
             type_and_continue();
 
@@ -3728,7 +4786,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
             cout << "I could see her slicing any of our throats open really, if she had a reason.\"" << endl;
             type_and_continue();
 
-            cout << "\n" << "\"" << "And I don't think " << get_character_name(WINECRAFTER, INFORMAL) << "would kill anyone... " << endl;
+            cout << "\n" << "\"" << "And I don't think " << get_character_name(WINECRAFTER, INFORMAL) << " would kill anyone... " << endl;
             cout << "But " << get_character_name(DRSTRONGHOLD) << " sold some of " << get_character_name(WINECRAFTER, INFORMAL) << "'s best bottles against his wishes.\"" << endl;
             type_and_continue();
         }
@@ -3820,7 +4878,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
                     type_and_continue();
 
                     cout << "\n" << "\"But... I think I sat to the right of " << get_character_name(MRSSTRONGHOLD) << ".\"" << endl;
-                    cout << "We had a nice discussion about... about me making a chocolate cake for " << get_character_name(MRSSTRONGHOLD) << "'s birthday next week.\"" << endl;
+                    cout << "We had a nice discussion about... about me making a chocolate cake for " << get_character_name(DRSTRONGHOLD) << "'s birthday next week.\"" << endl;
                     type_and_continue();
 
                     cout << "\n" << "She begins to sniffle." << endl;
@@ -3920,8 +4978,6 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
                 //Empties console screen
                 system("CLS");
 
-                print_input(userKeyword);
-
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
                 //Asks player which piece of evidence they'd like to interrogate the suspect about
@@ -3935,9 +4991,8 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
         system("CLS");
         //Prints a title to tell the player which character they are questioning
         print_character_questioning_title(roomNum);
-
-        print_input(userKeyword);
-
+        cout << "As you approach her, she kicks her feet against the covers." << endl;
+        cout << "\"Hi there, Detective. I can answer some questions if you have any for me.\"" << endl;
         //Asks player which questions they'd like to ask the suspect
         print_questioning_request(roomNum);
         userKeyword = get_keyword_input();
@@ -4008,7 +5063,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
 
             cout << get_character_name(MRSSTRONGHOLD, INFORMAL) << " smirks." << endl;
             cout << "\"Yes, as a matter of fact I do." << endl;
-            cout << get_character_name(ASTRONOMER, INFORMAL) << ", my husband's colleague, is a money hungry whore." << endl;
+            cout << get_character_name(ASTRONOMER, INFORMAL) << ", my husband's colleague, is quite money hungry." << endl;
             cout << "She's so desperate for some money my husband \'owed\' her that she probably slit his throat.\"" << endl;
             type_and_continue();
         }
@@ -4048,7 +5103,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     //Prints a title to tell the player which character they are questioning
                     print_character_questioning_title(roomNum);
 
-                    cout << get_character_name(MRSSTRONGHOLD, INFORMAL) << "glares at you as you talk about the safe." << endl;
+                    cout << get_character_name(MRSSTRONGHOLD, INFORMAL) << " glares at you as you talk about the safe." << endl;
                     cout << "\"Oh, you'd like to look in the safe?" << endl;
                     cout << "Sure! I can get out my baby pictures and we can invade my privacy together!\"" << endl;
                     type_and_continue();
@@ -4220,7 +5275,8 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
 
                     cout << "You hand " << get_character_name(MRSSTRONGHOLD, INFORMAL) << " the cufflink." << endl;
                     cout << "\"You found this in my husband's armoire?" << endl;
-                    cout << "This looks like one of the staff's...\"" << endl;
+                    cout << "It seems familiar but I'm not sure whose it is.\"" << endl;
+                    cout << "Obviously it's not " << get_character_name(ASTRONOMER) << "'s since she chose to wear that thin dress.\"" << endl;
                     type_and_continue();
 
                     currentUserChoices.at(ASKABOUTCUFFLINK) = true;
@@ -4279,8 +5335,6 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                 //Empties console screen
                 system("CLS");
 
-                print_input(userKeyword);
-
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
                 //Asks player which piece of evidence they'd like to interrogate the suspect about
@@ -4295,9 +5349,8 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
         system("CLS");
         //Prints a title to tell the player which character they are questioning
         print_character_questioning_title(roomNum);
-
-        print_input(userKeyword);
-
+        cout << "As you approach her, she taps her fountain pen on the page blankly." << endl;
+        cout << "\"I don't suppose you're just going to stand there, are you?\"" << endl;
         //Asks player which questions they'd like to ask the suspect
         print_questioning_request(roomNum);
         userKeyword = get_keyword_input();
@@ -4455,7 +5508,11 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
 
                     cout << get_character_name(WINECRAFTER) << " looks over the letter with shock." << endl;
                     cout << "\"I was wondering why " << get_character_name(DRSTRONGHOLD) << " didn't call me to celebrate after Dinner." << endl;
-                    cout << "I guess this explains it, but it certainly creates more questions than answers.\"" << endl;
+                    cout << "I guess this explains it, but it certainly creates more questions than answers...\"" << endl;
+                    
+                    cout << "You ask if The Wine Crafter recognizes the hand writing and he pauses for a moment." << endl;
+                    cout << "\"Well... I don't think this handwriting is " << get_character_name(BUTLER) << "'s." << endl;
+                    cout << "He writes rather cute welcome cards for the guests. This handwriting is much more scratchy.\"" << endl;
                 }
                 else if (((userKeyword.compare("red") == 0)
                     || (userKeyword.compare("velvet") == 0)
@@ -4571,8 +5628,6 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                 //Empties console screen
                 system("CLS");
 
-                print_input(userKeyword);
-
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
                 //Asks player which piece of evidence they'd like to interrogate the suspect about
@@ -4587,9 +5642,8 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
         system("CLS");
         //Prints a title to tell the player which character they are questioning
         print_character_questioning_title(roomNum);
-
-        print_input(userKeyword);
-
+        cout << "As you approach him, he drops a handful of grapes into a nearby bucket." << endl;
+        cout << "\"Question me, but be quick. Grapes aren't in season forever.\"" << endl;
         //Asks player which questions they'd like to ask the suspect
         print_questioning_request(roomNum);
         userKeyword = get_keyword_input();
@@ -4747,8 +5801,6 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
                 //Empties console screen
                 system("CLS");
 
-                print_input(userKeyword);
-
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
                 //Asks player which piece of evidence they'd like to interrogate the suspect about
@@ -4763,9 +5815,7 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
         system("CLS");
         //Prints a title to tell the player which character they are questioning
         print_character_questioning_title(roomNum);
-
-        print_input(userKeyword);
-
+        cout << "\"Mud. Mud mud mud.\"" << endl;
         //Asks player which questions they'd like to ask the suspect
         print_questioning_request(roomNum);
         userKeyword = get_keyword_input();
@@ -4945,8 +5995,8 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     print_character_questioning_title(roomNum);
 
                     cout << get_character_name(ASTRONOMER) << " carefully inspects the letter." << endl;
-                    cout << "\"This is peculiar." << endl;
-                    cout << "I've never seen this before, and I don't recognize this handwriting either." << endl;
+                    cout << "\"Sorry, it's quite hard to read. Very peculiar though." << endl;
+                    cout << "I don't recognize this handwriting..." << endl;
                     cout << "That means " << get_character_name(MRSSTRONGHOLD) << "definitely didn't write this.\"" << endl;
                     type_and_continue();
                 }
@@ -5086,8 +6136,6 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                 //Empties console screen
                 system("CLS");
 
-                print_input(userKeyword);
-
                 //Prints a title to tell the player which character they are questioning / interrogating
                 print_character_questioning_title(roomNum);
                 //Asks player which piece of evidence they'd like to interrogate the suspect about
@@ -5102,9 +6150,9 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
         system("CLS");
         //Prints a title to tell the player which character they are questioning
         print_character_questioning_title(roomNum);
-
-        print_input(userKeyword);
-
+        cout << "As you approach her, she sits down in a small chair beside the telescope." << endl;
+        cout << "She sighs. \"It's a shame that the stars aren't out tonight.\"" << endl;
+        cout << "\"What can I do for you?\"" << endl;
         //Asks player which questions they'd like to ask the suspect
         print_questioning_request(roomNum);
         userKeyword = get_keyword_input();
@@ -5358,6 +6406,22 @@ void print_inventory_item_description(int itemNum, vector<bool>& currentUserChoi
         cout << "The Sous Chef was " << get_character_name(DRSTRONGHOLD, INFORMAL) << "'s personal chef." << endl;
         cout << "The Wine Crafter was a bussiness partner of " << get_character_name(DRSTRONGHOLD, INFORMAL) << "'s." << endl;
         cout << "And lastly, the Astronomer was an old friend and associate of " << get_character_name(DRSTRONGHOLD) << "'s." << endl;
+
+        cout << "\nOrder of Events:" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "Everyone went on their separate ways after dinner." << endl;
+        cout << "Butler did some cleaning in the ballroom" << endl;
+        cout << "Souschef went to the kitchen to clean." << endl;
+        cout << "Mrs. Stronghold took a bath." << endl;
+        cout << "Winecrafter collected some grapes." << endl;
+        cout << "Astronomer conducted an experiment in her lab." << endl;
+
+        cout << "\nAutopsy:" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "Dr. Stronghold was found on his bed in the masterbedroom." << endl;
+        cout << "He was still clothed in the suit he'd worn to dinner." << endl;
+        cout << "His throat had clearly been slashed." << endl;
+        cout << "There was a slight lack of blood, but it seemed like enough blood to kill him." << endl;
         break;
 
     case EXPENSEREPORTS:
