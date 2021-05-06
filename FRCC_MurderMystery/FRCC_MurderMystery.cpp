@@ -2233,7 +2233,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
                         cout << "----------------------------------------" << endl;
                         cout << "A pair of silver handcuffs." << endl;
 
-                        if (count_clues(clueList) >= 17 || count_clues(clueList) <= 19) {
+                        if (count_clues(clueList) >= 17 && count_clues(clueList) <= 19) {
                             type_and_continue();
                             ending(currentUserChoices, clueList);
                         }
