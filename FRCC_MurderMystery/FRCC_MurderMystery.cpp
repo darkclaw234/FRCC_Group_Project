@@ -24,7 +24,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices, vector<string>
 string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 int leave_room(int roomNum);
 
-//These functions will allow the player to question a suspect and then return to the room to investigate afterwards.
+//These functions will allow the player to question a suspect and then return to their room to investigate afterwards.
 void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
@@ -33,9 +33,13 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
 void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 
+//The first function here allows the player to look at the clues they've collected
+//The second function here is what prints the actual description for each item they look at
 void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList, string userKeyword);
 void print_inventory_item_description(int itemNum, vector<bool>& currentUserChoices, vector<string>& clueList);
 
+//This function is used to count the number of clues found so far. 
+//It's used to determine whether or not the player is allowed to end the game or not
 int count_clues(vector<string>& clueList);
 
 //These seven functions print requests for user input. 
@@ -165,9 +169,10 @@ const int NUMCLUES = 24;
 //Main Program
 int main()
 {
-
+    //This code sets a seed for srand. It helps allow random NPC responses later.
     srand(static_cast<int>(time(0)));
 
+    //Declares roomNum and userKeyword, the two most important variables
     int roomNum = 0;
     string userKeyword;
 
@@ -180,24 +185,21 @@ int main()
 
     //Declares boolean vector clueList, which is a list of all clue names
     vector<string> clueList(NUMCLUES);
-    //Sets boolean at every index to false
+    //Sets every clue's name to ???, which indicates it has not been found yet
     for (size_t i = 0; i < clueList.size(); i++) {
         clueList.at(i) = "???";
     }
 
-
-
     //Prints introduction to story
     beginning();
-
+    //Enters tutorial
     enter_tutorial(userChoices, clueList);
 
-    //Loops Until roomNum is -1, which will only be the case once the player
-    //Submits their final answer of who the murderer is etc.
-    //Then the end of the game is set in motion and the user exits the loop.
+    //Loops Until roomNum is -1, which will never be the case
+    //The game will only end when the player decides to submit a final answer of who the killer is
     while (roomNum != -1) {
 
-        //Switch statement used to keep player in rooms 1 - 12 (a room 13 may be added later)
+        //Switch statement used to keep player in rooms 1 - 13
         //In every case, the code prints aroom description, 
         //allows player to investigate room until they want to leave, 
         //and then helps player move between rooms. 
@@ -717,9 +719,6 @@ int main()
         }
     }
 
-    //Calls ending function to finish game.
-    ending(userChoices, clueList);
-
     return 0;
 
 }
@@ -779,10 +778,12 @@ void beginning() {
 void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) {
     //Declares user input string
     string userKeyword;
-
+    //Clears Screen
     system("CLS");
 
+    //Prints the trophy hall's title
     print_room_title(TROPHYHALL);
+
     cout << "You enter the mansion and find yourself in an ornate " << get_room_name(TROPHYHALL) << "." << endl;
     cout << "Glass cupboards line the edges of the room with glimmering bronze and silver figures." << endl;
     cout << "Dracaena plants cradle some shelves filled with well dusted black and white photos." << endl;
@@ -809,6 +810,7 @@ void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) 
 
     }
 
+    //Clears Screen
     system("CLS");
 
     cout << "You are talking to " << get_character_name(TROPHYHALL) << ":" << endl;
@@ -818,13 +820,17 @@ void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) 
     cout << "It is important that you know how to interact with different clues.\"" << endl;
     cout << endl << get_character_name(TROPHYHALL) << " hands you the case file." << endl;
     cout << "\"Try typing \'case file\' to investigate that clue.\"" << endl;
-
+    //Gets userInput and sets it to lowercase
     userKeyword = get_keyword_input();
-    while (userKeyword.compare("Mud") != 0)
-    {
+
+    //Loops until user has typed "case" or "file"
+    while ((userKeyword.compare("case") != 0)
+            && (userKeyword.compare("file") != 0)){
+
+        //Checks if player typed "case" or "file"
         if ((userKeyword.compare("case") == 0)
-            || (userKeyword.compare("file") == 0))
-        {
+            || (userKeyword.compare("file") == 0)) {
+        
             cout << "You look over the case file." << endl;
             cout << "It has information on the suspects, alibis, and an autopsy." << endl;
             cout << "You'll look at it more later in your inventory." << endl;
@@ -833,6 +839,7 @@ void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) 
             cout << get_character_name(CLYDE) << " smiles at you." << endl;
             cout << "\n\"Great job detective!\"" << endl;
 
+            //This code tells the player they've found a clue and adds it to their inventory
             if ((clueList.at(CASEFILE)).compare("???") == 0) {
                 cout << "\n----------------------------------------" << endl;
                 cout << "You've found a clue! You can now access this clue in your inventory." << endl;
@@ -842,11 +849,13 @@ void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) 
             type_and_continue();
             break;
         }
+        //Prints if player fails to enter case or file
         cout << "\nIncorrect input." << endl;
         cout << "Try typing \"case file\"." << endl;
         userKeyword = get_keyword_input();
     }
 
+    //Clears Screen
     system("CLS");
 
     cout << "You are talking to " << get_character_name(TROPHYHALL) << ":" << endl;
@@ -855,11 +864,11 @@ void enter_tutorial(vector<bool>& currentUserChoices, vector<string>& clueList) 
     cout << "Be sure to investigate as much as possible." << endl;
     cout << "Good luck, Detective.\"" << endl;
 
+    //Sets currentUserChoices at MEETCLYDE index to true
     currentUserChoices.at(MEETCLYDE) = true;
-
     type_and_continue();
 
-    //Empties console screen
+    //Clears Screen
     system("CLS");
 
 }
@@ -880,6 +889,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
     //Defines the number of clues found
     int numClues = count_clues(clueList);
 
+    //Picks first ending when player has 17 to 19 clues
     if (numClues >= 17 && numClues <= 19) {
         //Empties console screen
         system("CLS");
@@ -907,7 +917,8 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
         cout << "Or, is it the Astronomer " << get_character_name(DRSTRONGHOLD) << " created his greatest scientific work with?" << endl;
         type_and_continue();
 
-        cout << "\nEnter Your Answer Now: " << endl;
+        //Tells player which number corresponds with which suspect they want to accuse
+        cout << "\nEnter Your Answer: " << endl;
         cout << "(Type \'1\' to accuse The Butler.)" << endl;
         cout << "(Type \'2\' to accuse The Sous Chef.)" << endl;
         cout << "(Type \'3\' to accuse The Widow.)" << endl;
@@ -916,6 +927,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
         cout << "----------------------------------------" << endl;
         userKeyword = get_keyword_input();
 
+        //Loops Until Player has chosen which suspect to accuse
         while ((userKeyword.compare("1") != 0)
             && (userKeyword.compare("2") != 0)
             && (userKeyword.compare("3") != 0)
@@ -981,6 +993,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 //Empties console screen
                 system("CLS");
 
+                //Begins Quiz: Player is asked about murder and must answer questions right to succeed
                 cout << get_character_name(MRSSTRONGHOLD) << " rolls up her sleeves." << endl;
                 cout << "I said to accuse the murderer, Detective, not randomly accuse someone." << endl;
                 type_and_continue();
@@ -990,6 +1003,8 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "How did I kill my husband then?\"" << endl;
                 type_and_continue();
 
+                
+                //Prints Quiz Question 1
                 cout << "\nWhat did " << get_character_name(MRSSTRONGHOLD) << " use to kill her husband?" << endl;
                 cout << "----------------------------------------" << endl;
                 cout << "(Type \'1\' to say she used a kitchen knife.)" << endl;
@@ -998,6 +1013,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "(Type \'4\' to say she beat him to death.)" << endl;
                 userKeyword = get_keyword_input();
 
+                //Loops until player chooses right answer, which is marked with a break statement
                 while(userKeyword.compare("1") != 0) {
 
                     if (userKeyword.compare("1") == 0) {
@@ -1007,24 +1023,28 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                         cout << get_character_name(CLYDE) << " sighs." << endl;
                         cout << "\"Do I need to take away your badge?\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
                     if (userKeyword.compare("3") == 0) {
                         cout << get_character_name(CLYDE) << " frowns." << endl;
                         cout << "\"Really, Detective?\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
                     if (userKeyword.compare("4") == 0) {
                         cout << get_character_name(CLYDE) << "'s eyes go wide." << endl;
                         cout << "\"What is she, a wrestler?\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
 
                     //Empties console screen
                     system("CLS");
 
+                    //Prints Quiz Question 1
                     cout << "\nWhat did " << get_character_name(MRSSTRONGHOLD) << " use to kill her husband?" << endl;
                     cout << "----------------------------------------" << endl;
                     cout << "(Type \'1\' to say she used a kitchen knife.)" << endl;
@@ -1034,6 +1054,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                     userKeyword = get_keyword_input();
                 }
 
+                //Forces player to start over if they make too many mistakes
                 if (numMistakes >= 5) {
                     cout << get_character_name(CLYDE) << " smacks you." << endl;
                     cout << "Detective, that's it! You clearly don't know what you're talking about." << endl;
@@ -1053,6 +1074,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "\"But you're wrong Detective, and you can't prove I took that knife." << endl;
                 type_and_continue();
 
+                //Prints Quiz Question 2:
                 cout << "Is there evidence " << get_character_name(MRSSTRONGHOLD) << " took the knife?" << endl;
                 cout << "----------------------------------------" << endl;
                 cout << "(Type \'1\' to say the knife was in her armoire.)" << endl;
@@ -1061,19 +1083,22 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "(Type \'4\' to say she cut herself while using it.)" << endl;
                 userKeyword = get_keyword_input();
 
+                //Loops until player chooses right answer, which is marked with a break statement
                 while (userKeyword.compare("3") != 0) {
 
                     if (userKeyword.compare("1") == 0) {
                         cout << get_character_name(CLYDE) << " shakes his head." << endl;
                         cout << "\"You're just lying now?\"" << endl;
-                        numMistakes++;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
+                        numMistakes++;
                     }
                     if (userKeyword.compare("2") == 0) {
                         cout << get_character_name(CLYDE) << " makes a face." << endl;
                         cout << "\"Who said that, Detective? Don't you think they would've spoken sooner?\"" << endl;
-                        numMistakes++;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
+                        numMistakes++;
                     }
                     if (userKeyword.compare("3") == 0) {
                         break;
@@ -1082,12 +1107,14 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                         cout << get_character_name(CLYDE) << " looks speechless." << endl;
                         cout << "\"What? Just... what?\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
 
                     //Empties console screen
                     system("CLS");
 
+                    //Prints Quiz Question 2:
                     cout << "Is there evidence " << get_character_name(MRSSTRONGHOLD) << " took the knife?" << endl;
                     cout << "----------------------------------------" << endl;
                     cout << "(Type \'1\' to say the knife was in her armoire.)" << endl;
@@ -1097,6 +1124,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                     userKeyword = get_keyword_input();
                 }
 
+                //Forces player to start over if they make too many mistakes
                 if (numMistakes >= 5) {
                     cout << get_character_name(CLYDE) << " resists the urge to smack you." << endl;
                     cout << "Detective, stop spitting out wild theories!" << endl;
@@ -1119,6 +1147,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "I just got out and found my husband's body! I didn't do anything else!" << endl;
                 type_and_continue();
 
+                //Prints Quiz Question 3:
                 cout << "What proof is there that " << get_character_name(MRSSTRONGHOLD) << " did more than \'nothing\'?" << endl;
                 cout << "----------------------------------------" << endl;
                 cout << "(Type \'1\' to say she blew out her candles.)" << endl;
@@ -1127,12 +1156,14 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "(Type \'4\' to say she put on her pajamas.)" << endl;
                 userKeyword = get_keyword_input();
 
+                //Loops until player chooses right answer, which is marked with a break statement
                 while (userKeyword.compare("2") != 0) {
 
                     if (userKeyword.compare("1") == 0) {
                         cout << get_character_name(CLYDE) << " nods." << endl;
                         cout << "\"That's a great point, except for the fact that it's not.\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
                     if (userKeyword.compare("2") == 0) {
@@ -1142,18 +1173,21 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                         cout << get_character_name(CLYDE) << " smacks his forehead." << endl;
                         cout << "\"Wow, Detective. I think I've been convinced.\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
                     if (userKeyword.compare("4") == 0) {
                         cout << get_character_name(CLYDE) << " seems frustrated." << endl;
                         cout << "\"Why does that matter?\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
 
                     //Empties console screen
                     system("CLS");
 
+                    //Prints Quiz Question 3:
                     cout << "Is there evidence " << get_character_name(MRSSTRONGHOLD) << " did more than she's saying?" << endl;
                     cout << "----------------------------------------" << endl;
                     cout << "(Type \'1\' to say she blew out her candles.)" << endl;
@@ -1163,6 +1197,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                     userKeyword = get_keyword_input();
                 }
 
+                //Forces player to start over if they make too many mistakes
                 if (numMistakes >= 5) {
                     cout << get_character_name(CLYDE) << " scowls at you." << endl;
                     cout << "\"Detective, you have some good points, but you also have a lot of bad ones." << endl;
@@ -1187,6 +1222,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "Detective, why does the sink matter to this case?" << endl;
                 type_and_continue();
 
+                //Prints Quiz Question 4:
                 cout << "Why was " << get_character_name(MRSSTRONGHOLD) << " using the sink?" << endl;
                 cout << "----------------------------------------" << endl;
                 cout << "(Type \'1\' to say she cleaned off the real murder weapon)" << endl;
@@ -1195,12 +1231,14 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "(Type \'4\' to say she threw up after murdering her husband)" << endl;
                 userKeyword = get_keyword_input();
 
+                //Loops until player chooses right answer, which is marked with a break statement
                 while (userKeyword.compare("2") != 0) {
 
                     if (userKeyword.compare("1") == 0) {
                         cout << get_character_name(CLYDE) << " rolls his eyes." << endl;
                         cout << "\"Didn't you say the murder weapon was the kitchen knife?\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
                     if (userKeyword.compare("2") == 0) {
@@ -1210,12 +1248,14 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                         cout << get_character_name(CLYDE) << " sighs." << endl;
                         cout << "\"Why would she do that?\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
                     if (userKeyword.compare("4") == 0) {
                         cout << get_character_name(CLYDE) << " looks at you, unamused." << endl;
                         cout << "\"You don't have any proof for that claim, do you?\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
 
@@ -1223,6 +1263,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                     system("CLS");
                     type_and_continue();
 
+                    //Prints Quiz Question 4:
                     cout << "Why was " << get_character_name(MRSSTRONGHOLD) << " using the sink?" << endl;
                     cout << "----------------------------------------" << endl;
                     cout << "(Type \'1\' to say she cleaned off the real murder weapon)" << endl;
@@ -1233,6 +1274,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                     userKeyword = get_keyword_input();
                 }
 
+                //Forces player to start over if they make too many mistakes
                 if (numMistakes >= 5) {
                     cout << get_character_name(CLYDE) << " sighs." << endl;
                     cout << "\"I actually thought you were going somewhere with this." << endl;
@@ -1251,6 +1293,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "NO YOU DIDN'T! PROOF! SHOW ME THE PROOF!" << endl;
                 type_and_continue();
 
+                //Prints Quiz Question 5:
                 cout << "What proof is there that " << get_character_name(MRSSTRONGHOLD) << " had blood on her?" << endl;
                 cout << "----------------------------------------" << endl;
                 cout << "(Type \'1\' to say she left a bloody tissue in the golden toilet)" << endl;
@@ -1260,18 +1303,21 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "----------------------------------------" << endl;
                 userKeyword = get_keyword_input();
 
+                //Loops until player chooses right answer, which is marked with a break statement
                 while (userKeyword.compare("3") != 0) {
 
                     if (userKeyword.compare("1") == 0) {
                         cout << get_character_name(CLYDE) << " goes red." << endl;
                         cout << "\"Don't... why?\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
                     if (userKeyword.compare("2") == 0) {
                         cout << get_character_name(CLYDE) << " looks like he's about to snap." << endl;
                         cout << "\"No there weren't, Detective. I checked the armoires.\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
                     if (userKeyword.compare("3") == 0) {
@@ -1281,22 +1327,25 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                         cout << get_character_name(CLYDE) << " bites his tongue." << endl;
                         cout << "\"That's so clearly false that I don't even know what to say.\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
 
                     //Empties console screen
                     system("CLS");
 
-                    cout << "Why was " << get_character_name(MRSSTRONGHOLD) << " using the sink?" << endl;
+                    //Prints Quiz Question 5:
+                    cout << "What proof is there that " << get_character_name(MRSSTRONGHOLD) << " had blood on her?" << endl;
                     cout << "----------------------------------------" << endl;
-                    cout << "(Type \'1\' to say she cleaned off the real murder weapon)" << endl;
-                    cout << "(Type \'2\' to say she cleaned the blood off of her)" << endl;
-                    cout << "(Type \'3\' to say she washed the snow off some boots)" << endl;
-                    cout << "(Type \'4\' to say she threw up after murdering her husband)" << endl;
+                    cout << "(Type \'1\' to say she left a bloody tissue in the golden toilet)" << endl;
+                    cout << "(Type \'2\' to say she left some bloody boots in the armoire)" << endl;
+                    cout << "(Type \'3\' to say she left some blood on her pajamas)" << endl;
+                    cout << "(Type \'4\' to say she has blood on her right now)" << endl;
                     cout << "----------------------------------------" << endl;
                     userKeyword = get_keyword_input();
                 }
 
+                //Forces player to start over if they make too many mistakes
                 if (numMistakes >= 5) {
                     cout << get_character_name(CLYDE) << " shakes his head." << endl;
                     cout << "\"Detective, I think you're on the right track, but you need harder evidence.\"" << endl;
@@ -1322,6 +1371,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << get_character_name(CLYDE) << " ponders the question." << endl;
                 cout << "\"What about it, Detective? Is this another lie?\"" << endl;
 
+                //Prints Quiz Question 6:
                 cout << "Does " << get_character_name(MRSSTRONGHOLD) << "'s story make sense?" << endl;
                 cout << "----------------------------------------" << endl;
                 cout << "(Type \'1\' to say this part of her story is true)" << endl;
@@ -1331,18 +1381,21 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "----------------------------------------" << endl;
                 userKeyword = get_keyword_input();
 
+                //Loops until player chooses right answer, which is marked with a break statement
                 while (userKeyword.compare("4") != 0) {
 
                     if (userKeyword.compare("1") == 0) {
                         cout << get_character_name(CLYDE) << " smiles." << endl;
                         cout << "\"Oh, good... Wait, what?\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
                     if (userKeyword.compare("2") == 0) {
                         cout << get_character_name(CLYDE) << " clears his throat." << endl;
                         cout << "\"How is the order of events wrong, Detective? The door broke and then she screamed.\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
                     if (userKeyword.compare("3") == 0) {
@@ -1350,6 +1403,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                         cout << "\"That would explain the two sets of footprints, but you literally just accused her of murder.\"" << endl;
                         cout << "No takebacksies.\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
                     if (userKeyword.compare("4") == 0) {
@@ -1359,6 +1413,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                     //Empties console screen
                     system("CLS");
 
+                    //Prints Quiz Question 6:
                     cout << "Does " << get_character_name(MRSSTRONGHOLD) << "'s story make sense?" << endl;
                     cout << "----------------------------------------" << endl;
                     cout << "(Type \'1\' to say this part of her story is true)" << endl;
@@ -1369,6 +1424,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                     userKeyword = get_keyword_input();
                 }
 
+                //Forces player to start over if they make too many mistakes
                 if (numMistakes >= 5) {
                     cout << get_character_name(CLYDE) << " pats you on the shoulder." << endl;
                     cout << "\"Detective, you need to clear your heard for a moment and come back." << endl;
@@ -1394,6 +1450,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "But why? Why would she lie about that?" << endl;
                 type_and_continue();
 
+                //Prints Quiz Question 7:
                 cout << "Why did " << get_character_name(MRSSTRONGHOLD) << " lie about what time the door was broken through?" << endl;
                 cout << "----------------------------------------" << endl;
                 cout << "(Type \'1\' to say she broke it down herself)" << endl;
@@ -1403,6 +1460,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "----------------------------------------" << endl;
                 userKeyword = get_keyword_input();
 
+                //Loops until player chooses right answer, which is marked with a break statement
                 while (userKeyword.compare("1") != 0) {
 
                     if (userKeyword.compare("1") == 0) {
@@ -1412,6 +1470,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                         cout << get_character_name(CLYDE) << " makes a face." << endl;
                         cout << "\"Who would do that for her? That doesn't make much sense.\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
                     if (userKeyword.compare("3") == 0) {
@@ -1419,18 +1478,21 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                         cout << "\"That would be interesting if it made any sense." << endl;
                         cout << "She seems much too self interested to help another killer.\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
                     if (userKeyword.compare("4") == 0) {
                         cout << get_character_name(CLYDE) << " nods." << endl;
                         cout << "\"Ah, okay. So you have no evidence then?\"" << endl;
                         type_and_continue();
+                        //Adds 1 to numMistakes since this is the wrong answer
                         numMistakes++;
                     }
 
                     //Empties console screen
                     system("CLS");
 
+                    //Prints Quiz Question 7:
                     cout << "Why did " << get_character_name(MRSSTRONGHOLD) << " lie about what time the door was broken through?" << endl;
                     cout << "----------------------------------------" << endl;
                     cout << "(Type \'1\' to say she broke it down herself)" << endl;
@@ -1472,6 +1534,8 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
 
                 cout << get_character_name(MRSSTRONGHOLD) << " looks at you with a genuine frown." << endl;
                 cout << "There are too many questions left to answer." << endl;
+
+                //Lists all clues player has found that second murderer left
                 if (clueList.at(SNOWYFOOTPRINTS).compare("???") != 0) {
                     cout << "Why are there two sets of footprints?" << endl;
                 }
@@ -1499,14 +1563,17 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
                 cout << "(Type \'no\' to ignore her.)" << endl;
                 cout << "----------------------------------------" << endl;
 
+                //Loops until player decides to take Mrs. Stronghold up on her deal or take her to prison
                 while ((userKeyword.compare("yes") != 0)
                     && (userKeyword.compare("no") != 0)) {
 
+                    //If player says yes, Mrs. Stronghold unlocks safe for them and lets them investigate more
                     if (userKeyword.compare("yes") == 0) {
                         cout << get_character_name(MRSSTRONGHOLD) << " smiles at you." << endl;
                         cout << "\"You won't regret it. Find them quickly so we may both burn in hell together.\"" << endl;
                         return;
                     }
+                    //If player says yes, Mrs. Stronghold is arrested and game ends
                     if (userKeyword.compare("no") == 0) {
                         cout << get_character_name(MRSSTRONGHOLD) << " starts to panic." << endl;
                         cout << "\"No. Wait, no! You can't do this! Don't you realize what you're doing?\"" << endl;
@@ -1692,6 +1759,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
             cout << "Or, is it " << get_character_name(ASTRONOMER) << ", the Astronomer " << get_character_name(DRSTRONGHOLD) << " made his greatest scientific work with?" << endl;
             type_and_continue();
 
+            //Tells player which number corresponds with which suspect they want to accuse
             cout << "\nEnter Your Answer: " << endl;
             cout << "(Type \'1\' to accuse The Butler.)" << endl;
             cout << "(Type \'2\' to accuse The Sous Chef.)" << endl;
@@ -1727,6 +1795,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
         cout << "Or, is it the Astronomer?" << endl;
         type_and_continue();
 
+        //Tells player which number corresponds with which suspect they want to accuse
         cout << "\nEnter Your Final Answer: " << endl;
         cout << "(Type \'1\' to accuse The Butler.)" << endl;
         cout << "(Type \'2\' to accuse The Sous Chef.)" << endl;
@@ -1887,6 +1956,7 @@ void ending(vector<bool>& currentUserChoices, vector<string>& clueList) {
             cout << "Or, is it the Astronomer?" << endl;
             type_and_continue();
 
+            //Tells player which number corresponds with which suspect they want to accuse
             cout << "\nEnter Your Final Answer: " << endl;
             cout << "(Type \'1\' to accuse The Butler.)" << endl;
             cout << "(Type \'2\' to accuse The Sous Chef.)" << endl;
@@ -2068,7 +2138,7 @@ void describe_room(int roomNum, vector<bool>& currentUserChoices, vector<string>
         break;
 
     case 13:
-        //FIXME: DESCRIBE ROOM 13
+        //Prints Description For Room 13
         print_room_title(roomNum);
         cout << "The " << get_room_name(BALCONY) << " is covered in snow from the storm." << endl;
         cout << "White flakes of snow from the rooftop are still swirling in the crisp winter air." << endl;
@@ -2097,6 +2167,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
     switch (roomNum) {
     case 0:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -2256,6 +2327,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 1:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -2308,6 +2380,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 2:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -2606,6 +2679,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 3:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -2669,6 +2743,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 4:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -2724,6 +2799,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 5:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -2812,6 +2888,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 6:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -2867,6 +2944,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 7:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -3063,6 +3141,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 8:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -3145,6 +3224,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 9:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -3212,6 +3292,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 10:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -3287,6 +3368,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 11:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -3410,6 +3492,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 12:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -3597,6 +3680,7 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
 
     case 13:
 
+        //Views inventory if player types "inventory"
         if ((userKeyword.compare("inventory") == 0)) {
             view_inventory(roomNum, currentUserChoices, clueList, userKeyword);
         }
@@ -3651,6 +3735,9 @@ string investigate_room(int roomNum, vector<bool>& currentUserChoices, vector<st
         break;
     }
 
+    //Prints a type and continue after an item is described.
+    //Doesn't print a type and continue when leaving room, after questioning someone,
+    //closing inventory, or coming back from an item within an item
     if ((userKeyword.compare("leave") != 0)
         && (userKeyword.compare("back") != 0) 
         && (userKeyword.compare("close") != 0)
@@ -3675,16 +3762,18 @@ int leave_room(int roomNum) {
     //Gets user's chosen room
     string userKeyword = get_keyword_input();
 
-    //Sets New Room Num based on user input as long as the input is the name of an adjacent room
+    //Sets New Room Num as long as the input is the name of an adjacent room
     switch (roomNum) {
 
+    //Sets New Room Num based on user's inputted room name
     case 0:
         if ((userKeyword.compare("ballroom") == 0)
             || (userKeyword.compare("bl") == 0)) {
             newRoomNum = 1;
         }
         break;
-
+    
+    //Sets New Room Num based on user's inputted room name
     case 1:
         if ((userKeyword.compare("trophy hall") == 0)
             || (userKeyword.compare("trophy") == 0)
@@ -3733,6 +3822,7 @@ int leave_room(int roomNum) {
         }
         break;
 
+    //Sets New Room Num based on user's inputted room name
     case 2:
         if ((userKeyword.compare("ballroom") == 0)
             || (userKeyword.compare("bl") == 0)) {
@@ -3752,6 +3842,7 @@ int leave_room(int roomNum) {
         }
         break;
 
+    //Sets New Room Num based on user's inputted room name
     case 3:
         if ((userKeyword.compare("ballroom") == 0)
             || (userKeyword.compare("bl") == 0)) {
@@ -3767,6 +3858,7 @@ int leave_room(int roomNum) {
         }
         break;
 
+    //Sets New Room Num based on user's inputted room name
     case 4:
         if ((userKeyword.compare("ballroom") == 0)
             || (userKeyword.compare("bl") == 0)) {
@@ -3786,6 +3878,7 @@ int leave_room(int roomNum) {
         }
         break;
 
+    //Sets New Room Num based on user's inputted room name
     case 5:
         if ((userKeyword.compare("ballroom") == 0)
             || (userKeyword.compare("bl") == 0)) {
@@ -3804,7 +3897,8 @@ int leave_room(int roomNum) {
             newRoomNum = 7;
         }
         break;
-
+        
+    //Sets New Room Num based on user's inputted room name
     case 6:
         if ((userKeyword.compare("ballroom") == 0)
             || (userKeyword.compare("bl") == 0)) {
@@ -3822,6 +3916,7 @@ int leave_room(int roomNum) {
         }
         break;
 
+    //Sets New Room Num based on user's inputted room name
     case 7:
         if ((userKeyword.compare("ballroom") == 0)
             || (userKeyword.compare("bl") == 0)) {
@@ -3839,6 +3934,7 @@ int leave_room(int roomNum) {
         }
         break;
 
+    //Sets New Room Num based on user's inputted room name
     case 8:
         if ((userKeyword.compare("ballroom") == 0)
             || (userKeyword.compare("bl") == 0)) {
@@ -3868,6 +3964,7 @@ int leave_room(int roomNum) {
         }
         break;
 
+    //Sets New Room Num based on user's inputted room name
     case 9:
         if ((userKeyword.compare("stairwell") == 0)
             || (userKeyword.compare("stair") == 0)
@@ -3884,6 +3981,7 @@ int leave_room(int roomNum) {
         }
         break;
 
+    //Sets New Room Num based on user's inputted room name
     case 10:
         if ((userKeyword.compare("stairwell") == 0)
             || (userKeyword.compare("stair") == 0)
@@ -3900,6 +3998,7 @@ int leave_room(int roomNum) {
         }
         break;
 
+    //Sets New Room Num based on user's inputted room name
     case 11:
         if ((userKeyword.compare("stairwell") == 0)
             || (userKeyword.compare("stair") == 0)
@@ -3920,6 +4019,7 @@ int leave_room(int roomNum) {
         }
         break;
 
+    //Sets New Room Num based on user's inputted room name
     case 12:
         if ((userKeyword.compare("stairwell") == 0)
             || (userKeyword.compare("stair") == 0)
@@ -3938,6 +4038,7 @@ int leave_room(int roomNum) {
         }
         break;
 
+    //Sets New Room Num based on user's inputted room name
     case 13:
         if ((userKeyword.compare("observatory") == 0)
             || (userKeyword.compare("ob") == 0)) {
@@ -3962,7 +4063,7 @@ int leave_room(int roomNum) {
 }
 
 
-
+//Function that allows player to question Clyde and then return to the Trophy Hall
 void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
 
     //Empties console screen
@@ -3975,10 +4076,10 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
     print_pendleton_help_request(roomNum);
     string userKeyword = get_keyword_input();
 
-    //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
+    //Loops until player decides to stop questioning suspect
     while (userKeyword.compare("stop") != 0) {
 
-        //Don't forget quotes when they speak
+        //Prints info about case file if player asks about it
         if (userKeyword.compare("1") == 0) {
 
             //Empties console screen
@@ -4001,6 +4102,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
             cout << "\"Hopefully you'll have it solved in no time.\"" << endl;
             type_and_continue();
         }
+        //Prints info about investigating rooms if player asks about it
         if (userKeyword.compare("2") == 0) {
 
             //Empties console screen
@@ -4032,6 +4134,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
             cout << "If I'm asked to investigate further, I could type \'nature\' or \'snails\' to find out more on either book!\"" << endl;
             type_and_continue();
         }
+        //Prints info about finding clues if player asks about it
         if (userKeyword.compare("3") == 0) {
 
             //Empties console screen
@@ -4050,6 +4153,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
             cout << "Typing \'inventory\' will allow you to look at any of the clues you've already found.\"" << endl;
             type_and_continue();
         }
+        //Prints info about questioning suspects if player asks about it
         if (userKeyword.compare("4") == 0) {
 
             //Empties console screen
@@ -4072,6 +4176,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
             cout << "For example, you could type \'case\' or \'file\' or \'case file\' to ask about the case file.\"" << endl;
             type_and_continue();
         }
+        //Prints info about how to end game if player asks about it
         if (userKeyword.compare("5") == 0) {
 
             //Empties console screen
@@ -4089,6 +4194,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
             cout << "Try not to ruin an innocent man or woman's life.\"" << endl;
             type_and_continue();
         }
+        //Interrogates suspect if player requested to do so
         if (userKeyword.compare("interrogate") == 0) {
 
             //Empties console screen
@@ -4099,8 +4205,10 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
             print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
+            //Loops until player decides to end interrogation of suspect
             while (userKeyword.compare("end") != 0) {
 
+                //Prints Suspect's knowledge of CASEFILE if player types "case file" and has found CASEFILE
                 if (((userKeyword.compare("case") == 0)
                     || (userKeyword.compare("file") == 0)
                     || (userKeyword.compare("casefile") == 0))
@@ -4126,6 +4234,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
                     cout << "I'm human. I'm sure I could've made a mistake or two, or been told a lie.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of EXPENSEREPORTS if player types "expense reports" and has found EXPENSEREPORTS
                 else if (((userKeyword.compare("expense") == 0)
                     || (userKeyword.compare("report") == 0)
                     || (userKeyword.compare("reports") == 0))
@@ -4147,6 +4256,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
                     << get_character_name(MRSSTRONGHOLD) << ", " << get_character_name(WINECRAFTER) << ", and " << get_character_name(ASTRONOMER) << "." << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of SMALLSAFE if player types "small safe" and has found SMALLSAFE
                 else if (((userKeyword.compare("small") == 0)
                     || (userKeyword.compare("safe") == 0))
                     && ((clueList.at(SMALLSAFE)).compare("???") != 0)) {
@@ -4162,6 +4272,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
                     cout << "Maybe you could convince her to open it somehow, just to make sure neither of them are hiding anything.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of LOCKEDCHESTS if player types "locked chests" and has found LOCKEDCHESTS
                 else if (((userKeyword.compare("locked") == 0)
                     || (userKeyword.compare("chest") == 0)
                     || (userKeyword.compare("chests") == 0))
@@ -4178,6 +4289,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
                     cout << "I wouldn't waste your time trying to open their chests.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of MISSINGKNIFE if player types "missing knife" and has found MISSINGKNIFE
                 else  if (((userKeyword.compare("missing") == 0)
                     || (userKeyword.compare("knife") == 0))
                     && ((clueList.at(MISSINGKNIFE)).compare("???") != 0)) {
@@ -4196,6 +4308,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
                     cout << "Unless there's some wild evidence I couldn't find, our victim died of blood loss from that wound." << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of BLOODSTAINS if player types "blood stains" and has found BLOODSTAINS
                 else if (((userKeyword.compare("blood") == 0)
                     || (userKeyword.compare("stain") == 0)
                     || (userKeyword.compare("stains") == 0)
@@ -4220,6 +4333,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
                     cout << "Now we have to figure out how it got there." << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of CLEANEDFLOOR if player types "cleaned floor" and has found CLEANEDFLOOR
                 else if (((userKeyword.compare("cleaned") == 0)
                     || (userKeyword.compare("floor") == 0))
                     && ((clueList.at(CLEANEDFLOOR)).compare("???") != 0)) {
@@ -4234,6 +4348,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
                     cout << "\"Isn't the Butler using bleach to clean the " << get_room_name(BALLROOM) << "?\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of BROKENLOCK if player types "broken lock" and has found BROKENLOCK
                 else if (((userKeyword.compare("broken") == 0)
                     || (userKeyword.compare("lock") == 0))
                     && ((clueList.at(BROKENLOCK)).compare("???") != 0)) {
@@ -4252,6 +4367,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
                     cout << "You'd think leaving through the room's main entrance would be easier." << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of SLASHEDTHROAT if player types "slashed throat" and has found SLASHEDTHROAT
                 else if (((userKeyword.compare("slashed") == 0)
                     || (userKeyword.compare("throat") == 0))
                     && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
@@ -4265,6 +4381,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
                     cout << "\"A painful way to die... but at least it was quick.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of FOAMEDMOUTH if player types "foamed mouth" and has found FOAMEDMOUTH
                 else if (((userKeyword.compare("foamed") == 0)
                     || (userKeyword.compare("mouth") == 0))
                     && ((clueList.at(FOAMEDMOUTH)).compare("???") != 0)) {
@@ -4280,6 +4397,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
                     cout << "I'm... truly unable to say why that happened.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of BLOODYGARMENT if player types "bloody garment" and has found BLOODYGARMENT
                 else if (((userKeyword.compare("bloody") == 0)
                     || (userKeyword.compare("garment") == 0))
                     && ((clueList.at(BLOODYGARMENT)).compare("???") != 0)) {
@@ -4295,6 +4413,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
                     cout << "\"This seems rather incriminating... but I'm not sure who for.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of SNOWYFOOTPRINTS if player types "snowy footprints" and has found SNOWYFOOTPRINTS
                 else if (((userKeyword.compare("snowy") == 0)
                     || (userKeyword.compare("foot") == 0)
                     || (userKeyword.compare("prints") == 0)
@@ -4311,6 +4430,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
                     cout << "I have no idea why there are two sets.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Randomized Responses to Anything Else
                 else {
                     int replyNum = ((rand() % 4) + 1);
                     if (replyNum == 1) {
@@ -4354,6 +4474,7 @@ void questioning_clyde(int roomNum, vector<bool>& currentUserChoices, vector<str
 
 }
 
+//Function that allows player to question Butler and then return to the Ballroom
 void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
 
     //Empties console screen
@@ -4366,9 +4487,10 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
     print_questioning_request(roomNum);
     string userKeyword = get_keyword_input();
 
-    //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
+    //Loops until player decides to stop questioning suspect
     while (userKeyword.compare("stop") != 0) {
 
+        //Prints Suspect's Introduction if player types '1'
         if (userKeyword.compare("1") == 0) {
 
             //Empties console screen
@@ -4388,6 +4510,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
             cout << "Please ask me any questions you have, even if they incriminate me.\"" << endl;
             type_and_continue();
         }
+        //Prints Suspect's Whereabouts if player types '2'
         if (userKeyword.compare("2") == 0) {
 
             //Empties console screen
@@ -4413,6 +4536,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
             cout << "\"I've been cleaning all week, but I couldn't finish " << get_character_name(DRSTRONGHOLD) << "'s final order before he died.\"" << endl;
             type_and_continue();
         }
+        //Prints Suspect's Suspicions if player types '3'
         if (userKeyword.compare("3") == 0) {
 
             //Empties console screen
@@ -4430,6 +4554,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
             cout << "And truthfully, he's denied all of our wishes at times.\"" << endl;
             type_and_continue(); 
         }
+        //Interrogates suspect if player requested to do so
         if (userKeyword.compare("interrogate") == 0) {
 
             //Empties console screen
@@ -4440,8 +4565,10 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
             print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
+            //Loops until player decides to end interrogation of suspect
             while (userKeyword.compare("end") != 0) {
 
+                //Prints Suspect's knowledge of CASEFILE if player types "case file" and has found CASEFILE
                 if (((userKeyword.compare("case") == 0)
                     || (userKeyword.compare("file") == 0)
                     || (userKeyword.compare("casefile") == 0))
@@ -4457,6 +4584,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "I always thought he would just pass in his sleep peacefully.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of ANONYMOUSLETTER if player types "anonymous letter" and has found ANONYMOUSLETTER
                 else if (((userKeyword.compare("anonymous") == 0)
                     || (userKeyword.compare("letter") == 0))
                     && ((clueList.at(ANONYMOUSLETTER).compare("???") != 0))) {
@@ -4476,6 +4604,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "I think it's too sloppy to be " << get_character_name(MRSSTRONGHOLD) << "'s or mine." << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of LOCKEDCHESTS if player types "locked chests" and has found LOCKEDCHESTS
                 else if (((userKeyword.compare("locked") == 0)
                     || (userKeyword.compare("chest") == 0)
                     || (userKeyword.compare("chests") == 0))
@@ -4491,6 +4620,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "I don't think you'll lose any valuable evidence if you don't inspect my undergarments.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of REDVELVETCHAIRS if player types "red velvet chairs" and has found REDVELVETCHAIRS
                 else if (((userKeyword.compare("red") == 0)
                     || (userKeyword.compare("velvet") == 0)
                     || (userKeyword.compare("chair") == 0) 
@@ -4516,6 +4646,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     currentUserChoices.at(ASKABOUTREDVELVETCHAIRS) = true;
 
                 }
+                //Prints Suspect's knowledge of STONEBUTTON if player types "stone button" and has found STONEBUTTON
                 else if (((userKeyword.compare("stone") == 0)
                     || (userKeyword.compare("button") == 0))
                     && ((clueList.at(STONEBUTTON)).compare("???") != 0)) {
@@ -4539,6 +4670,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     currentUserChoices.at(ASKABOUTSTONEBUTTON) = true;
 
                 }
+                //Prints Suspect's knowledge of EMPTYDISPLAY if player types "empty display" and has found EMPTYDISPLAY
                 else if (((userKeyword.compare("empty") == 0)
                     || (userKeyword.compare("display") == 0))
                     && ((clueList.at(EMPTYDISPLAY)).compare("???") != 0)) {
@@ -4562,6 +4694,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     currentUserChoices.at(ASKABOUTEMPTYDISPLAY) = true;
 
                 }
+                //Prints Suspect's knowledge of CLEANEDFLOOR if player types "cleaned floor" and has found CLEANEDFLOOR
                 else if (((userKeyword.compare("cleaned") == 0)
                     || (userKeyword.compare("floor") == 0))
                     && ((clueList.at(CLEANEDFLOOR)).compare("???") != 0)) {
@@ -4580,6 +4713,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "\"I can only assume someone stole my cleaning supplies, but I have no idea who did.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of GLASSSHARDS if player types "glass shards" and has found GLASSSHARDS
                 else if (((userKeyword.compare("glass") == 0)
                     || (userKeyword.compare("shard") == 0)
                     || (userKeyword.compare("shards") == 0))
@@ -4599,6 +4733,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     currentUserChoices.at(ASKABOUTGLASSSHARDS) = true;
 
                 }
+                //Prints Suspect's knowledge of BREAKERBOX if player types "breaker box" and has found BREAKERBOX
                 else if (((userKeyword.compare("breaker") == 0)
                     || (userKeyword.compare("box") == 0))
                     && ((clueList.at(BREAKERBOX)).compare("???") != 0)) {
@@ -4617,6 +4752,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "\"I just did so because it's my job, but suppose that makes me a major suspect now.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of SLASHEDTHROAT if player types "slashed throat" and has found SLASHEDTHROAT
                 else if (((userKeyword.compare("slashed") == 0)
                     || (userKeyword.compare("throat") == 0))
                     && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
@@ -4630,6 +4766,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "\"That's very odd. I don't remember his throat being like that during dinner.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of WETBOOTS if player types "wet boots" and has found WET BOOTS
                 else if (((userKeyword.compare("wet") == 0)
                     || (userKeyword.compare("boot") == 0)
                     || (userKeyword.compare("boots") == 0))
@@ -4645,6 +4782,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "He didn't wear them to Dinner, however, and I doubt he would've gone outside in the storm.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of CUFFLINK if player types "cuff link" and has found CUFFLINK
                 else if (((userKeyword.compare("cufflink") == 0))
                 && ((clueList.at(CUFFLINK)).compare("???") != 0)) {
 
@@ -4658,6 +4796,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
                 cout << "No, this isn't mine. I'm very careful with my belongings. Losing one doesn't suit me.\"" << endl;
                 type_and_continue();
                 }
+                //Prints Randomized Responses to Anything Else
                 else {
                     int replyNum = ((rand() % 4) + 1);
                     if (replyNum == 1) {
@@ -4699,6 +4838,7 @@ void questioning_butler(int roomNum, vector<bool>& currentUserChoices, vector<st
     }
 }
 
+//Function that allows player to question Sous Chef and then return to the Servant's Quarters
 void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
 
     //Empties console screen
@@ -4710,10 +4850,10 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
     print_questioning_request(roomNum);
     string userKeyword = get_keyword_input();
 
-    //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
+    //Loops until player decides to stop questioning suspect
     while (userKeyword.compare("stop") != 0) {
 
-        //Don't forget quotes when they speak
+        //Prints Suspect's Introduction if player types '1'
         if (userKeyword.compare("1") == 0) {
 
             //Empties console screen
@@ -4740,6 +4880,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
             cout << "I'd like you to solve this quickly and efficiently so us innocent folk can go.\"" << endl;
             type_and_continue();
         }
+        //Prints Suspect's Whereabouts if player types '2'
         if (userKeyword.compare("2") == 0) {
 
             //Empties console screen
@@ -4766,6 +4907,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
             cout << "\"In fact, once you leave me here, I think I'll try to finish that nap.\"" << endl;
             type_and_continue();
         }
+        //Prints Suspect's Suspicions if player types '3'
         if (userKeyword.compare("3") == 0) {
 
             //Empties console screen
@@ -4790,6 +4932,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
             cout << "But " << get_character_name(DRSTRONGHOLD) << " sold some of " << get_character_name(WINECRAFTER, INFORMAL) << "'s best bottles against his wishes.\"" << endl;
             type_and_continue();
         }
+        //Interrogates suspect if player requested to do so
         if (userKeyword.compare("interrogate") == 0) {
 
             //Empties console screen
@@ -4800,8 +4943,10 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
             print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
+            //Loops until player decides to end interrogation of suspect
             while (userKeyword.compare("end") != 0) {
 
+                //Prints Suspect's knowledge of CASEFILE if player types "case file" and has found CASEFILE
                 if (((userKeyword.compare("case") == 0)
                     || (userKeyword.compare("file") == 0)
                     || (userKeyword.compare("casefile") == 0))
@@ -4817,6 +4962,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
                     cout << "Whoever slashed " << get_character_name(DRSTRONGHOLD) << "'s throat deserves to rot in prison.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of ANONYMOUSLETTER if player types "anonymous letter" and has found ANONYMOUSLETTER
                 else if (((userKeyword.compare("anonymous") == 0)
                     || (userKeyword.compare("letter") == 0))
                     && ((clueList.at(ANONYMOUSLETTER).compare("???") != 0))) {
@@ -4836,6 +4982,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
                     cout << get_character_name(DRSTRONGHOLD, INFORMAL) << " died in the " << get_room_name(MASTERBEDROOM) << ", didn't he?\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of MISSINGKNIFE if player types "missing knife" and has found MISSINGKNIFE
                 else  if (((userKeyword.compare("missing") == 0)
                     || (userKeyword.compare("knife") == 0))
                     && ((clueList.at(MISSINGKNIFE)).compare("???") != 0)) {
@@ -4861,6 +5008,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
                     cout << "I think that means one of those two had to have taken it.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of REDVELVETCHAIRS if player types "red velvet chairs" and has found REDVELVETCHAIRS
                 else if (((userKeyword.compare("red") == 0)
                     || (userKeyword.compare("velvet") == 0)
                     || (userKeyword.compare("chair") == 0)
@@ -4885,6 +5033,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
                     cout << "\"Sorry, I think I need a moment.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of CUTNIGHTSHADE if player types "cut nightshade" and has found CUTNIGHTSHADE
                 else if (((userKeyword.compare("nightshade") == 0)
                     || (userKeyword.compare("nightshades") == 0)
                     || (userKeyword.compare("cut") == 0)
@@ -4902,6 +5051,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
                     cout << "\"Oh, those were so pretty. I don't know why anyone would be cruel enough to cut them.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of BREAKERBOX if player types "breaker box" and has found BREAKERBOX
                 else if (((userKeyword.compare("breaker") == 0)
                     || (userKeyword.compare("box") == 0))
                     && ((clueList.at(BREAKERBOX)).compare("???") != 0)) {
@@ -4915,6 +5065,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
                     cout << "\"I didn't notice the lights go off. I was taking a nap, remember?\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of BLOODSTAINS if player types "blood stains" and has found BLOODSTAINS
                 else if (((userKeyword.compare("blood") == 0)
                     || (userKeyword.compare("stain") == 0)
                     || (userKeyword.compare("stains") == 0)
@@ -4932,6 +5083,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
                     cout << "That has to be it. Right?\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of SLASHEDTHROAT if player types "slashed throat" and has found SLASHEDTHROAT
                 else if (((userKeyword.compare("slashed") == 0)
                     || (userKeyword.compare("throat") == 0))
                     && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
@@ -4945,6 +5097,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
                     cout << "\"Stop talking about that. Please.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of CUFFLINK if player types "cuff link" and has found CUFFLINK
                 else if (((userKeyword.compare("cufflink") == 0))
                     && ((clueList.at(CUFFLINK)).compare("???") != 0)) {
 
@@ -4955,9 +5108,11 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
                     
                     cout << "You tell her about the cufflink and she stretches." << endl;
                     cout << "\"Oh, that's odd. You found this in " << get_character_name(DRSTRONGHOLD) << "'s armoire?" << endl;
-                    cout << "I suppose it must be one of " << get_character_name(BUTLER, INFORMAL) << "'s cufflinks. I wonder why that was there?\"" << endl;
+                    cout << "It looks like one of my uniform's, but its not mine." << endl;
+                    cout << "I suppose it must be one of " << get_character_name(BUTLER, INFORMAL) << "'s cufflinks.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Randomized Responses to Anything Else
                 else {
                     int replyNum = ((rand() % 4) + 1);
                     if (replyNum == 1) {
@@ -5000,6 +5155,7 @@ void questioning_souschef(int roomNum, vector<bool>& currentUserChoices, vector<
 
 }
 
+//Function that allows player to question Mrs. Stronghold and then return to the Library
 void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
 
     //Empties console screen
@@ -5012,10 +5168,10 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
     print_questioning_request(roomNum);
     string userKeyword = get_keyword_input();
 
-    //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
+    //Loops until player decides to stop questioning suspect
     while (userKeyword.compare("stop") != 0) {
 
-        
+        //Prints Suspect's Introduction if player types '1'
         if (userKeyword.compare("1") == 0) {
 
             //Empties console screen
@@ -5028,6 +5184,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
             cout << "She sighs and returns to her writing." << endl;
             type_and_continue();
         }
+        //Prints Suspect's Whereabouts if player types '2'
         if (userKeyword.compare("2") == 0) {
 
             //Empties console screen
@@ -5054,6 +5211,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
             cout << "Instead, I found my husband's body on the bed and the balcony door wide open.\"" << endl;
             type_and_continue();
         }
+        //Prints Suspect's Suspicions if player types '3'
         if (userKeyword.compare("3") == 0) {
 
             //Empties console screen
@@ -5067,6 +5225,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
             cout << "She's so desperate for some money my husband \'owed\' her that she probably slit his throat.\"" << endl;
             type_and_continue();
         }
+        //Interrogates suspect if player requested to do so
         if (userKeyword.compare("interrogate") == 0) {
 
             //Empties console screen
@@ -5077,8 +5236,10 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
             print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
+            //Loops until player decides to end interrogation of suspect
             while (userKeyword.compare("end") != 0) {
 
+                //Prints Suspect's knowledge of CASEFILE if player types "case file" and has found CASEFILE
                 if (((userKeyword.compare("case") == 0)
                     || (userKeyword.compare("file") == 0)
                     || (userKeyword.compare("casefile") == 0))
@@ -5094,6 +5255,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "Perhaps you should remove me from the pool and start looking for the real murderer.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of SMALLSAFE if player types "small safe" and has found SMALLSAFE
                 else if (((userKeyword.compare("small") == 0)
                     || (userKeyword.compare("safe") == 0))
                     && ((clueList.at(SMALLSAFE)).compare("???") != 0)) {
@@ -5108,6 +5270,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "Sure! I can get out my baby pictures and we can invade my privacy together!\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of INSURANCEPOLICY if player types "insurance policy" and has found INSURANCEPOLICY
                 else if (((userKeyword.compare("insurance") == 0)
                     || (userKeyword.compare("policy") == 0))
                     && ((clueList.at(INSURANCEPOLICY)).compare("???") != 0)) {
@@ -5118,9 +5281,10 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     print_character_questioning_title(roomNum);
 
                     cout << "You wave the insurance policy in " << get_character_name(MRSSTRONGHOLD) << "'s face and she tears up." << endl;
-                    cout << "\"Don't rub it in, Detective. Just arrest me and move on. Let me rot in peace.\"" << endl;
+                    cout << "\"Don't rub it in, Detective. Just find the other killer and move on. Let me rot in peace.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of ANONYMOUSLETTER if player types "anonymous letter" and has found ANONYMOUSLETTER
                 else if (((userKeyword.compare("anonymous") == 0)
                     || (userKeyword.compare("letter") == 0))
                     && ((clueList.at(ANONYMOUSLETTER).compare("???") != 0))) {
@@ -5139,6 +5303,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "\"Is there another murderer in this house besides me?\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of MISSINGKNIFE if player types "missing knife" and has found MISSINGKNIFE
                 else if (((userKeyword.compare("missing") == 0)
                     || (userKeyword.compare("knife") == 0))
                     && ((clueList.at(MISSINGKNIFE)).compare("???") != 0)) {
@@ -5157,6 +5322,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "I suppose she chops fish heads. Chopping up a husband would be a simple task for her.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of REDVELVETCHAIRS if player types "red velvet chairs" and has found REDVELVETCHAIRS
                 else if (((userKeyword.compare("red") == 0)
                     || (userKeyword.compare("velvet") == 0)
                     || (userKeyword.compare("chair") == 0)
@@ -5174,6 +5340,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "Why do you ask, Detective? Playing Duck Duck Goose?\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of STONEBUTTON if player types "stone button" and has found STONEBUTTON
                 else if (((userKeyword.compare("stone") == 0)
                     || (userKeyword.compare("button") == 0))
                     && ((clueList.at(STONEBUTTON)).compare("???") != 0)) {
@@ -5191,6 +5358,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "\"I suppose this is all hopeless. You'll never find the killer, will you?\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of BREAKERBOX if player types "breaker box" and has found BREAKERBOX
                 else if (((userKeyword.compare("breaker") == 0)
                     || (userKeyword.compare("box") == 0))
                     && ((clueList.at(BREAKERBOX)).compare("???") != 0)) {
@@ -5210,6 +5378,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "After seeing my husband like that, I just screamed, and everyone came running.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of SLASHEDTHROAT if player types "slashed throat" and has found SLASHEDTHROAT
                 else if (((userKeyword.compare("slashed") == 0)
                     || (userKeyword.compare("throat") == 0))
                     && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
@@ -5224,6 +5393,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "Perhaps next you'd like me to recreate my tears so you can taste them?\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of FOAMEDMOUTH if player types "foamed mouth" and has found FOAMEDMOUTH
                 else if (((userKeyword.compare("foamed") == 0)
                     || (userKeyword.compare("mouth") == 0))
                     && ((clueList.at(FOAMEDMOUTH)).compare("???") != 0)) {
@@ -5238,6 +5408,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "Focus, Detective. Don't start talking about what he ate for breakfast or other nonsense!\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of BLOODYGARMENT if player types "bloody garment" and has found BLOODYGARMENT
                 else if (((userKeyword.compare("bloody") == 0)
                     || (userKeyword.compare("garment") == 0))
                     && ((clueList.at(BLOODYGARMENT)).compare("???") != 0)) {
@@ -5251,6 +5422,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "\"I suppose the blood must've dripped under the bed. How awful.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of WETBOOTS if player types "wet boots" and has found WET BOOTS
                 else if (((userKeyword.compare("wet") == 0)
                     || (userKeyword.compare("boot") == 0)
                     || (userKeyword.compare("boots") == 0))
@@ -5265,6 +5437,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "\"Oh. Those were in my armoire? How strange.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of CUFFLINK if player types "cuff link" and has found CUFFLINK
                 else if (((userKeyword.compare("cufflink") == 0))
                     && ((clueList.at(CUFFLINK)).compare("???") != 0)) {
 
@@ -5282,6 +5455,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     currentUserChoices.at(ASKABOUTCUFFLINK) = true;
 
                 }
+                //Prints Suspect's knowledge of WASHEDSINK if player types "washed sink" and has found WASHEDSINK
                 else if (((userKeyword.compare("washed") == 0)
                     || (userKeyword.compare("sink") == 0))
                     && ((clueList.at(WASHEDSINK)).compare("???") != 0)) {
@@ -5297,6 +5471,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "I probably used the sink before my bath. Why does it matter?\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of SNOWYFOOTPRINTS if player types "snowy footprints" and has found SNOWYFOOTPRINTS
                 else if (((userKeyword.compare("snowy") == 0)
                 || (userKeyword.compare("foot") == 0)
                 || (userKeyword.compare("prints") == 0)
@@ -5313,6 +5488,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
                     cout << "Are you blind, Detective?\"" << endl;
                     type_and_continue();
                 }
+                //Prints Randomized Responses to Anything Else
                 else {
                     int replyNum = ((rand() % 4) + 1);
                     cout << replyNum;
@@ -5358,6 +5534,7 @@ void questioning_mrsstronghold(int roomNum, vector<bool>& currentUserChoices, ve
 
 }
 
+//Function that allows player to question Wine Crafter and then return to the Greenhouse
 void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
 
     //Empties console screen
@@ -5370,10 +5547,10 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
     print_questioning_request(roomNum);
     string userKeyword = get_keyword_input();
 
-    //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
+    //Loops until player decides to stop questioning suspect
     while (userKeyword.compare("stop") != 0) {
 
-        //Don't forget quotes when they speak
+        //Prints Suspect's Introduction if player types '1'
         if (userKeyword.compare("1") == 0) {
 
             //Empties console screen
@@ -5393,6 +5570,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
             cout << "He secured a grant from the local mining town and wanted to get drunk.\"" << endl;
             type_and_continue();
         }
+        //Prints Suspect's Whereabouts if player types '2'
         if (userKeyword.compare("2") == 0) {
 
             //Empties console screen
@@ -5417,6 +5595,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
             cout << "I presume he had some reason to do so.\"" << endl;
             type_and_continue();
         }
+        //Prints Suspect's Suspicions if player types '3'
         if (userKeyword.compare("3") == 0) {
 
             //Empties console screen
@@ -5430,6 +5609,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
             cout << "She seemed quite preoccupied and didn't say a word to her husband. I think that's rather unlike her.\"" << endl;
             type_and_continue();
         }
+        //Requests Suspect's Flashlight if player types '3'
         if (userKeyword.compare("4") == 0) {
 
             //Empties console screen
@@ -5437,6 +5617,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
             //Prints a title to tell the player which character they are questioning
             print_character_questioning_title(roomNum);
 
+            //Gives player flashlight if they've entered wine cellar and investigated
             if (currentUserChoices.at(ENTERWINECELLAR) == true) {
                 cout << get_character_name(WINECRAFTER) << " sighs as you explain how dim the " << get_room_name(WINECELLAR) << " is." << endl;
                 cout << "\"Fine, Detective. Take my flashlight, but you'd better find something worthwhile down there." << endl;
@@ -5446,6 +5627,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                 currentUserChoices.at(GETFLASHLIGHT) = true;
 
             }
+            //Doesn't give player flaslight otherwise
             else {
                 cout << get_character_name(WINECRAFTER) << " scowls at you." << endl;
                 cout << "\"What could you possibly need my flashlight for?\"" << endl;
@@ -5453,6 +5635,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
              }
 
         }
+        //Interrogates suspect if player requested to do so
         if (userKeyword.compare("interrogate") == 0) {
 
             //Empties console screen
@@ -5463,8 +5646,10 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
             print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
+            //Loops until player decides to end interrogation of suspect
             while (userKeyword.compare("end") != 0) {
 
+                //Prints Suspect's knowledge of CASEFILE if player types "case file" and has found CASEFILE
                 if (((userKeyword.compare("case") == 0)
                     || (userKeyword.compare("file") == 0)
                     || (userKeyword.compare("casefile") == 0))
@@ -5481,6 +5666,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                     type_and_continue();
 
                 }
+                //Prints Suspect's knowledge of EXPENSEREPORTS if player types "expense reports" and has found EXPENSEREPORTS
                 else if (((userKeyword.compare("expense") == 0)
                     || (userKeyword.compare("report") == 0)
                     || (userKeyword.compare("reports") == 0))
@@ -5497,6 +5683,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
 
                     currentUserChoices.at(ASKABOUTEXPENSEREPORTS) = true;
                 }
+                //Prints Suspect's knowledge of ANONYMOUSLETTER if player types "anonymous letter" and has found ANONYMOUSLETTER
                 else if (((userKeyword.compare("anonymous") == 0)
                     || (userKeyword.compare("letter") == 0))
                     && ((clueList.at(ANONYMOUSLETTER).compare("???") != 0))) {
@@ -5514,6 +5701,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                     cout << "\"Well... I don't think this handwriting is " << get_character_name(BUTLER) << "'s." << endl;
                     cout << "He writes rather cute welcome cards for the guests. This handwriting is much more scratchy.\"" << endl;
                 }
+                //Prints Suspect's knowledge of REDVELVETCHAIRS if player types "red velvet chairs" and has found REDVELVETCHAIRS
                 else if (((userKeyword.compare("red") == 0)
                     || (userKeyword.compare("velvet") == 0)
                     || (userKeyword.compare("chair") == 0)
@@ -5533,6 +5721,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                     cout << "I'm also quite sure " << get_character_name(MRSSTRONGHOLD) << " was sat directly to her husband's right." << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of CUTNIGHTSHADE if player types "cut nightshade" and has found CUTNIGHTSHADE
                 else if (((userKeyword.compare("nightshade") == 0)
                     || (userKeyword.compare("nightshades") == 0)
                     || (userKeyword.compare("cut") == 0)
@@ -5554,6 +5743,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                     currentUserChoices.at(ASKABOUTCUTNIGHTSHADE) = true;
 
                 }
+                //Prints Suspect's knowledge of EMPTYDISPLAY if player types "empty display" and has found EMPTYDISPLAY
                 else if (((userKeyword.compare("empty") == 0)
                     || (userKeyword.compare("display") == 0))
                     && ((clueList.at(EMPTYDISPLAY)).compare("???") != 0)) {
@@ -5575,6 +5765,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                     currentUserChoices.at(ASKABOUTEMPTYDISPLAY) = true;
 
                 }
+                //Prints Suspect's knowledge of GLASSSHARDS if player types "glass shards" and has found GLASSSHARDS
                 else if (((userKeyword.compare("glass") == 0)
                     || (userKeyword.compare("shard") == 0)
                     || (userKeyword.compare("shards") == 0))
@@ -5594,6 +5785,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                     currentUserChoices.at(ASKABOUTGLASSSHARDS) = true;
 
                 }
+                //Prints Suspect's knowledge of BREAKERBOX if player types "breaker box" and has found BREAKERBOX
                 else if (((userKeyword.compare("breaker") == 0)
                     || (userKeyword.compare("box") == 0))
                     && ((clueList.at(BREAKERBOX)).compare("???") != 0)) {
@@ -5608,6 +5800,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
                     cout << "We don't have lights installed out here, hence the flashlight.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Randomized Responses to Anything Else
                 else {
                     int replyNum = ((rand() % 4) + 1);
                     if (replyNum == 1) {
@@ -5651,6 +5844,7 @@ void questioning_winecrafter(int roomNum, vector<bool>& currentUserChoices, vect
 
 }
 
+//Function that allows player to question Mud Man and then return to the Boiler Room
 void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
 
     //Empties console screen
@@ -5662,22 +5856,25 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
     print_questioning_request(roomNum);
     string userKeyword = get_keyword_input();
 
-    //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
+    //Loops until player decides to stop questioning suspect
     while (userKeyword.compare("stop") != 0) {
 
-        //Don't forget quotes when they speak
+        //Prints Suspect's Introduction if player types '1'
         if (userKeyword.compare("1") == 0) {
             cout << "\"MUDMAN!!!\"" << endl;
             type_and_continue();
         }
+        //Prints Suspect's Whereabouts if player types '2'
         if (userKeyword.compare("2") == 0) {
             cout << "\"MUD!!!\"" << endl;
             type_and_continue();
         }
+        //Prints Suspect's Suspicions if player types '3'
         if (userKeyword.compare("3") == 0) {
             cout << "\"mud....\"" << endl;
             type_and_continue();
         }
+        //Interrogates suspect if player requested to do so
         if (userKeyword.compare("interrogate") == 0) {
 
             //Empties console screen
@@ -5688,8 +5885,10 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
             print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
+            //Loops until player decides to end interrogation of suspect
             while (userKeyword.compare("end") != 0) {
 
+                //Prints Suspect's knowledge of LATECHECK if player types "late check" and has found LATECHECK
                 if (((userKeyword.compare("late") == 0)
                     || (userKeyword.compare("check") == 0))
                     && ((clueList.at(LATECHECK)).compare("???") != 0)) {
@@ -5702,6 +5901,7 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "\"Mud. Mud Mud.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of ANONYMOUSLETTER if player types "anonymous letter" and has found ANONYMOUSLETTER
                 else if (((userKeyword.compare("anonymous") == 0)
                     || (userKeyword.compare("letter") == 0))
                     && ((clueList.at(ANONYMOUSLETTER)).compare("???") != 0)) {
@@ -5714,6 +5914,7 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "\"MUUUDDD!!!\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of MISSINGKNIFE if player types "missing knife" and has found MISSINGKNIFE
                 else if (((userKeyword.compare("missing") == 0)
                     || (userKeyword.compare("knife") == 0))
                     && ((clueList.at(MISSINGKNIFE)).compare("???") != 0)) {
@@ -5726,6 +5927,7 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "\"Mud is love. Mud is life.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of REDVELVETCHAIRS if player types "red velvet chairs" and has found REDVELVETCHAIRS
                 else if (((userKeyword.compare("red") == 0)
                     || (userKeyword.compare("velvet") == 0)
                     || (userKeyword.compare("chair") == 0)
@@ -5740,6 +5942,7 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "\"Mud....\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of CUTNIGHTSHADE if player types "cut nightshade" and has found CUTNIGHTSHADE
                 else if (((userKeyword.compare("cut") == 0)
                     || (userKeyword.compare("night") == 0)
                     || (userKeyword.compare("shade") == 0)
@@ -5756,6 +5959,7 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "\"Mud???\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of BROKENLOCK if player types "broken lock" and has found BROKENLOCK
                 else if (((userKeyword.compare("broken") == 0)
                     || (userKeyword.compare("lock") == 0))
                     && ((clueList.at(BROKENLOCK)).compare("???") != 0)) {
@@ -5768,6 +5972,7 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "The Mudman doesn't respond, he simply starts rolling in his mud excitedly." << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of WETBOOTS if player types "wet boots" and has found WET BOOTS
                 else if (((userKeyword.compare("wet") == 0)
                     || (userKeyword.compare("boot") == 0)
                     || (userKeyword.compare("boots") == 0))
@@ -5781,6 +5986,7 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
                     cout << "The Mudman seems to become very angry at this question and begins screaming incoherently while he throws mud at you." << endl;
                     type_and_continue();
                 }
+                //Prints Randomized Responses to Anything Else
                 else {
                     int replyNum = ((rand() % 4) + 1);
                     if (replyNum == 1) {
@@ -5823,6 +6029,7 @@ void questioning_mudman(int roomNum, vector<bool>& currentUserChoices, vector<st
 
 }
 
+//Function that allows player to question Astronomer and then return to the Observatory
 void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
 
     //Empties console screen
@@ -5836,10 +6043,10 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
     print_questioning_request(roomNum);
     string userKeyword = get_keyword_input();
 
-    //FIXME: REMOVE INPUT PRINTER WHEN GAME IS FINISHED
+    //Loops until player decides to stop questioning suspect
     while (userKeyword.compare("stop") != 0) {
 
-        //Don't forget quotes when they speak
+        //Prints Suspect's Introduction if player types '1'
         if (userKeyword.compare("1") == 0) {
 
             //Empties console screen
@@ -5858,6 +6065,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
             cout << "He wasn't perfect, but he truly cared about the science. He taught me so much, too.\"" << endl;
             type_and_continue();
         }
+        //Prints Suspect's Whereabouts if player types '2'
         if (userKeyword.compare("2") == 0) {
 
             //Empties console screen
@@ -5882,6 +6090,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
             cout << "Unfortunately, I was much more concerned about " << get_character_name(MRSSTRONGHOLD) << "'s scream than securing an alibi." << endl;
             type_and_continue();
         }
+        //Prints Suspect's Suspicions if player types '3'
         if (userKeyword.compare("3") == 0) {
 
             //Empties console screen
@@ -5900,6 +6109,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
             cout << "It's not a solid motive if she didn't know she was being fired.\"" << endl;
             type_and_continue();
         }
+        //Requests Suspect's UV LIGHT if player types '4'
         if (userKeyword.compare("4") == 0) {
 
             //Empties console screen
@@ -5907,6 +6117,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
             //Prints a title to tell the player which character they are questioning
             print_character_questioning_title(roomNum);
 
+            //Doesn't give player UVLIGHT if they haven't given the late check to Astronomer
             if (currentUserChoices.at(GIVELATECHECK) != true) {
                 cout << get_character_name(ASTRONOMER) << " sighs." << endl;
                 cout << "Detective, I'd be happy to help, but I want you to do something for me first." << endl;
@@ -5914,6 +6125,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                 cout << "If you can find me that money, I'll let you have access to my supplies if you really need them." << endl;
                 type_and_continue();
             }
+            //Gives player UVLIGHT if they've given the late check to Astronomer
             else {
                 cout << get_character_name(ASTRONOMER) << " smiles at you wistfully." << endl;
                 cout << "Of course, Detective. Here's my best UV Light." << endl;
@@ -5924,6 +6136,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
             }
 
         }
+        //Interrogates suspect if player requested to do so
         if (userKeyword.compare("interrogate") == 0) {
 
             //Empties console screen
@@ -5934,8 +6147,10 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
             print_interrogation_request(roomNum, currentUserChoices, clueList);
             userKeyword = get_keyword_input();
 
+            //Loops until player decides to end interrogation of suspect
             while (userKeyword.compare("end") != 0) {
 
+                //Prints Suspect's knowledge of CASEFILE if player types "case file" and has found CASEFILE
                 if (((userKeyword.compare("case") == 0)
                     || (userKeyword.compare("file") == 0)
                     || (userKeyword.compare("casefile") == 0))
@@ -5951,6 +6166,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     cout << "He deserved to discover even more than he had.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of SMALLSAFE if player types "small safe" and has found SMALLSAFE
                 else if (((userKeyword.compare("small") == 0)
                     || (userKeyword.compare("safe") == 0))
                     && ((clueList.at(SMALLSAFE)).compare("???") != 0)) {
@@ -5964,6 +6180,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     cout << "\"You should ask his wife about his safe. I have no knowledge on the matter.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of LATECHECK if player types "late check" and has found LATECHECK
                 else if (((userKeyword.compare("late") == 0)
                     || (userKeyword.compare("check") == 0))
                     && ((clueList.at(LATECHECK)).compare("???") != 0)) {
@@ -5985,6 +6202,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
 
                     currentUserChoices.at(GIVELATECHECK) = true;
                 }
+                //Prints Suspect's knowledge of ANONYMOUSLETTER if player types "anonymous letter" and has found ANONYMOUSLETTER
                 else if (((userKeyword.compare("anonymous") == 0)
                     || (userKeyword.compare("letter") == 0))
                     && ((clueList.at(ANONYMOUSLETTER)).compare("???") != 0)) {
@@ -6000,6 +6218,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     cout << "That means " << get_character_name(MRSSTRONGHOLD) << "definitely didn't write this.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of REDVELVETCHAIRS if player types "red velvet chairs" and has found REDVELVETCHAIRS
                 else if (((userKeyword.compare("red") == 0)
                     || (userKeyword.compare("velvet") == 0)
                     || (userKeyword.compare("chair") == 0)
@@ -6016,6 +6235,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     cout << "I just remember that I sat across from the Wine Crafter.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of EMPTYDISPLAY if player types "empty display" and has found EMPTYDISPLAY
                 else if (((userKeyword.compare("empty") == 0)
                     || (userKeyword.compare("display") == 0))
                     && ((clueList.at(EMPTYDISPLAY)).compare("???") != 0)) {
@@ -6033,6 +6253,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     currentUserChoices.at(ASKABOUTEMPTYDISPLAY) = true;
 
                 }
+                //Prints Suspect's knowledge of BREAKERBOX if player types "breaker box" and has found BREAKERBOX
                 else if (((userKeyword.compare("breaker") == 0)
                     || (userKeyword.compare("box") == 0))
                     && ((clueList.at(BREAKERBOX)).compare("???") != 0)) {
@@ -6063,6 +6284,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     type_and_continue();
 
                 }
+                //Prints Suspect's knowledge of BROKENLOCK if player types "broken lock" and has found BROKENLOCK
                 else if (((userKeyword.compare("broken") == 0)
                     || (userKeyword.compare("lock") == 0))
                     && ((clueList.at(BROKENLOCK)).compare("???") != 0)) {
@@ -6082,6 +6304,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     cout << "I'd presume " << get_character_name(MRSSTRONGHOLD) << " since she was in the Master Bathroom at the time.\"" << endl;
                     type_and_continue();
                 }
+                //Prints Suspect's knowledge of FOAMEDMOUTH if player types "foamed mouth" and has found FOAMEDMOUTH
                 else if (((userKeyword.compare("foamed") == 0)
                     || (userKeyword.compare("mouth") == 0))
                     && ((clueList.at(FOAMEDMOUTH)).compare("???") != 0)) {
@@ -6099,6 +6322,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     currentUserChoices.at(ASKABOUTFOAMEDMOUTH) = true;
 
                 }
+                //Prints Suspect's knowledge of SNOWYFOOTPRINTS if player types "snowy footprints" and has found SNOWYFOOTPRINTS
                 else if (((userKeyword.compare("snowy") == 0)
                     || (userKeyword.compare("foot") == 0)
                     || (userKeyword.compare("prints") == 0)
@@ -6116,6 +6340,7 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
                     cout << "There's no way the killer would return to the scene and risk being found, right?\"" << endl;
                     type_and_continue();
                 }
+                //Prints Randomized Responses to Anything Else
                 else {
                     int replyNum = ((rand() % 4) + 1);
                     if (replyNum == 1) {
@@ -6160,34 +6385,39 @@ void questioning_astronomer(int roomNum, vector<bool>& currentUserChoices, vecto
 
 }
 
+//Allows player to view their inventory from any room
 void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string>& clueList, string userKeyword) {
 
+    //Loops until player decides to go back to room
     while (userKeyword.compare("back") != 0) {
         //Empties console screen
         system("CLS");
         cout << "You are viewing your Inventory:" << endl;
         cout << "----------------------------------------" << endl;
 
+        //Prints clueList
         cout << clueList.at(CASEFILE) << endl;
         cout << clueList.at(EXPENSEREPORTS) << endl;
         cout << clueList.at(SMALLSAFE) << endl;
-
+        //Only prints certain clues after Mrs. Armstrond is accused first
         if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD) == true) {
             cout << clueList.at(INSURANCEPOLICY) << endl;
             cout << clueList.at(LATECHECK) << endl;
             cout << clueList.at(ANONYMOUSLETTER) << endl;
         }
+        //Prints clueList
         cout << clueList.at(LOCKEDCHESTS) << endl;
         cout << clueList.at(MISSINGKNIFE) << endl;
         cout << clueList.at(REDVELVETCHAIRS) << endl;
         cout << clueList.at(CUTNIGHTSHADE) << endl;
         cout << clueList.at(STONEBUTTON) << endl;
         cout << clueList.at(EMPTYDISPLAY) << endl;
-
+        //Only prints certain clues after Mrs. Armstrond is accused first
         if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD) == true) {
             cout << clueList.at(BLOODSTAINS) << endl;
             cout << clueList.at(CLEANEDFLOOR) << endl;
         }
+        //Prints clueList
         cout << clueList.at(GLASSSHARDS) << endl;
         cout << clueList.at(BROKENLOCK) << endl;
         cout << clueList.at(SLASHEDTHROAT) << endl;
@@ -6205,6 +6435,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
 
         userKeyword = get_keyword_input();
 
+        //Prints CASEFILE description with right input
         if (((userKeyword.compare("case") == 0)
             || (userKeyword.compare("file") == 0)
             || (userKeyword.compare("casefile") == 0))
@@ -6213,6 +6444,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(CASEFILE, currentUserChoices, clueList);
 
         }
+        //Prints EXPENSEREPORTS description with right input
         else if (((userKeyword.compare("expense") == 0)
             || (userKeyword.compare("report") == 0)
             || (userKeyword.compare("reports") == 0))
@@ -6221,6 +6453,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(EXPENSEREPORTS, currentUserChoices, clueList);
 
         }
+        //Prints SMALLSAFE description with right input
         else if (((userKeyword.compare("small") == 0)
             || (userKeyword.compare("safe") == 0))
             && ((clueList.at(SMALLSAFE)).compare("???") != 0)) {
@@ -6228,6 +6461,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(SMALLSAFE, currentUserChoices, clueList);
 
         }
+        //Prints INSURANCEPOLICY description with right input
         else if (((userKeyword.compare("insurance") == 0)
             || (userKeyword.compare("policy") == 0))
             && ((clueList.at(INSURANCEPOLICY)).compare("???") != 0)) {
@@ -6235,6 +6469,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(INSURANCEPOLICY, currentUserChoices, clueList);
 
         }
+        //Prints LATECHECK description with right input
         else if (((userKeyword.compare("late") == 0)
             || (userKeyword.compare("check") == 0))
             && ((clueList.at(LATECHECK)).compare("???") != 0)) {
@@ -6242,6 +6477,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(LATECHECK, currentUserChoices, clueList);
 
         }
+        //Prints ANONYMOUSLETTER description with right input
         else if (((userKeyword.compare("anonymous") == 0)
             || (userKeyword.compare("letter") == 0))
             && ((clueList.at(ANONYMOUSLETTER).compare("???") != 0))) {
@@ -6249,6 +6485,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(ANONYMOUSLETTER, currentUserChoices, clueList);
 
         }
+        //Prints LOCKEDCHESTS description with right input
         else if (((userKeyword.compare("locked") == 0)
             || (userKeyword.compare("chest") == 0)
             || (userKeyword.compare("chests") == 0))
@@ -6257,13 +6494,15 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(LOCKEDCHESTS, currentUserChoices, clueList);
 
         }
-        else  if (((userKeyword.compare("missing") == 0)
+        //Prints MISSINGKNIFE description with right input
+        else if (((userKeyword.compare("missing") == 0)
             || (userKeyword.compare("knife") == 0))
             && ((clueList.at(MISSINGKNIFE)).compare("???") != 0)) {
 
             print_inventory_item_description(MISSINGKNIFE, currentUserChoices, clueList);
 
         }
+        //Prints REDVELVETCHAIRS description with right input
         else if (((userKeyword.compare("red") == 0)
             || (userKeyword.compare("velvet") == 0)
             || (userKeyword.compare("chair") == 0)
@@ -6273,6 +6512,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(REDVELVETCHAIRS, currentUserChoices, clueList);
 
         }
+        //Prints CUTNIGHTSHADES description with right input
         else if (((userKeyword.compare("nightshade") == 0)
             || (userKeyword.compare("nightshades") == 0)
             || (userKeyword.compare("cut") == 0)
@@ -6284,6 +6524,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(CUTNIGHTSHADE, currentUserChoices, clueList);
 
         }
+        //Prints STONEBUTTON description with right input
         else if (((userKeyword.compare("stone") == 0)
             || (userKeyword.compare("button") == 0))
             && ((clueList.at(STONEBUTTON)).compare("???") != 0)) {
@@ -6291,6 +6532,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(STONEBUTTON, currentUserChoices, clueList);
 
         }
+        //Prints EMPTYDISPLAY description with right input
         else if (((userKeyword.compare("empty") == 0)
             || (userKeyword.compare("display") == 0))
             && ((clueList.at(EMPTYDISPLAY)).compare("???") != 0)) {
@@ -6298,6 +6540,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(EMPTYDISPLAY, currentUserChoices, clueList);
 
         }
+        //Prints BLOODSTAINS description with right input
         else if (((userKeyword.compare("blood") == 0)
             || (userKeyword.compare("stain") == 0)
             || (userKeyword.compare("stains") == 0)
@@ -6308,6 +6551,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(BLOODSTAINS, currentUserChoices, clueList);
 
         }
+        //Prints CLEANEDFLOOR description with right input
         else if (((userKeyword.compare("cleaned") == 0)
             || (userKeyword.compare("floor") == 0))
             && ((clueList.at(CLEANEDFLOOR)).compare("???") != 0)) {
@@ -6315,6 +6559,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(CLEANEDFLOOR, currentUserChoices, clueList);
 
         }
+        //Prints GLASSSHARDS description with right input
         else if (((userKeyword.compare("glass") == 0)
             || (userKeyword.compare("shard") == 0)
             || (userKeyword.compare("shards") == 0))
@@ -6323,6 +6568,15 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(GLASSSHARDS, currentUserChoices, clueList);
 
         }
+        //Prints BREAKERBOX description with right input
+        else if (((userKeyword.compare("breaker") == 0)
+        || (userKeyword.compare("box") == 0))
+        && ((clueList.at(BREAKERBOX)).compare("???") != 0)) {
+
+        print_inventory_item_description(BREAKERBOX, currentUserChoices, clueList);
+
+        }
+        //Prints BROKENLOCK description with right input
         else if (((userKeyword.compare("broken") == 0)
             || (userKeyword.compare("lock") == 0))
             && ((clueList.at(BROKENLOCK)).compare("???") != 0)) {
@@ -6330,6 +6584,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(BROKENLOCK, currentUserChoices, clueList);
 
         }
+        //Prints SLASHEDTHROAT description with right input
         else if (((userKeyword.compare("slashed") == 0)
             || (userKeyword.compare("throat") == 0))
             && ((clueList.at(SLASHEDTHROAT)).compare("???") != 0)) {
@@ -6337,6 +6592,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(SLASHEDTHROAT, currentUserChoices, clueList);
 
         }
+        //Prints FOAMEDMOUTH description with right input
         else if (((userKeyword.compare("foamed") == 0)
             || (userKeyword.compare("mouth") == 0))
             && ((clueList.at(FOAMEDMOUTH)).compare("???") != 0)) {
@@ -6344,6 +6600,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(FOAMEDMOUTH, currentUserChoices, clueList);
 
         }
+        //Prints BLOODYGARMENT description with right input
         else if (((userKeyword.compare("bloody") == 0)
             || (userKeyword.compare("garment") == 0))
             && ((clueList.at(BLOODYGARMENT)).compare("???") != 0)) {
@@ -6351,6 +6608,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(BLOODYGARMENT, currentUserChoices, clueList);
 
         }
+        //Prints WETBOOTS description with right input
         else if (((userKeyword.compare("wet") == 0)
             || (userKeyword.compare("boot") == 0)
             || (userKeyword.compare("boots") == 0))
@@ -6359,12 +6617,14 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(WETBOOTS, currentUserChoices, clueList);
 
         }
+        //Prints CUFFLINK description with right input
         else if (((userKeyword.compare("cufflink") == 0))
             && ((clueList.at(CUFFLINK)).compare("???") != 0)) {
 
             print_inventory_item_description(CUFFLINK, currentUserChoices, clueList);
 
         }
+        //Prints WASHEDSINK description with right input
         else if (((userKeyword.compare("washed") == 0)
         || (userKeyword.compare("sink") == 0))
         && ((clueList.at(WASHEDSINK)).compare("???") != 0)) {
@@ -6372,6 +6632,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
             print_inventory_item_description(WASHEDSINK, currentUserChoices, clueList);
 
         }
+        //Prints SNOWYFOOTPRINTS description with right input
         else if (((userKeyword.compare("snowy") == 0)
             || (userKeyword.compare("foot") == 0)
             || (userKeyword.compare("prints") == 0)
@@ -6391,6 +6652,7 @@ void view_inventory(int roomNum, vector<bool>& currentUserChoices, vector<string
 
 }
 
+//Prints Inventory Item Descriptions
 void print_inventory_item_description(int itemNum, vector<bool>& currentUserChoices, vector<string>& clueList) {
 
     //Empties console screen
@@ -6596,6 +6858,8 @@ void print_inventory_item_description(int itemNum, vector<bool>& currentUserChoi
 
 }
 
+//This function is used to count the number of clues found so far. 
+//It's used to determine whether or not the player is allowed to end the game or not
 int count_clues(vector<string>& clueList) {
     int numClues = 0;
     for (int i = 0; i < clueList.size(); i++) {
@@ -6626,6 +6890,7 @@ void print_further_keyword_request() {
     cout << "----------------------------------------" << endl;
 }
 
+//Asks player what they'd like to investigate in the safe
 void print_safe_request() {
     cout << "\n----------------------------------------" << endl;
     cout << "What do you want to investigate in the safe?" << endl;
@@ -6660,6 +6925,7 @@ void print_questioning_request(int roomNum) {
     cout << "This will allow you to ask them about any of the clues you've found so far that they may recognize.)" << endl;
 }
 
+//Asks user what they want to talk to pendleton about
 void print_pendleton_help_request(int roomNum) {
     cout << "\nWhat do you want to ask?" << endl;
     cout << "----------------------------------------" << endl;
@@ -6680,7 +6946,9 @@ void print_interrogation_request(int roomNum, vector<bool>& currentUserChoices, 
     cout << "Which clue do you want to use to interrogate " << get_character_name(roomNum) << "?" << endl;
     cout << "----------------------------------------" << endl;
     switch (roomNum) {
+    //Prints clues you can ask Clyde about
     case CLYDE:
+        //Only Prints certain clues after Mrs. Stronghold is accused first time
         if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
             cout << clueList.at(CASEFILE) << endl;
             cout << clueList.at(EXPENSEREPORTS) << endl;
@@ -6708,8 +6976,10 @@ void print_interrogation_request(int roomNum, vector<bool>& currentUserChoices, 
             cout << clueList.at(SNOWYFOOTPRINTS) << endl;
         }
         break;
-
+    
+    //Prints clues you can ask Butler about
     case BUTLER:
+        //Only Prints certain clues after Mrs. Stronghold is accused first time
         if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
             cout << clueList.at(CASEFILE) << endl;
             cout << clueList.at(ANONYMOUSLETTER) << endl;
@@ -6738,7 +7008,9 @@ void print_interrogation_request(int roomNum, vector<bool>& currentUserChoices, 
         }
         break;
 
+    //Prints clues you can ask Sous Chef about
     case SOUSCHEF:
+        //Only Prints certain clues after Mrs. Stronghold is accused first time
         if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
             cout << clueList.at(CASEFILE) << endl;
             cout << clueList.at(ANONYMOUSLETTER) << endl;
@@ -6761,7 +7033,9 @@ void print_interrogation_request(int roomNum, vector<bool>& currentUserChoices, 
         }
         break;
 
+    //Prints clues you can ask Mrs. Stronghold about
     case MRSSTRONGHOLD:
+        //Only Prints certain clues after Mrs. Stronghold is accused first time
         if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
             cout << clueList.at(CASEFILE) << endl;
             cout << clueList.at(SMALLSAFE) << endl;
@@ -6796,7 +7070,9 @@ void print_interrogation_request(int roomNum, vector<bool>& currentUserChoices, 
         }
         break;
 
+    //Prints clues you can ask Wine Crafter about
     case WINECRAFTER:
+        //Only Prints certain clues after Mrs. Stronghold is accused first time
         if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
             cout << clueList.at(CASEFILE) << endl;
             cout << clueList.at(EXPENSEREPORTS) << endl;
@@ -6818,7 +7094,9 @@ void print_interrogation_request(int roomNum, vector<bool>& currentUserChoices, 
         }
         break;
 
+    //Prints clues you can ask Mud Man about
     case MUDMAN:
+        //Only Prints certain clues after Mrs. Stronghold is accused first time
         if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
             cout << clueList.at(LATECHECK) << endl;
             cout << clueList.at(ANONYMOUSLETTER) << endl;
@@ -6838,7 +7116,9 @@ void print_interrogation_request(int roomNum, vector<bool>& currentUserChoices, 
         }
         break;
 
+    //Prints clues you can ask Astronomer about
     case ASTRONOMER:
+        //Only Prints certain clues after Mrs. Stronghold is accused first time
         if (currentUserChoices.at(ACCUSEMRSSTRONGHOLD)) {
             cout << clueList.at(CASEFILE) << endl;
             cout << clueList.at(SMALLSAFE) << endl;
@@ -6866,14 +7146,11 @@ void print_interrogation_request(int roomNum, vector<bool>& currentUserChoices, 
     cout << "(Type \"end\" to end the interrogation with " << get_character_name(roomNum) << " and return to the character interaction menu.)" << endl;
 }
 
-string get_clue_name(int clueNumber, vector<string>& clueList) {
-    return "FIXME: ADD LIST OF CLUES / INVENTORY SYSTEM";
-}
-
 //Prints name of characters associated with current roomNum
 string get_character_name(int roomNum, int formality) {
     switch (roomNum) {
 
+    //Prints Name of Character in Trophy Hall
     case 0:
         if (formality == FORMAL) {
             return "Clyde Pendleton";
@@ -6882,6 +7159,7 @@ string get_character_name(int roomNum, int formality) {
             return "Clyde";
         }
 
+    //Prints Name of Character in Ballroom
     case 1:
         if (formality == FORMAL) {
             return "Mr. Gilmore";
@@ -6893,6 +7171,7 @@ string get_character_name(int roomNum, int formality) {
     case 2:
         return "ROOM 2 N/A";
 
+    //Prints Name of Character in Servant's Quarters
     case 3:
         if (formality == FORMAL) {
             return "Ms. Davis";
@@ -6901,6 +7180,7 @@ string get_character_name(int roomNum, int formality) {
             return "Sue";
         }
 
+    //Prints Name of Character in Library
     case 4:
         if (formality == FORMAL) {
             return "Mrs. Stronghold";
@@ -6915,6 +7195,7 @@ string get_character_name(int roomNum, int formality) {
     case 6:
         return "ROOM 6 N/A";
 
+    //Prints Name of Character in Greenhouse
     case 7:
         if (formality == FORMAL) {
             return "Mr. Arbert";
@@ -6929,6 +7210,7 @@ string get_character_name(int roomNum, int formality) {
     case 9:
         return "ROOM 9 N/A";
 
+    //Prints Name of Character in Boiler Room
     case 10:
         if (formality == FORMAL) {
             return "Mud Man";
@@ -6937,6 +7219,7 @@ string get_character_name(int roomNum, int formality) {
             return "Mud Mud Mud";
         }
 
+    //Prints Name of Character in Observatory
     case 11:
         if (formality == FORMAL) {
             return "Dr. Tyson";
@@ -6945,6 +7228,7 @@ string get_character_name(int roomNum, int formality) {
             return "Jill";
         }
 
+    //Prints Name of Character in Master Bedroom
     case 12:
         if (formality == FORMAL) {
             return "Dr. Stronghold";
@@ -6961,6 +7245,7 @@ string get_character_name(int roomNum, int formality) {
     }
 }
 
+//Tells player which character they're questioning
 void print_character_questioning_title(int roomNum) {
     cout << "You are questioning " << get_character_name(roomNum) << ":" << endl;
     cout << "----------------------------------------" << endl;
@@ -7033,13 +7318,15 @@ void print_adjacent_rooms(int roomNum) {
     cout << "Adjacent Rooms: " << endl;
 
     switch (roomNum) {
-
+    
+    //Prints Rooms Adjacent to Trophy Hall
     case 0:
         cout << endl;
         cout << "[" << get_room_name(1) << "]" << endl;
         cout << "--------------------------------------------------------------------------------" << endl;
         break;
 
+    //Prints Rooms Adjacent to Ballroom
     case 1:
         cout << "\nWEST WING\t| " << get_room_name(2) << ", " << get_room_name(3) << ", " << get_room_name(4) << endl;
         cout << "FRONT AND BACK  | " << get_room_name(8) << ", " << get_room_name(0) << endl;
@@ -7047,42 +7334,49 @@ void print_adjacent_rooms(int roomNum) {
         cout << "--------------------------------------------------------------------------------" << endl;
         break;
 
+    //Prints Rooms Adjacent to Office
     case 2:
         cout << endl;
         cout << "[" << get_room_name(1) << "], " << "[" << get_room_name(3) << "], " << "[" << get_room_name(4) << "]" << endl;
         cout << "--------------------------------------------------------------------------------" << endl;
         break;
 
+    //Prints Rooms Adjacent to Servant's Quarters
     case 3:
         cout << endl;
         cout << "[" << get_room_name(1) << "], " << "[" << get_room_name(2) << "], " << "[" << get_room_name(4) << "]" << endl;
         cout << "--------------------------------------------------------------------------------" << endl;
         break;
 
+    //Prints Rooms Adjacent to Library
     case 4:
         cout << endl;
         cout << "[" << get_room_name(1) << "], " << "[" << get_room_name(2) << "], " << "[" << get_room_name(3) << "]" << endl;
         cout << "--------------------------------------------------------------------------------" << endl;
         break;
 
+    //Prints Rooms Adjacent to Kitchen
     case 5:
         cout << endl;
         cout << "[" << get_room_name(1) << "], " << "[" << get_room_name(6) << "], " << "[" << get_room_name(7) << "]" << endl;
         cout << "--------------------------------------------------------------------------------" << endl;
         break;
 
+    //Prints Rooms Adjacent to Dining Room
     case 6:
         cout << endl;
         cout << "[" << get_room_name(1) << "], " << "[" << get_room_name(5) << "], " << "[" << get_room_name(7) << "]" << endl;
         cout << "--------------------------------------------------------------------------------" << endl;
         break;
 
+    //Prints Rooms Adjacent to Greenhouse
     case 7:
         cout << endl;
         cout << "[" << get_room_name(1) << "], " << "[" << get_room_name(5) << "], " << "[" << get_room_name(6) << "]" << endl;
         cout << "--------------------------------------------------------------------------------" << endl;
         break;
 
+    //Prints Rooms Adjacent to Stairwell
     case 8:
         cout << "\nUPSTAIRS    | " << get_room_name(11) << ", " << get_room_name(12) << endl;
         cout << "MAIN FLOOR  | " << get_room_name(1) << endl;
@@ -7090,30 +7384,35 @@ void print_adjacent_rooms(int roomNum) {
         cout << "--------------------------------------------------------------------------------" << endl;
         break;
 
+    //Prints Rooms Adjacent to Wine Cellar
     case 9:
         cout << endl;
         cout << "[" << get_room_name(10) << "], " << "[" << get_room_name(8) << "]" << endl;
         cout << "--------------------------------------------------------------------------------" << endl;
         break;
 
+    //Prints Rooms Adjacent to Boiler Room
     case 10:
         cout << endl;
         cout << "[" << get_room_name(9) << "], " << "[" << get_room_name(8) << "]" << endl;
         cout << "--------------------------------------------------------------------------------" << endl;
         break;
 
+    //Prints Rooms Adjacent to Observatory
     case 11:
         cout << endl;
         cout << "[" << get_room_name(12) << "], " << "[" << get_room_name(13) << "], " << "[" << get_room_name(8) << "]" << endl;
         cout << "--------------------------------------------------------------------------------" << endl;
         break;
 
+    //Prints Rooms Adjacent to Master Bedroom
     case 12:
         cout << endl;
         cout << "[" << get_room_name(11) << "], " << "[" << get_room_name(13) << "], " << "[" << get_room_name(8) << "]" << endl;
         cout << "--------------------------------------------------------------------------------" << endl;
         break;
 
+    //Prints Rooms Adjacent to Balcony
     case 13:
         cout << endl;
         cout << "[" << get_room_name(11) << "], " << "[" << get_room_name(12) << "]" << endl;
@@ -7124,6 +7423,7 @@ void print_adjacent_rooms(int roomNum) {
 }
 
 
+//Prints map for player's reference so they know what room they're in
 void print_map(int roomNum) {
 
     switch (roomNum) {
